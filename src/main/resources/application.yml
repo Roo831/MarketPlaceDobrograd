@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/marketplace
+    username: postgres
+    password: 121212!@Qw
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update                   # Автоматическое создание/обновление схемы базы данных
+    show-sql: true                       # Показ SQL-запросов в консоли
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect # Указание диалекта для PostgreSQL
+  # Настройки для управления транзакциями
+  transaction:
+    default-timeout: 30                  # Тайм-аут транзакции в секундах
+
+# Настройки сервера
+server:
+  port: 8081                         # Порт, на котором будет запущено приложение
+
+# Настройки логирования
+logging:
+  level:
+    root: INFO                           # Уровень логирования для корневого логгера
+    com.poptsov.marketplace: DEBUG       # Уровень логирования для вашего пакета
+               # Пароль по умолчанию
