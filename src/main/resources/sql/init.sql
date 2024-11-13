@@ -8,15 +8,18 @@ CREATE TABLE users
     firstname        VARCHAR(64),
     lastname         VARCHAR(64),
     steam_id         VARCHAR(64),
-    role             VARCHAR(20)  NOT NULL CHECK (role IN ('ADMIN', 'SELLER', 'BUYER', 'BANNED'))
+    role             VARCHAR(20)  NOT NULL CHECK (role IN ('ADMIN', 'SELLER', 'BUYER', 'BANNED')) DEFAULT 'BUYER',
+    isAdmin Boolean NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE seller
+CREATE TABLE shop
 (
     id          SERIAL PRIMARY KEY,
     user_id     INTEGER NOT NULL UNIQUE,
     rating      INTEGER CHECK (rating >= 1 AND rating <= 5),
-    description TEXT,
+    specialization VARCHAR NOT NULL CHECK ( specialization IN ('CHIEF', 'GUNDEALER' )),
+    address VARCHAR(64) NOT NULL UNIQUE,
+    shop_name VARCHAR(128),
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
@@ -27,17 +30,11 @@ CREATE TABLE product
     description TEXT,
     price       INTEGER      NOT NULL,
     category    VARCHAR(20)  NOT NULL CHECK (category IN ('GUNS', 'FOOD')),
-    seller_id   INTEGER      NOT NULL,
+    shop_id   INTEGER      NOT NULL,
     is_active   BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (seller_id) REFERENCES seller (id) ON DELETE CASCADE
+    FOREIGN KEY (shop_id) REFERENCES shop (id) ON DELETE CASCADE
 );
 
-CREATE TABLE admin
-(
-    id      SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL UNIQUE,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-);
 
 CREATE TABLE banned
 (
