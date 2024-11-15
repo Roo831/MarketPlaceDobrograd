@@ -7,32 +7,24 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @Entity
-@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Data
-public class User {
+@Table(name = "shops")
+public class Shop {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private Integer id;
+    private String shopName;
 
-    private String username;
+    private String Address;
 
-    private String email;
+    private Integer rating;
 
-    private String password;
+    private Specialization specialization;
 
-    private String firstname;
-
-    private String lastname;
-
-    private String steamId;
-
-    private Role role;
-
-    private Boolean isAdmin;
 }
