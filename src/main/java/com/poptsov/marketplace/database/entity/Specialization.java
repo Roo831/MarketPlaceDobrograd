@@ -1,8 +1,6 @@
 package com.poptsov.marketplace.database.entity;
 
+public enum Specialization {
 
-
-public class Admin extends User {
-
-
+    CHIEF, GUNDEALER
 }
