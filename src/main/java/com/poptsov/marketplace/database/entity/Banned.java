@@ -14,24 +14,16 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "shops")
-public class Shop {
+@Table(name = "banned")
+public class Banned {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    private String descriptionOfBan;
 
-    private String address;
-
-    private Integer rating;
-
-    private Specialization specialization;
-
-    private Date createdAt;
-
-    private String description;
+    private Date banDate;
 
     private User user;
 

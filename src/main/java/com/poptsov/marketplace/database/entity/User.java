@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
@@ -35,4 +37,8 @@ public class User {
     private Role role;
 
     private Boolean isAdmin;
+
+    private Boolean isBanned;
+
+    private Date createdAt;
 }
