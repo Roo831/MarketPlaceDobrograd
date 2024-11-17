@@ -1,7 +1,14 @@
 package com.poptsov.marketplace.database.entity;
 
-public enum Role {
+import org.springframework.security.core.GrantedAuthority;
 
-ADMIN, USER, BANNED
+public enum Role implements GrantedAuthority {
 
+admin, banned, user;
+
+
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }
