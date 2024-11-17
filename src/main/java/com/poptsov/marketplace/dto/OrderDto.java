@@ -15,16 +15,16 @@ import java.util.Date;
 @AllArgsConstructor
 public class OrderDto {
 
-    @NotNull(message = "Order ID is required")
+    @NotNull(message = "Order ID cannot be Blank")
     private Integer orderId;
 
-    @NotNull(message = "CreatedAt is required")
+    @NotNull(message = "CreatedAt cannot be Null")
     private Date createdAt;
 
-    @NotNull(message = "Status is required")
+    @NotNull(message = "Status cannot be Null")
     private Status status;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name cannot be Blank")
     private String name;
 
     @Size(max = 500, message = "Description must be less than 500 characters")
@@ -33,9 +33,9 @@ public class OrderDto {
     @Min(value = 0, message = "Price must be greater than or equal to 0")
     private Integer price;
 
-    @NotNull(message = "User  ID is required")
+    @NotNull(message = "User ID cannot be Null")
     private Integer userId;
 
-    @NotNull(message = "Shop ID is required")
+    @NotNull(message = "Shop ID cannot be Null")
     private Integer shopId;
 }

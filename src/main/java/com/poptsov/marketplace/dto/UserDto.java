@@ -14,23 +14,23 @@ import java.util.Date;
 @AllArgsConstructor
 public class UserDto {
 
-    @NotNull(message = "ID is required")
+    @NotNull(message = "ID cannot be Null")
     private Integer id;
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Username cannot be Blank")
     private String username;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Email cannot be Blank")
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password cannot be Blank")
     private String password;
 
-    @NotBlank(message = "Firstname is required")
+    @NotBlank(message = "Firstname cannot be Blank")
     private String firstname;
 
-    @NotBlank(message = "Lastname is required")
+    @NotBlank(message = "Lastname is cannot be Blank")
     private String lastname;
 
     private String steamId;
@@ -42,6 +42,6 @@ public class UserDto {
 
     private Boolean isBanned;
 
-    @NotNull(message = "CreatedAt is required")
+    @NotNull(message = "CreatedAt cannot be Null")
     private Date createdAt;
 }

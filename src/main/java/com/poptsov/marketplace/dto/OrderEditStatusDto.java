@@ -13,6 +13,6 @@ import java.util.Date;
 @Data
 public class OrderEditStatusDto {
 
-    @NotNull(message = "Status is required")
+    @NotNull(message = "Status cannot be Null")
     private Status status;
 }
