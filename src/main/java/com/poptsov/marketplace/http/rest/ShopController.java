@@ -23,20 +23,20 @@ public class ShopController {
 
 
     @PostMapping("/shopCreate/users/{id}")
-    public ResponseEntity<ShopDto> createShop(@PathVariable Integer id, @Validated @RequestBody ShopCreateDto shopCreateDto) {
-        ShopDto shopDto = shopService.createShop(id, shopCreateDto);
+    public ResponseEntity<ShopReadDto> createShop(@PathVariable Integer id, @Validated @RequestBody ShopCreateDto shopCreateDto) {
+        ShopReadDto shopDto = shopService.createShop(id, shopCreateDto);
         return ResponseEntity.ok(shopDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ShopDto> getShopById(@PathVariable Integer id) {
-        ShopDto shopDto = shopService.getShopById(id);
+    public ResponseEntity<ShopReadDto> getShopById(@PathVariable Integer id) {
+        ShopReadDto shopDto = shopService.getShopById(id);
         return ResponseEntity.ok(shopDto);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ShopDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopEditDto shopEditDto) {
-        ShopDto updatedShopDto = shopService.editShop(id, shopEditDto);
+    public ResponseEntity<ShopReadDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopEditDto shopEditDto) {
+        ShopReadDto updatedShopDto = shopService.editShop(id, shopEditDto);
         return ResponseEntity.ok(updatedShopDto);
     }
 
@@ -47,26 +47,26 @@ public class ShopController {
     }
 
     @GetMapping("/{id}/orders")
-    public ResponseEntity<List<OrderDto>> getShopOrders(@PathVariable Integer id) {
-        List<OrderDto> orders = orderService.getOrdersByShopId(id);
+    public ResponseEntity<List<OrderReadDto>> getShopOrders(@PathVariable Integer id) {
+        List<OrderReadDto> orders = orderService.getOrdersByShopId(id);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping
-    public ResponseEntity<List<ShopDto>> getAllShops() {
-        List<ShopDto> shops = shopService.getAllShops();
+    public ResponseEntity<List<ShopReadDto>> getAllShops() {
+        List<ShopReadDto> shops = shopService.getAllShops();
         return ResponseEntity.ok(shops);
     }
 
     @GetMapping("/{id}/findOwner")
-    public ResponseEntity<UserDto> getOwnerByShopId(@PathVariable Integer id) {
-        UserDto ownerDto = userService.getOwnerByShopId(id);
+    public ResponseEntity<UserReadDto> getOwnerByShopId(@PathVariable Integer id) {
+        UserReadDto ownerDto = userService.getOwnerByShopId(id);
         return ResponseEntity.ok(ownerDto);
     }
 
     @GetMapping("/active")
-    public ResponseEntity<List<ShopDto>> getActiveShops() {
-        List<ShopDto> shops = shopService.getActiveShops();
+    public ResponseEntity<List<ShopReadDto>> getActiveShops() {
+        List<ShopReadDto> shops = shopService.getActiveShops();
         return ResponseEntity.ok(shops);
     }
 

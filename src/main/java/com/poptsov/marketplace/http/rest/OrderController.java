@@ -19,15 +19,15 @@ public class OrderController {
     private final ShopService shopService;
 
     @PostMapping("/users/{userId}/shops/{shopId}")
-    public ResponseEntity<OrderDto> createOrder(@PathVariable Integer userId, @PathVariable Integer shopId, @Validated @RequestBody OrderCreateDto orderCreateDto) {
-        OrderDto orderDto = orderService.createOrder(userId, shopId, orderCreateDto);
-        return ResponseEntity.ok(orderDto);
+    public ResponseEntity<OrderReadDto> createOrder(@PathVariable Integer userId, @PathVariable Integer shopId, @Validated @RequestBody OrderCreateDto orderCreateDto) {
+        OrderReadDto orderReadDto = orderService.createOrder(userId, shopId, orderCreateDto);
+        return ResponseEntity.ok(orderReadDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable Integer id) {
-        OrderDto orderDto = orderService.getOrderById(id);
-        return ResponseEntity.ok(orderDto);
+    public ResponseEntity<OrderReadDto> getOrderById(@PathVariable Integer id) {
+        OrderReadDto orderReadDto = orderService.getOrderById(id);
+        return ResponseEntity.ok(orderReadDto);
     }
 
     @DeleteMapping("/{id}")
@@ -37,26 +37,26 @@ public class OrderController {
     }
 
     @PatchMapping("/{id}/during")
-    public ResponseEntity<OrderDto> setOrderToProcessing(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        OrderDto orderDto = orderService.setOrderStatusToProcessing(id, orderEditStatusDto);
-        return ResponseEntity.ok(orderDto);
+    public ResponseEntity<OrderReadDto> setOrderToProcessing(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
+        OrderReadDto orderReadDto = orderService.setOrderStatusToProcessing(id, orderEditStatusDto);
+        return ResponseEntity.ok(orderReadDto);
     }
 
     @PatchMapping("/{id}/completed")
-    public ResponseEntity<OrderDto> setOrderToCompleted(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        OrderDto orderDto = orderService.setOrderStatusToCompleted(id, orderEditStatusDto);
-        return ResponseEntity.ok(orderDto);
+    public ResponseEntity<OrderReadDto> setOrderToCompleted(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
+        OrderReadDto orderReadDto = orderService.setOrderStatusToCompleted(id, orderEditStatusDto);
+        return ResponseEntity.ok(orderReadDto);
     }
 
     @GetMapping("/{id}/getOwner")
-    public ResponseEntity<UserDto> getOwnerByOrderId(@PathVariable Integer id) {
-        UserDto ownerDto = userService.getOwnerByOrderId(id);
+    public ResponseEntity<UserReadDto> getOwnerByOrderId(@PathVariable Integer id) {
+        UserReadDto ownerDto = userService.getOwnerByOrderId(id);
         return ResponseEntity.ok(ownerDto);
     }
 
     @GetMapping("/{id}/getShop")
-    public ResponseEntity<ShopDto> getShopByOrderId(@PathVariable Integer id) {
-        ShopDto shopDto = shopService.getShopByOrderId(id);
+    public ResponseEntity<ShopReadDto> getShopByOrderId(@PathVariable Integer id) {
+        ShopReadDto shopDto = shopService.getShopByOrderId(id);
         return ResponseEntity.ok(shopDto);
     }
 }

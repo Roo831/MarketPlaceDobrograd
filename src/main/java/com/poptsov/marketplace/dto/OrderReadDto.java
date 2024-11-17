@@ -1,9 +1,7 @@
 package com.poptsov.marketplace.dto;
 
-import com.poptsov.marketplace.database.entity.Shop;
 import com.poptsov.marketplace.database.entity.Status;
 import jakarta.validation.constraints.*;
-import com.poptsov.marketplace.database.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDto {
+public class OrderReadDto {
 
     @NotNull(message = "Order ID cannot be Blank")
     private Integer orderId;
