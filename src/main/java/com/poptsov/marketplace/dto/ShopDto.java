@@ -21,6 +21,6 @@ public class ShopDto {
 
     private String description;
 
-    private User user;
+    private Integer userId;
 
 }
