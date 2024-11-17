@@ -1,45 +1,61 @@
 package com.poptsov.marketplace.http.rest;
 
 import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.service.OrderService;
+import com.poptsov.marketplace.service.ShopService;
+import com.poptsov.marketplace.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
-public class OrderController {
+@RequiredArgsConstructor
+public class OrdersController {
 
-    @PostMapping("/users/{userId}/shops/{shopId}")
+    private final OrderService orderService;
+    private final UserService userService;
+    private final ShopService shopService;
+
+    @PostMapping("/user/{userId}/shop/{shopId}")
     public ResponseEntity<OrderDto> createOrder(@PathVariable Long userId, @PathVariable Long shopId, @RequestBody OrderCreateDto orderCreateDto) {
-        // Логика создания заказа
+        OrderDto orderDto = orderService.createOrder(userId, shopId, orderCreateDto);
+        return ResponseEntity.ok(orderDto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderDto> getOrderById(@PathVariable Long id) {
-        // Логика получения заказа по ID
+        OrderDto orderDto = orderService.getOrderById(id);
+        return ResponseEntity.ok(orderDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteOrder(@PathVariable Long id) {
-        // Логика удаления заказа
+        boolean isDeleted = orderService.deleteOrder(id);
+        return ResponseEntity.ok(isDeleted);
     }
 
     @PatchMapping("/{id}/during")
-    public ResponseEntity<OrderDto> setOrderInProcess(@PathVariable Long id, @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        // Логика установки флага "В Обработке"
+    public ResponseEntity<OrderDto> setOrderToProcessing(@PathVariable Long id, @RequestBody OrderEditStatusDto orderEditStatusDto) {
+        OrderDto orderDto = orderService.setOrderStatusToProcessing(id, orderEditStatusDto);
+        return ResponseEntity.ok(orderDto);
     }
 
     @PatchMapping("/{id}/completed")
-    public ResponseEntity<OrderDto> setOrderCompleted(@PathVariable Long id, @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        // Логика установки флага "Готов"
+    public ResponseEntity<OrderDto> setOrderToCompleted(@PathVariable Long id, @RequestBody OrderEditStatusDto orderEditStatusDto) {
+        OrderDto orderDto = orderService.setOrderStatusToCompleted(id, orderEditStatusDto);
+        return ResponseEntity.ok(orderDto);
     }
 
     @GetMapping("/{id}/getOwner")
-    public ResponseEntity<UserDto> getOrderOwner(@PathVariable Long id) {
-        // Логика получения владельца по ID заказа
+    public ResponseEntity<UserDto> getOwnerByOrderId(@PathVariable Long id) {
+        UserDto ownerDto = userService.getOwnerByOrderId(id);
+        return ResponseEntity.ok(ownerDto);
     }
 
     @GetMapping("/{id}/getShop")
-    public ResponseEntity<ShopDto> getOrderShop(@PathVariable Long id) {
-        // Логика получения магазина по ID заказа
+    public ResponseEntity<ShopDto> getShopByOrderId(@PathVariable Long id) {
+        ShopDto shopDto = shopService.getShopByOrderId(id);
+        return ResponseEntity.ok(shopDto);
     }
 }

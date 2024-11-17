@@ -40,8 +40,16 @@ public class UsersController {
         return ResponseEntity.ok(orders);
     }
 
+    @GetMapping("/{id}/orders/{orderId}")
+    public ResponseEntity<OrderDto> getUserOrderById(@PathVariable Long id, @PathVariable Long orderId) {
+        OrderDto orderDto = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orderDto);
+    }
+
     @GetMapping("/{id}/shop")
-    public ResponseEntity<ShopDto> getUserShop(@PathVariable Integer id) {
-        ShopDto shop = shopService.getShopByUserId(id);
+    public ResponseEntity<List<ShopDto>> getShopsByUserId(@PathVariable Long id) {
+        List<ShopDto> shops = shopService.getShopsByUserId(id);
+        return ResponseEntity.ok(shops);
     }
 }
+

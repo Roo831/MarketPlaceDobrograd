@@ -2,6 +2,9 @@ package com.poptsov.marketplace.http.rest;
 
 
 import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.service.ShopService;
+import com.poptsov.marketplace.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,40 +12,52 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/shops")
-public class ShopController {
+@RequiredArgsConstructor
+public class ShopsController {
 
-    @PostMapping("/users/{id}")
+    private final ShopService shopService;
+    private final UserService userService;
+
+
+    @PostMapping("/shopCreate/users/{id}")
     public ResponseEntity<ShopDto> createShop(@PathVariable Long id, @RequestBody ShopCreateDto shopCreateDto) {
-        // Логика создания магазина и прикрепления его к пользователю
+        ShopDto shopDto = shopService.createShop(id, shopCreateDto);
+        return ResponseEntity.ok(shopDto);
     }
 
-    @GetMapping("/users/{id}")
-    public ResponseEntity<ShopDto> getShopByUserId(@PathVariable Long id) {
-        // Логика получения магазина по ID пользователя
+    @GetMapping("/{id}")
+    public ResponseEntity<ShopDto> getShopById(@PathVariable Long id) {
+        ShopDto shopDto = shopService.getShopById(id);
+        return ResponseEntity.ok(shopDto);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ShopDto> editShop(@PathVariable Long id, @RequestBody ShopEditDto shopEditDto) {
-        // Логика редактирования данных магазина
+        ShopDto updatedShopDto = shopService.editShop(id, shopEditDto);
+        return ResponseEntity.ok(updatedShopDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteShop(@PathVariable Long id) {
-        // Логика удаления магазина
+        boolean isDeleted = shopService.deleteShop(id);
+        return ResponseEntity.ok(isDeleted);
     }
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<OrderDto>> getShopOrders(@PathVariable Long id) {
-        // Логика получения всех заказов магазина
+        List<OrderDto> orders = orderService.getOrdersByShopId(id);
+        return ResponseEntity.ok(orders);
     }
 
     @GetMapping
     public ResponseEntity<List<ShopDto>> getAllShops() {
-        // Логика получения списка магазинов
+        List<ShopDto> shops = shopService.getAllShops();
+        return ResponseEntity.ok(shops);
     }
 
     @GetMapping("/{id}/findOwner")
-    public ResponseEntity<UserDto> getShopOwner(@PathVariable Long id) {
-        // Логика получения владельца по ID магазина
+    public ResponseEntity<UserDto> getOwnerByShopId(@PathVariable Long id) {
+        UserDto ownerDto = userService.getOwnerByShopId(id);
+        return ResponseEntity.ok(ownerDto);
     }
 }

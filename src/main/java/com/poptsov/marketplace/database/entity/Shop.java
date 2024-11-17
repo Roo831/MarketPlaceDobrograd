@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Entity
@@ -27,12 +29,19 @@ public class Shop {
 
     private Integer rating;
 
+    @Enumerated(EnumType.STRING)
     private Specialization specialization;
 
     private Date createdAt;
 
     private String description;
 
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
 
 }
