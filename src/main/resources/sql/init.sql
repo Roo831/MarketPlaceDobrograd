@@ -7,7 +7,7 @@ CREATE TABLE users
     firstname  VARCHAR(64), -- РП имя
     lastname   VARCHAR(64), -- РП фамилия
     steam_id   VARCHAR(64), -- steam_id
-    role       VARCHAR(20)  NOT NULL CHECK (role IN ('ADMIN', 'USER', 'BANNED')) DEFAULT 'USER', -- роль. Возможно не нужна, так как есть флаги isAdmin и isBanned
+    role       VARCHAR(20)  NOT NULL CHECK (role IN ('admin', 'user', 'banned')) DEFAULT 'user', -- роль. Возможно не нужна, так как есть флаги isAdmin и isBanned
     is_admin    Boolean      NOT NULL                                             DEFAULT FALSE, -- администратор
     is_banned   Boolean      NOT NULL                                             DEFAULT FALSE, -- забанен?
     created_at TIMESTAMP  DEFAULT CURRENT_TIMESTAMP  -- дата создания
@@ -19,7 +19,7 @@ CREATE TABLE shops
     id             SERIAL PRIMARY KEY,
     user_id        INTEGER     NOT NULL UNIQUE, -- владелец магазина
     rating         INTEGER CHECK (rating >= 1 AND rating <= 5), --оценка
-    specialization VARCHAR     NOT NULL CHECK ( specialization IN ('CHIEF', 'GUNDEALER')), -- специализация
+    specialization VARCHAR     NOT NULL CHECK ( specialization IN ('chief', 'gundealer')), -- специализация
     address        VARCHAR(64) NOT NULL UNIQUE, --адрес магазина
     name      VARCHAR(128), --имя магазина
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --дата создания
@@ -44,7 +44,7 @@ CREATE TABLE orders
     user_id    INTEGER     NOT NULL, -- ИД заказчика
     shop_id    INTEGER     NOT NULL, -- ИД магазина в котором будет совершена покупка заказчиком
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- время создания заказа
-    status     VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'DURING', 'COMPLETED', 'CANCELLED')), -- "На рассмотрении", "В обработке", "Готов", "Отменен"
+    status     VARCHAR(20) NOT NULL CHECK (status IN ('pending', 'during', 'completed', 'cancelled')), -- "На рассмотрении", "В обработке", "Готов", "Отменен"
     name VARCHAR(256) NOT NULL, -- название заказа
     description TEXT,       -- описание заказа. Здесь указывается все то, что хочет приобрести клиент.
     price      INTEGER     NOT NULL, -- цена, которую предлагает клиент. Если цена не устраивает продавца, он может пометить

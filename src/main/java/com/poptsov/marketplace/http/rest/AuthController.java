@@ -2,7 +2,7 @@ package com.poptsov.marketplace.http.rest;
 
 import com.poptsov.marketplace.dto.LoginDto;
 import com.poptsov.marketplace.dto.RegisterDto;
-import com.poptsov.marketplace.dto.UserDto;
+import com.poptsov.marketplace.dto.UserReadDto;
 import com.poptsov.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +20,16 @@ public class AuthController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser (@Validated @RequestBody RegisterDto registerDto) {
+    public ResponseEntity<UserReadDto> registerUser (@Validated @RequestBody RegisterDto registerDto) {
         // Логика регистрации пользователя
-        UserDto userDto = userService.registerUser(registerDto);
-        return ResponseEntity.ok(userDto);
+        UserReadDto userReadDto = userService.registerUser(registerDto);
+        return ResponseEntity.ok(userReadDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDto> loginUser (@Validated @RequestBody LoginDto loginDto) {
+    public ResponseEntity<UserReadDto> loginUser (@Validated @RequestBody LoginDto loginDto) {
         // Логика аутентификации пользователя
-        UserDto userDto = userService.authenticateUser(loginDto);
-        return ResponseEntity.ok(userDto);
+        UserReadDto userReadDto = userService.authenticateUser(loginDto);
+        return ResponseEntity.ok(userReadDto);
     }
 }

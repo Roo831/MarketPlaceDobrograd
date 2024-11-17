@@ -1,7 +1,6 @@
 package com.poptsov.marketplace.dto;
 
 import com.poptsov.marketplace.database.entity.Specialization;
-import com.poptsov.marketplace.database.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShopDto {
+public class ShopReadDto {
 
     @NotNull(message = "ID cannot be Null")
     private Integer id;

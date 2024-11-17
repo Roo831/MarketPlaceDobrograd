@@ -16,4 +16,5 @@ public class UserEditDto {
 
     @NotBlank(message = "Lastname cannot be Blank")
     private String lastname;
+
 }

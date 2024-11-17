@@ -1,11 +1,17 @@
 package com.poptsov.marketplace.service;
 
 
+import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.LoginDto;
 import com.poptsov.marketplace.dto.RegisterDto;
-import com.poptsov.marketplace.dto.UserDto;
+import com.poptsov.marketplace.dto.UserReadDto;
 import com.poptsov.marketplace.dto.UserEditDto;
+import com.poptsov.marketplace.exceptions.UserCreateException;
+import com.poptsov.marketplace.exceptions.UserUpdateException;
+import com.poptsov.marketplace.mapper.UserEditMapper;
+import com.poptsov.marketplace.mapper.UserReadMapper;
+import com.poptsov.marketplace.mapper.UserRegisterMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,17 +29,27 @@ import java.util.Optional;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final UserRegisterMapper userRegisterMapper;
+    private final UserReadMapper userReadMapper;
+    private final UserEditMapper userEditMapper;
 
 
     @Transactional
-    public UserDto create(RegisterDto registerDto) {
+    public UserReadDto create(RegisterDto registerDto) {
         return Optional.of(registerDto) // если дто пришло
-                .map(dto -> {
-                    return userCreateEditMapper.map(dto);
-                }) // замапить в ентити
+                .map(userRegisterMapper::map) // замапить в ентити
                 .map(userRepository::save) // сохранить в БД
                 .map(userReadMapper::map) // обратно замапить в UserReadDto
-                .orElseThrow(); // обработка ошибок
+                .orElseThrow(() -> new UserCreateException("Failed to create user: " + registerDto.getUsername())); // обработка ошибок
+    }
+
+    @Transactional
+    public UserReadDto updateUser (Integer id, UserEditDto userEditDto) {
+
+        Optional<UserEditDto> optionalUserEditDto = Optional.of(userEditDto);
+        return   userRepository.update(id, userEditMapper.map(userEditDto)) // обновить пользователя
+                .map(userReadMapper::map) // Замапить обратно в UserReadDto
+                .orElseThrow(() -> new UserUpdateException("Failed to update user with id: " + id)); // Обработка ошибок, если пользователь не найден
     }
 
     @Override
@@ -48,26 +64,27 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public UserDto getOwnerByShopId(Integer id) {
+    public UserReadDto getOwnerByShopId(Integer id) {
     }
 
-    public UserDto getUserById(Integer id) {
+    public UserReadDto getUserById(Integer id) {
+
     }
 
-    public UserDto getOwnerByOrderId(Integer id) {
+    public UserReadDto getOwnerByOrderId(Integer id) {
         return null;
     }
 
-    public UserDto registerUser(RegisterDto registerDto) {
+    public UserReadDto registerUser(RegisterDto registerDto) {
         return null;
     }
 
-    public UserDto authenticateUser(LoginDto loginDto) {
+    public UserReadDto authenticateUser(LoginDto loginDto) {
     }
 
-    public UserDto updateUser(Integer id, UserEditDto userEditDto) {
-    }
 
-    public List<UserDto> getAllUsers() {
+
+    public List<UserReadDto> getAllUsers() {
+        return null;
     }
 }

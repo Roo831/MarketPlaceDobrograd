@@ -1,7 +1,6 @@
 package com.poptsov.marketplace.http.rest;
 
 
-import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.service.OrderService;
 import com.poptsov.marketplace.service.ShopService;
@@ -24,32 +23,32 @@ public class UserController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<UserDto>> getUsers() {
-        List<UserDto> usersDto = userService.getAllUsers();
+    public ResponseEntity<List<UserReadDto>> getUsers() {
+        List<UserReadDto> usersDto = userService.getAllUsers();
         return ResponseEntity.ok(usersDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
-        UserDto userDto = userService.getUserById(id);
-        return ResponseEntity.ok(userDto);
+    public ResponseEntity<UserReadDto> getUserById(@PathVariable Integer id) {
+        UserReadDto userReadDto = userService.getUserById(id);
+        return ResponseEntity.ok(userReadDto);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDto> editUser (@PathVariable Integer id, @Validated @RequestBody UserEditDto userEditDto) {
-        UserDto updatedUserDto = userService.updateUser (id, userEditDto);
-        return ResponseEntity.ok(updatedUserDto);
+    public ResponseEntity<UserReadDto> editUser (@PathVariable Integer id, @Validated @RequestBody UserEditDto userEditDto) {
+        UserReadDto updatedUserReadDto = userService.updateUser (id, userEditDto);
+        return ResponseEntity.ok(updatedUserReadDto);
     }
 
     @GetMapping("/{id}/orders")
-    public ResponseEntity<List<OrderDto>> getUserOrders(@PathVariable Integer id) {
-        List<OrderDto> orders = orderService.getOrdersByUserId(id);
+    public ResponseEntity<List<OrderReadDto>> getUserOrders(@PathVariable Integer id) {
+        List<OrderReadDto> orders = orderService.getOrdersByUserId(id);
         return ResponseEntity.ok(orders);
     }
 
     @GetMapping("/{id}/shop")
-    public ResponseEntity<List<ShopDto>> getShopsByUserId(@PathVariable Integer id) {
-        List<ShopDto> shops = shopService.getShopsByUserId(id);
+    public ResponseEntity<List<ShopReadDto>> getShopsByUserId(@PathVariable Integer id) {
+        List<ShopReadDto> shops = shopService.getShopsByUserId(id);
         return ResponseEntity.ok(shops);
     }
 

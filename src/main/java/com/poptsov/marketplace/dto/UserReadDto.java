@@ -4,6 +4,7 @@ import com.poptsov.marketplace.database.entity.Role;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+@Builder
+public class UserReadDto {
 
     @NotNull(message = "ID cannot be Null")
     private Integer id;
