@@ -7,7 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +36,7 @@ public class User {
 
     private String steamId;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private Boolean isAdmin;
@@ -41,4 +44,11 @@ public class User {
     private Boolean isBanned;
 
     private Date createdAt;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Order> orders = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Shop shop;
 }

@@ -23,6 +23,7 @@ public class Order {
 
     private Date createdAt;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     private String name;
@@ -31,8 +32,12 @@ public class Order {
 
     private Integer price;
 
+    @ManyToOne()
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne()
+    @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
 
 }

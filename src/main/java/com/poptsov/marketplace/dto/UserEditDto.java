@@ -1,13 +1,19 @@
 package com.poptsov.marketplace.dto;
 
-import com.poptsov.marketplace.database.entity.Role;
+import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEditDto {
 
+    @NotBlank(message = "Firstname is required")
     private String firstname;
 
+    @NotBlank(message = "Lastname is required")
     private String lastname;
-
 }
