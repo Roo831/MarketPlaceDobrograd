@@ -11,19 +11,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegisterDto {
 
-    @NotBlank(message = "Username is required")
+    @NotBlank(message = "Username cannot be Blank")
     private String username;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Email cannot be Blank")
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "Password cannot be Blank")
     private String password;
 
-    @NotBlank(message = "Firstname is required")
+    @NotBlank(message = "Firstname cannot be Blank")
     private String firstname;
 
-    @NotBlank(message = "Lastname is required")
+    @NotBlank(message = "Lastname cannot be Blank")
     private String lastname;
 }

@@ -15,19 +15,19 @@ import java.util.Date;
 @AllArgsConstructor
 public class ShopDto {
 
-    @NotNull(message = "ID is required")
+    @NotNull(message = "ID cannot be Null")
     private Integer id;
 
-    @NotBlank(message = "Name is required")
+    @NotBlank(message = "Name cannot be Blank")
     private String name;
 
-    @NotBlank(message = "Address is required")
+    @NotBlank(message = "Address cannot be Blank")
     private String address;
 
     @Min(value = 0, message = "Rating must be greater than or equal to 0")
     private Integer rating;
 
-    @NotNull(message = "Specialization is required")
+    @NotNull(message = "Specialization cannot be Blank")
     private Specialization specialization;
 
     @NotNull(message = "CreatedAt is required")

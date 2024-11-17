@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserEditDto {
 
-    @NotBlank(message = "Firstname is required")
+    @NotBlank(message = "Firstname cannot be Blank")
     private String firstname;
 
-    @NotBlank(message = "Lastname is required")
+    @NotBlank(message = "Lastname cannot be Blank")
     private String lastname;
 }
