@@ -35,7 +35,7 @@ public class UserDto {
 
     private String steamId;
 
-    @NotNull(message = "Role is required")
+    @NotNull(message = "Role cannot be Null")
     private Role role;
 
     private Boolean isAdmin;

@@ -2,8 +2,10 @@ package com.poptsov.marketplace.service;
 
 
 import com.poptsov.marketplace.database.repository.UserRepository;
+import com.poptsov.marketplace.dto.LoginDto;
 import com.poptsov.marketplace.dto.RegisterDto;
 import com.poptsov.marketplace.dto.UserDto;
+import com.poptsov.marketplace.dto.UserEditDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,4 +48,26 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public UserDto getOwnerByShopId(Integer id) {
+    }
+
+    public UserDto getUserById(Integer id) {
+    }
+
+    public UserDto getOwnerByOrderId(Integer id) {
+        return null;
+    }
+
+    public UserDto registerUser(RegisterDto registerDto) {
+        return null;
+    }
+
+    public UserDto authenticateUser(LoginDto loginDto) {
+    }
+
+    public UserDto updateUser(Integer id, UserEditDto userEditDto) {
+    }
+
+    public List<UserDto> getAllUsers() {
+    }
 }
