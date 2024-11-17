@@ -27,15 +27,18 @@ public class ShopDto {
     @Min(value = 0, message = "Rating must be greater than or equal to 0")
     private Integer rating;
 
-    @NotNull(message = "Specialization cannot be Blank")
+    @NotNull(message = "Specialization cannot be Null")
+    private boolean isActive;
+
+    @NotNull(message = "Specialization cannot be Null")
     private Specialization specialization;
 
-    @NotNull(message = "CreatedAt is required")
+    @NotNull(message = "CreatedAt cannot be Null")
     private Date createdAt;
 
     @Size(max = 500, message = "Description must be less than 500 characters")
     private String description;
 
-    @NotNull(message = "User  ID is required")
+    @NotNull(message = "User  ID cannot be Null")
     private Integer userId;
 }

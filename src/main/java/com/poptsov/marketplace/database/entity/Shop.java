@@ -34,6 +34,8 @@ public class Shop {
 
     private Date createdAt;
 
+    private boolean isActive;
+
     private String description;
 
     @OneToOne
@@ -43,5 +45,7 @@ public class Shop {
     @Builder.Default
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
+
+
 
 }
