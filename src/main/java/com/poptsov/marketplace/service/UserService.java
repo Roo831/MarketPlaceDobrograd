@@ -8,25 +8,24 @@ import com.poptsov.marketplace.dto.RegisterDto;
 import com.poptsov.marketplace.dto.UserReadDto;
 import com.poptsov.marketplace.dto.UserEditDto;
 import com.poptsov.marketplace.exceptions.UserCreateException;
+import com.poptsov.marketplace.exceptions.UserGetException;
 import com.poptsov.marketplace.exceptions.UserUpdateException;
 import com.poptsov.marketplace.mapper.UserEditMapper;
 import com.poptsov.marketplace.mapper.UserReadMapper;
 import com.poptsov.marketplace.mapper.UserRegisterMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final UserRepository userRepository;
     private final UserRegisterMapper userRegisterMapper;
@@ -35,7 +34,20 @@ public class UserService implements UserDetailsService {
 
 
     @Transactional
-    public UserReadDto create(RegisterDto registerDto) {
+    public UserReadDto updateUser(Integer id, UserEditDto userEditDto) {
+        return Optional.of(userRepository.save(userEditMapper.map(id, userEditDto))) // обновить пользователя
+                .map(userReadMapper::map) // Замапить обратно в UserReadDto
+                .orElseThrow(() -> new UserUpdateException("Failed to update user with id: " + id)); // Обработка ошибок, если пользователь не найден
+    }
+
+    public UserReadDto getUserById(Integer id) {
+        return userRepository.getUserById(id)
+                .map(userReadMapper::map)
+                .orElseThrow(() -> new UserGetException("Failed to get user with id: " + id));
+    }
+
+    @Transactional
+    public UserReadDto registerUser(RegisterDto registerDto) {
         return Optional.of(registerDto) // если дто пришло
                 .map(userRegisterMapper::map) // замапить в ентити
                 .map(userRepository::save) // сохранить в БД
@@ -43,48 +55,31 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UserCreateException("Failed to create user: " + registerDto.getUsername())); // обработка ошибок
     }
 
-    @Transactional
-    public UserReadDto updateUser (Integer id, UserEditDto userEditDto) {
+    public List<UserReadDto> getAllUsers() {
+        List<User> users = userRepository.findAll(); // Получаем список пользователей
 
-        Optional<UserEditDto> optionalUserEditDto = Optional.of(userEditDto);
-        return   userRepository.update(id, userEditMapper.map(userEditDto)) // обновить пользователя
-                .map(userReadMapper::map) // Замапить обратно в UserReadDto
-                .orElseThrow(() -> new UserUpdateException("Failed to update user with id: " + id)); // Обработка ошибок, если пользователь не найден
+        if (users.isEmpty()) {
+            throw new UserGetException("No users found"); // Выбрасываем исключение, если список пуст
+        }
+
+        return users.stream()
+                .map(userReadMapper::map) // Маппим каждую сущность User в UserReadDto
+                .collect(Collectors.toList()); // Собираем в список
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
-                .map(user -> new org.springframework.security.core.userdetails.User(
-                        user.getUsername(),
-                        user.getPassword(),
-                        Collections.singleton(user.getRole())
-                ))
-                .orElseThrow(() -> new UsernameNotFoundException("Failed to retrive user: " + username));
-
-    }
-
-    public UserReadDto getOwnerByShopId(Integer id) {
-    }
-
-    public UserReadDto getUserById(Integer id) {
-
-    }
-
-    public UserReadDto getOwnerByOrderId(Integer id) {
-        return null;
-    }
-
-    public UserReadDto registerUser(RegisterDto registerDto) {
-        return null;
-    }
 
     public UserReadDto authenticateUser(LoginDto loginDto) {
-    }
 
-
-
-    public List<UserReadDto> getAllUsers() {
         return null;
     }
+
+    public UserReadDto getOwnerByOrderId(Integer orderId) {
+        return null;
+    }
+
+    public UserReadDto getOwnerByShopId(Integer shopId) {
+        return null;
+    }
+
+
 }

@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/marketplace
     username: postgres
-    password: 121212!@Qw
+    password: 12121212!@Qw
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
