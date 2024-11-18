@@ -22,10 +22,11 @@ public class UserEditMapper implements Mapper<UserEditDto, User>{
         return user;
     }
 
-    @Override
-    public User map(UserEditDto fromObject, User toObject) {
 
-        copy(toObject, fromObject);
-        return toObject;
+
+    public User map(Integer id, UserEditDto userEditDto) {
+        User user = User.builder().id(id).build();
+        copy(user, userEditDto);
+        return user;
     }
 }
