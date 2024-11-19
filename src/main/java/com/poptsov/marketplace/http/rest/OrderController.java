@@ -48,11 +48,11 @@ public class OrderController {
         return ResponseEntity.ok(orderReadDto);
     }
 
-    @GetMapping("/{id}/getOwner")
-    public ResponseEntity<UserReadDto> getOwnerByOrderId(@PathVariable Integer id) {
-        UserReadDto ownerDto = userService.getOwnerByOrderId(id);
-        return ResponseEntity.ok(ownerDto);
-    }
+//    @GetMapping("/{id}/getOwner")
+//    public ResponseEntity<UserReadDto> getOwnerByOrderId(@PathVariable Integer id) {
+//        UserReadDto ownerDto = userService.getOwnerByOrderId(id);
+//        return ResponseEntity.ok(ownerDto);
+//    }
 
     @GetMapping("/{id}/getShop")
     public ResponseEntity<ShopReadDto> getShopByOrderId(@PathVariable Integer id) {

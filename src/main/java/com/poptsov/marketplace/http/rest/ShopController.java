@@ -58,11 +58,11 @@ public class ShopController {
         return ResponseEntity.ok(shops);
     }
 
-    @GetMapping("/{id}/findOwner")
-    public ResponseEntity<UserReadDto> getOwnerByShopId(@PathVariable Integer id) {
-        UserReadDto ownerDto = userService.getOwnerByShopId(id);
-        return ResponseEntity.ok(ownerDto);
-    }
+//    @GetMapping("/{id}/findOwner")
+//    public ResponseEntity<UserReadDto> getOwnerByShopId(@PathVariable Integer id) {
+//        UserReadDto ownerDto = userService.getOwnerByShopId(id);
+//        return ResponseEntity.ok(ownerDto);
+//    }
 
     @GetMapping("/active")
     public ResponseEntity<List<ShopReadDto>> getActiveShops() {
