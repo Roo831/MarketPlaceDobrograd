@@ -1,4 +1,9 @@
 spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+    web:
+      resources:
+        add-mappings: false
   datasource:
     url: jdbc:postgresql://localhost:5432/marketplace
     username: postgres
@@ -23,5 +28,13 @@ server:
 logging:
   level:
     root: INFO                           # Уровень логирования для корневого логгера
-    com.poptsov.marketplace: DEBUG       # Уровень логирования для вашего пакета
-               # Пароль по умолчанию
+    com:
+      poptsov:
+        marketplace: DEBUG                # Уровень логирования для вашего пакета
+  file:
+    name: app.log
+
+marketplace:
+  app:
+    secret: q6b+8X0O8zIYFhG4u4n5nJ3hK9x9m9QWm6H6xW9f0uI=
+    lifetime: 60000

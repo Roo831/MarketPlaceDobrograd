@@ -26,9 +26,6 @@ public class UserReadDto {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotBlank(message = "Password cannot be Blank")
-    private String password;
-
     @NotBlank(message = "Firstname cannot be Blank")
     private String firstname;
 

@@ -2,16 +2,14 @@ package com.poptsov.marketplace.database.entity;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,7 +32,7 @@ public class Shop {
 
     private Date createdAt;
 
-    private boolean isActive;
+    private boolean active;
 
     private String description;
 

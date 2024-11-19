@@ -23,7 +23,7 @@ CREATE TABLE shops
     address        VARCHAR(64) NOT NULL UNIQUE, --адрес магазина
     name      VARCHAR(128), --имя магазина
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --дата создания
-    is_active Boolean NOT NULL, --магазин отображается на главной странице
+    active Boolean NOT NULL, --магазин отображается на главной странице
     description    TEXT, -- описание магазина (перечень товаров например)
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 

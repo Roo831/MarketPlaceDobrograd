@@ -1,42 +1,85 @@
-//package com.poptsov.marketplace.config;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//import org.springframework.security.web.SecurityFilterChain;
-//import static com.poptsov.marketplace.database.entity.Role.admin;
-//import static com.poptsov.marketplace.database.entity.Role.user;
-//import static com.poptsov.marketplace.database.entity.Role.banned;
-//import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-//import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-//
-//
-//    @Configuration
-//    @EnableWebSecurity
-//    @EnableMethodSecurity(prePostEnabled = true)
-//    public class SecurityConfiguration {
-//
-////        @Bean
-////        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception { // Настроить права доступа
-////            http
-////                    .csrf(CsrfConfigurer::disable)
-////                    .authorizeHttpRequests(auth -> auth
-////                            .requestMatchers("/login", "/users/registration","/v3/api-docs/", "/swagger-ui/").permitAll()
-////                            .requestMatchers("/admin/**").hasRole(admin.getAuthority())
-////                            .requestMatchers(antMatcher("/users/{\\d}/delete")).hasAnyAuthority(admin.getAuthority())
-////                            .anyRequest().authenticated())
-//////                .httpBasic(Customizer.withDefaults())
-////                    .formLogin(login -> login.loginPage("/login")
-////                            .defaultSuccessUrl("/shops")
-////                            .permitAll())
-////                    .logout(logout -> logout
-////                            .logoutUrl("/logout")
-////                            .logoutSuccessUrl("/login")
-////                            .deleteCookies("JSESSIONID"));
-////
-////            return http.build();
-////        }
-//    }
+package com.poptsov.marketplace.config;
+
+import com.poptsov.marketplace.database.entity.Role;
+import com.poptsov.marketplace.security.JwtAuthenticationFilter;
+import com.poptsov.marketplace.service.UserService;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfiguration {
+
+    private final UserService userService;
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority(Role.admin.name()) // только для администраторов
+                        .requestMatchers("/shops/**", "/users/**", "/orders/**").hasAnyAuthority(Role.user.name(), Role.admin.name()) // доступ для пользователей и администраторов
+                        .anyRequest().authenticated()
+                )
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userService.userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+
+}
+
+
 

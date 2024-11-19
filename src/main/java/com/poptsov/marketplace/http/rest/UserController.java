@@ -36,7 +36,7 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserReadDto> editUser (@PathVariable Integer id, @Validated @RequestBody UserEditDto userEditDto) {
-        UserReadDto updatedUserReadDto = userService.updateUser (id, userEditDto);
+        UserReadDto updatedUserReadDto = userService.updateUser(id, userEditDto);
         return ResponseEntity.ok(updatedUserReadDto);
     }
 

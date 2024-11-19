@@ -24,4 +24,11 @@ public class UserRegisterMapper implements Mapper<RegisterDto, User> {
         user.setLastname(registerDto.getLastname());
 
     }
+
+    public User map(RegisterDto registerDto, String password) {
+        User user = new User();
+        copy(user, registerDto);
+        user.setPassword(password);
+        return user;
+    }
 }
