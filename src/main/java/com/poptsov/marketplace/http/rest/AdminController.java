@@ -7,6 +7,7 @@ import com.poptsov.marketplace.dto.UserRoleDto;
 import com.poptsov.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class AdminController {
      */
 
     @PatchMapping("/users/{id}")
-    public ResponseEntity<UserReadDto> changeRole(@PathVariable Integer id, @RequestBody UserRoleDto userRoleDto) {
+    public ResponseEntity<UserReadDto> changeRole(@PathVariable Integer id, @Validated @RequestBody UserRoleDto userRoleDto) {
         return ResponseEntity.ok(userService.updateUser(id, userRoleDto));
     }
 
@@ -80,8 +81,4 @@ public class AdminController {
      * @return OrderReadDto
      */
 
-    @GetMapping("/orders/{id}")
-    public ResponseEntity<OrderReadDto> getOrderById(@PathVariable Integer id) {
-        return ResponseEntity.ok( userService.getOrderByUserId(id));
-    }
 }

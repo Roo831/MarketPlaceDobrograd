@@ -16,7 +16,7 @@ public class UserEditMapper implements Mapper<UserEditDto, User>{
     }
 
     @Override
-    public User map(UserEditDto object) {
+    public User map(UserEditDto object) { // Не используется
         User user = new User();
         copy(user, object);
         return user;

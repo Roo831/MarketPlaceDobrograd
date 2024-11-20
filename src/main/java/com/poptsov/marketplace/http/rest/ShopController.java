@@ -4,7 +4,6 @@ package com.poptsov.marketplace.http.rest;
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.service.OrderService;
 import com.poptsov.marketplace.service.ShopService;
-import com.poptsov.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +17,6 @@ import java.util.List;
 public class ShopController {
 
     private final ShopService shopService;
-    private final UserService userService;
     private final OrderService orderService;
 
     /**
@@ -109,8 +107,8 @@ public class ShopController {
      */
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Boolean> doActiveShop(@PathVariable Integer id, @RequestBody ShopEditStatusDto shopEditStatusDto) {
-        boolean isActive = shopService.doActiveShop(id, shopEditStatusDto);
+    public ResponseEntity<Boolean> switchActiveStatus(@PathVariable Integer id, @Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
+        boolean isActive = shopService.switchActiveStatus(id, shopEditStatusDto);
         return ResponseEntity.ok(isActive);
     }
 

@@ -42,10 +42,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             UserAlreadyExistException.class,
             UserNotFoundException.class,
-            UserUpdateException.class,
-            UserGetException.class,
-            UserCreateException.class,
-            ShopGetException.class,
+            EntityUpdateException.class,
+            EntityGetException.class,
+            EntityCreateException.class,
             UsernameNotFoundException.class
     })
     public ResponseEntity<Map<String, String>> handleCustomExceptions(RuntimeException ex) {
