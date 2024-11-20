@@ -1,15 +1,14 @@
 package com.poptsov.marketplace.service;
 
-import com.poptsov.marketplace.database.entity.Role;
 import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.dto.JwtAuthenticationResponse;
 import com.poptsov.marketplace.dto.LoginDto;
 import com.poptsov.marketplace.dto.RegisterDto;
+import com.poptsov.marketplace.mapper.UserRegisterMapper;
 import com.poptsov.marketplace.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,30 +16,21 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final UserService userService;
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final UserRegisterMapper userRegisterMapper;
 
     /**
      * Регистрация пользователя
      *
-     * @param request данные пользователя
+     * @param registerDto данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signUp(RegisterDto request) {
+    public JwtAuthenticationResponse signUp(RegisterDto registerDto) {
         System.out.println("Build user from dto");
-        var user = User.builder()
-                .username(request.getUsername())
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.user)
-                .isAdmin(false)
-                .isBanned(false)
-                .build();
-
+        User user = userRegisterMapper.map(registerDto);
+        System.out.println(("try to create user in DB"));
         userService.create(user);
-
+        System.out.println("try to generate token");
         var jwt = jwtService.generateToken(user);
         System.out.println("return JwtAuthenticationResponse: " + jwt);
         return new JwtAuthenticationResponse(jwt);
@@ -67,4 +57,5 @@ public class AuthenticationService {
 
         return new JwtAuthenticationResponse(jwt);
     }
+
 }

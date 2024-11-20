@@ -50,19 +50,6 @@ public class OrderController {
     }
 
     /**
-     * Удалить заказ по его идентификатору
-     *
-     * @param id Идентификатор заказа,
-     * @return ShopReadDto
-     */
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
-        boolean isDeleted = orderService.deleteOrder(id);
-        return ResponseEntity.ok(isDeleted);
-    }
-
-    /**
      * Изменить статус заказа
      *
      * @param id Идентификатор заказа,
@@ -73,6 +60,19 @@ public class OrderController {
     public ResponseEntity<OrderReadDto>editOrderStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
         OrderReadDto orderReadDto = orderService.editOrderStatus(id, orderEditStatusDto);
         return ResponseEntity.ok(orderReadDto);
+    }
+
+    /**
+     * Удалить заказ по его идентификатору
+     *
+     * @param id Идентификатор заказа,
+     * @return ShopReadDto
+     */
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
+        boolean isDeleted = orderService.deleteOrder(id);
+        return ResponseEntity.ok(isDeleted);
     }
 
     /**
