@@ -4,6 +4,7 @@ import com.poptsov.marketplace.database.entity.Shop;
 import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.ShopRepository;
 import com.poptsov.marketplace.dto.ShopCreateDto;
+import com.poptsov.marketplace.dto.ShopEditStatusDto;
 import com.poptsov.marketplace.dto.ShopReadDto;
 import com.poptsov.marketplace.dto.ShopEditDto;
 import com.poptsov.marketplace.exceptions.ShopGetException;
@@ -68,7 +69,7 @@ public class ShopService {
         return false;
     }
 
-    public boolean doActiveShop(Integer id) {
+    public boolean doActiveShop(Integer id, ShopEditStatusDto shopEditStatusDto) {
         return false;
     }
 }

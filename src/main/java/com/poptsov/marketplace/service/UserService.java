@@ -12,6 +12,7 @@ import com.poptsov.marketplace.mapper.UserEditMapper;
 import com.poptsov.marketplace.mapper.UserReadMapper;
 import com.poptsov.marketplace.mapper.UserRegisterMapper;
 
+import com.poptsov.marketplace.mapper.UserRoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,26 +32,27 @@ import java.util.stream.Collectors;
     @RequiredArgsConstructor
     public class UserService {
 
-        private final UserRepository repository;
+        private final UserRepository userRepository;
         private final UserReadMapper userReadMapper;
         private final UserEditMapper userEditMapper;
+        private final UserRoleMapper userRoleMapper;
 
         @Transactional
         public User save(User user) {
             System.out.println("Сохранить в БД");
-            return repository.save(user);
+            return userRepository.save(user);
         }
 
 
         @Transactional
         public User create(User user) {
             System.out.println("Проверить пользователя на наличие в БД его имени");
-            if (repository.existsByUsername(user.getUsername())) {
+            if (userRepository.existsByUsername(user.getUsername())) {
                 throw new RuntimeException("Пользователь с таким именем уже существует");
             }
 
             System.out.println("Проверить пользователя на наличие в БД его почты");
-            if (repository.existsByEmail(user.getEmail())) {
+            if (userRepository.existsByEmail(user.getEmail())) {
                 throw new RuntimeException("Пользователь с таким email уже существует");
             }
             return save(user);
@@ -58,7 +60,7 @@ import java.util.stream.Collectors;
 
         public User getByUsername(String username) {
             System.out.println("Попытаться получить user по его username");
-            return repository.findByUsername(username)
+            return userRepository.findByUsername(username)
                     .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
 
         }
@@ -77,20 +79,28 @@ import java.util.stream.Collectors;
 
     @Transactional
     public UserReadDto updateUser(Integer id, UserEditDto userEditDto) {
-        return Optional.of(repository.save(userEditMapper.map(id, userEditDto))) // обновить пользователя
+        return Optional.of(userRepository.save(userEditMapper.map(id, userEditDto))) // обновить пользователя
+                .map(userReadMapper::map) // Замапить обратно в UserReadDto
+                .orElseThrow(() -> new UserUpdateException("Failed to update user with id: " + id)); // Обработка ошибок, если пользователь не найден
+    }
+
+    @Transactional
+    public UserReadDto updateUser(Integer id, UserRoleDto userRoleDto) {
+
+        return Optional.of(userRepository.save(userRoleMapper.map(id, userRoleDto))) // обновить пользователя
                 .map(userReadMapper::map) // Замапить обратно в UserReadDto
                 .orElseThrow(() -> new UserUpdateException("Failed to update user with id: " + id)); // Обработка ошибок, если пользователь не найден
     }
 
     public UserReadDto getUserById(Integer id) {
-        return repository.findUserById(id)
+        return userRepository.findUserById(id)
                 .map(userReadMapper::map)
                 .orElseThrow(() -> new UserGetException("Failed to get user with id: " + id));
     }
 
 
     public List<UserReadDto> getAllUsers() {
-        List<User> users = repository.findAll(); // Получаем список пользователей
+        List<User> users = userRepository.findAll(); // Получаем список пользователей
 
         if (users.isEmpty()) {
             throw new UserGetException("No users found"); // Выбрасываем исключение, если список пуст
@@ -107,6 +117,18 @@ import java.util.stream.Collectors;
     }
 
     public UserReadDto getOwnerByShopId(Integer shopId) {
+        return null;
+    }
+
+    public ShopReadDto getShopByUserId(Integer id) {
+        return null;
+    }
+
+    public List<OrderReadDto> getOrdersByUserId(Integer id) {
+        return null;
+    }
+
+    public OrderReadDto getOrderByUserId(Integer id) {
         return null;
     }
 }

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShopActiveDto {
+public class ShopEditStatusDto {
 
     @NotNull(message = "Specialization cannot be Null")
-    private boolean isActive;
+    private boolean active;
 
 }
