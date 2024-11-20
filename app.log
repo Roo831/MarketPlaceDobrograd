@@ -1533,3 +1533,67 @@ com.poptsov.marketplace.exceptions.BannedException: Пользователь з�
 2024-11-20T23:16:51.888+05:00  INFO 9256 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2024-11-20T23:16:51.891+05:00  INFO 9256 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2024-11-20T23:16:51.897+05:00  INFO 9256 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-11-20T23:29:28.931+05:00  INFO 17432 --- [main] c.p.marketplace.MarketplaceApplication   : Starting MarketplaceApplication using Java 17.0.12 with PID 17432 (C:\Users\user2\IdeaProjects\MarketPlaceDobrograd\target\classes started by user2 in C:\Users\user2\IdeaProjects\MarketPlaceDobrograd)
+2024-11-20T23:29:28.933+05:00 DEBUG 17432 --- [main] c.p.marketplace.MarketplaceApplication   : Running with Spring Boot v3.3.5, Spring v6.1.14
+2024-11-20T23:29:28.934+05:00  INFO 17432 --- [main] c.p.marketplace.MarketplaceApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-11-20T23:29:29.677+05:00  INFO 17432 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-20T23:29:29.749+05:00  INFO 17432 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 65 ms. Found 4 JPA repository interfaces.
+2024-11-20T23:29:30.306+05:00  INFO 17432 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-20T23:29:30.319+05:00  INFO 17432 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-20T23:29:30.319+05:00  INFO 17432 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2024-11-20T23:29:30.381+05:00  INFO 17432 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-20T23:29:30.381+05:00  INFO 17432 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1393 ms
+2024-11-20T23:29:30.528+05:00  INFO 17432 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-20T23:29:30.590+05:00  INFO 17432 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-11-20T23:29:30.625+05:00  INFO 17432 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-11-20T23:29:30.924+05:00  INFO 17432 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-11-20T23:29:30.955+05:00  INFO 17432 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-11-20T23:29:31.113+05:00  INFO 17432 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@44976b08
+2024-11-20T23:29:31.115+05:00  INFO 17432 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-11-20T23:29:31.151+05:00  WARN 17432 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-11-20T23:29:32.203+05:00  INFO 17432 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-11-20T23:29:32.323+05:00  INFO 17432 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-20T23:29:32.697+05:00 DEBUG 17432 --- [main] c.p.m.security.JwtAuthenticationFilter   : Filter 'jwtAuthenticationFilter' configured for use
+2024-11-20T23:29:32.815+05:00  INFO 17432 --- [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-11-20T23:29:32.843+05:00  INFO 17432 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-11-20T23:29:33.166+05:00  WARN 17432 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-20T23:29:33.799+05:00  INFO 17432 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-20T23:29:33.810+05:00  INFO 17432 --- [main] c.p.marketplace.MarketplaceApplication   : Started MarketplaceApplication in 5.399 seconds (process running for 5.995)
+2024-11-20T23:29:41.920+05:00  INFO 17432 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-20T23:29:41.921+05:00  INFO 17432 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-20T23:29:41.922+05:00  INFO 17432 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-20T23:32:40.868+05:00  INFO 17432 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-20T23:32:40.870+05:00  INFO 17432 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-11-20T23:32:40.875+05:00  INFO 17432 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-11-20T23:32:45.877+05:00  INFO 8368 --- [main] c.p.marketplace.MarketplaceApplication   : Starting MarketplaceApplication using Java 17.0.12 with PID 8368 (C:\Users\user2\IdeaProjects\MarketPlaceDobrograd\target\classes started by user2 in C:\Users\user2\IdeaProjects\MarketPlaceDobrograd)
+2024-11-20T23:32:45.880+05:00 DEBUG 8368 --- [main] c.p.marketplace.MarketplaceApplication   : Running with Spring Boot v3.3.5, Spring v6.1.14
+2024-11-20T23:32:45.881+05:00  INFO 8368 --- [main] c.p.marketplace.MarketplaceApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-11-20T23:32:46.594+05:00  INFO 8368 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-20T23:32:46.664+05:00  INFO 8368 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 4 JPA repository interfaces.
+2024-11-20T23:32:47.202+05:00  INFO 8368 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-20T23:32:47.214+05:00  INFO 8368 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-20T23:32:47.214+05:00  INFO 8368 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2024-11-20T23:32:47.274+05:00  INFO 8368 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-20T23:32:47.274+05:00  INFO 8368 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1342 ms
+2024-11-20T23:32:47.419+05:00  INFO 8368 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-20T23:32:47.480+05:00  INFO 8368 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-11-20T23:32:47.515+05:00  INFO 8368 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-11-20T23:32:47.813+05:00  INFO 8368 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-11-20T23:32:47.845+05:00  INFO 8368 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-11-20T23:32:48.006+05:00  INFO 8368 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@749d7c01
+2024-11-20T23:32:48.007+05:00  INFO 8368 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-11-20T23:32:48.043+05:00  WARN 8368 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-11-20T23:32:49.095+05:00  INFO 8368 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-11-20T23:32:49.217+05:00  INFO 8368 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-20T23:32:49.608+05:00 DEBUG 8368 --- [main] c.p.m.security.JwtAuthenticationFilter   : Filter 'jwtAuthenticationFilter' configured for use
+2024-11-20T23:32:49.727+05:00  INFO 8368 --- [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-11-20T23:32:49.758+05:00  INFO 8368 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-11-20T23:32:50.079+05:00  WARN 8368 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-20T23:32:50.738+05:00  INFO 8368 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-20T23:32:50.749+05:00  INFO 8368 --- [main] c.p.marketplace.MarketplaceApplication   : Started MarketplaceApplication in 5.369 seconds (process running for 5.961)
+2024-11-20T23:32:54.205+05:00  INFO 8368 --- [http-nio-8081-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-20T23:32:54.205+05:00  INFO 8368 --- [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-20T23:32:54.206+05:00  INFO 8368 --- [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-20T23:34:11.193+05:00  INFO 8368 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-20T23:34:11.195+05:00  INFO 8368 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-11-20T23:34:11.199+05:00  INFO 8368 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

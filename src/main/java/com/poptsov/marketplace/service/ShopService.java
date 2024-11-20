@@ -53,8 +53,13 @@ public class ShopService {
 
     @Transactional
     public ShopReadDto createShop(Integer userId, ShopCreateEditDto shopCreateDto) {
+
+
         return userRepository.findById(userId)
                 .map(owner -> {
+                    if (owner.getShop() != null && owner.getShop().getId() != null) {
+                        throw new EntityGetException("Shop already exists");
+                    }
                     Shop shop = shopCreateEditMapper.map(shopCreateDto);
                     shop.setUser(owner);
                     return shopRepository.save(shop);
