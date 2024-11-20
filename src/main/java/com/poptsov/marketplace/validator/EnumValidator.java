@@ -3,7 +3,7 @@ package com.poptsov.marketplace.validator;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
+public class EnumValidator implements ConstraintValidator<ValidEnum, Enum<?>> {
 
     private Enum<?>[] enumValues;
 
@@ -13,15 +13,17 @@ public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext context) {
+    public boolean isValid(Enum<?> value, ConstraintValidatorContext context) {
+        System.out.println("Validating enum value: " + value);
         if (value == null) {
-            return true; // или false, в зависимости от ваших требований
+            return false;
         }
         for (Enum<?> enumValue : enumValues) {
-            if (enumValue.name().equals(value)) {
+            if (enumValue.equals(value)) {
                 return true;
             }
         }
+        System.out.println("isValid return false");
         return false;
     }
 }

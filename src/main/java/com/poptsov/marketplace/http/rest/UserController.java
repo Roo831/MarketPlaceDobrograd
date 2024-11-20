@@ -69,10 +69,10 @@ public class UserController {
      */
 
     @GetMapping("/{id}/shop")
-    public ResponseEntity<List<ShopReadDto>> getShopsByUserId(@PathVariable Integer id) {
-        List<ShopReadDto> shops = shopService.getShopsByUserId(id);
+    public ResponseEntity<ShopReadDto> getShopByUserId(@PathVariable Integer id) {
+        ShopReadDto shop = shopService.getShopByUserId(id);
         // TODO: проверка владельца (Пользователь может получить доступ только к своему магазину)
-        return ResponseEntity.ok(shops);
+        return ResponseEntity.ok(shop);
     }
 
 }

@@ -1,9 +1,6 @@
 package com.poptsov.marketplace.mapper;
 
 import com.poptsov.marketplace.database.entity.User;
-import com.poptsov.marketplace.dto.UserEditDto;
-import com.poptsov.marketplace.dto.UserRoleDto;
-import com.poptsov.marketplace.mapper.Mapper;
 import org.springframework.stereotype.Component;
 
 @Component

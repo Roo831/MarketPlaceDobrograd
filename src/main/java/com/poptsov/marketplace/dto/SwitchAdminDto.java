@@ -1,19 +1,16 @@
 package com.poptsov.marketplace.dto;
 
-import com.poptsov.marketplace.database.entity.Role;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class UserRoleDto {
+public class SwitchAdminDto {
 
-    @NotNull(message = "Role cannot be Null")
-    private Role role;
-
+    @NotNull(message = "admin cannot be null")
+    private boolean admin;
 }

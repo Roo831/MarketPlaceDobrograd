@@ -1,24 +1,24 @@
 package com.poptsov.marketplace.dto;
 
-import com.poptsov.marketplace.validator.ValidEnum;
-import jakarta.validation.constraints.*;
 import com.poptsov.marketplace.database.entity.Specialization;
+import com.poptsov.marketplace.validator.ValidEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.*;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class ShopEditDto {
+public class ShopCreateEditDto {
 
     @NotBlank(message = "Shop name cannot be Blank")
-    private String shopName;
+    private String name;
 
     @NotBlank(message = "Address cannot be Blank")
     private String address;
 
-    @NotNull(message = "Specialization cannot be Blank")
+    @NotNull(message = "Specialization cannot be Null")
     @ValidEnum(enumClass = Specialization.class, message = "Invalid specialization value")
     private Specialization specialization;
 

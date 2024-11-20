@@ -23,13 +23,13 @@ public class ShopController {
      * Создать магазин и прикрепить его к пользователю
      *
      * @param userId Идентификатор пользователя,
-     * @param shopCreateDto Данные нового магазина
+     * @param shopCreateEditDto Данные нового магазина
      * @return ShopReadDto
      */
 
     @PostMapping("/create")
-    public ResponseEntity<ShopReadDto> createShop(@RequestParam Integer userId, @Validated @RequestBody ShopCreateDto shopCreateDto) {
-        ShopReadDto shopDto = shopService.createShop(userId, shopCreateDto);
+    public ResponseEntity<ShopReadDto> createShop(@RequestParam Integer userId, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
+        ShopReadDto shopDto = shopService.createShop(userId, shopCreateEditDto);
         return ResponseEntity.ok(shopDto);
     }
 
@@ -50,13 +50,14 @@ public class ShopController {
      * Редактировать данные магазина
      *
      * @param id, Идентификатор магазина
-     * @param shopEditDto Вносимые изменения
+     * @param shopCreateEditDto Вносимые изменения
      * @return ShopReadDto
      */
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ShopReadDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopEditDto shopEditDto) {
-        ShopReadDto updatedShopDto = shopService.editShop(id, shopEditDto);
+    public ResponseEntity<ShopReadDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
+        System.out.println("Received request to edit shop with ID: " + id + " and DTO: " + shopCreateEditDto);
+        ShopReadDto updatedShopDto = shopService.editShop(id, shopCreateEditDto);
         return ResponseEntity.ok(updatedShopDto);
     }
 
@@ -68,9 +69,11 @@ public class ShopController {
      */
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Boolean> deleteShop(@PathVariable Integer id) {
-        boolean isDeleted = shopService.deleteShop(id);
-        return ResponseEntity.ok(isDeleted);
+    public ResponseEntity<Void> deleteShop(@PathVariable Integer id) {
+        if(shopService.deleteShop(id))
+        return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.notFound().build();
     }
 
     /**
@@ -107,9 +110,9 @@ public class ShopController {
      */
 
     @PatchMapping("/{id}/status")
-    public ResponseEntity<Boolean> switchActiveStatus(@PathVariable Integer id, @Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
-        boolean isActive = shopService.switchActiveStatus(id, shopEditStatusDto);
-        return ResponseEntity.ok(isActive);
+    public ResponseEntity<ShopReadDto> switchActiveStatus(@PathVariable Integer id, @Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
+       ShopReadDto shop = shopService.switchActiveStatus(id, shopEditStatusDto);
+        return ResponseEntity.ok(shop);
     }
 
 }

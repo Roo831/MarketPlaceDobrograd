@@ -1,9 +1,7 @@
 package com.poptsov.marketplace.http.rest;
 
-import com.poptsov.marketplace.dto.OrderReadDto;
-import com.poptsov.marketplace.dto.ShopReadDto;
-import com.poptsov.marketplace.dto.UserReadDto;
-import com.poptsov.marketplace.dto.UserRoleDto;
+import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.service.BannedService;
 import com.poptsov.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminController {
 
+    private final BannedService bannedService;
     private final UserService userService;
 
     /**
@@ -41,17 +40,6 @@ public class AdminController {
         return ResponseEntity.ok( userService.getUserById(id));
     }
 
-    /**
-     * Изменить роль пользователю
-     * @param id Идентификатор пользователя,
-     * @param userRoleDto Новая роль
-     * @return UserReadDto
-     */
-
-    @PatchMapping("/users/{id}")
-    public ResponseEntity<UserReadDto> changeRole(@PathVariable Integer id, @Validated @RequestBody UserRoleDto userRoleDto) {
-        return ResponseEntity.ok(userService.updateUser(id, userRoleDto));
-    }
 
     /**
      * Получить магазин пользователя
@@ -76,9 +64,63 @@ public class AdminController {
     }
 
     /**
-     * Получить заказ
-     * @param id Идентификатор пользователя
-     * @return OrderReadDto
+     * Изменить роль пользователю
+     * @param id Идентификатор пользователя,
+     * @param switchAdminDto true/false
+     * @return UserReadDto
      */
+
+    @PatchMapping("/users/{id}/makeAdmin")
+    public ResponseEntity<UserReadDto> switchAdmin(@PathVariable Integer id, @Validated @RequestBody SwitchAdminDto switchAdminDto) {
+        return ResponseEntity.ok(userService.updateUser(id, switchAdminDto));
+    }
+
+    /**
+     * Забанить пользователя
+     * @param id Идентификатор пользователя,
+     * @param banCreateDto причина бана
+     * @return BanReadDto
+     */
+
+    @PatchMapping("/users/{id}/ban")
+    public ResponseEntity<BanReadDto> banUser(@PathVariable Integer id, @Validated @RequestBody BanCreateDto banCreateDto) {
+        return ResponseEntity.ok(bannedService.createBanned(id, banCreateDto));
+    }
+
+    /**
+     * Разбанить пользователя
+     * @param id Идентификатор пользователя,
+     * @return UserReadDto
+     */
+
+    @DeleteMapping("/users/{id}/unban")
+    public ResponseEntity<UserReadDto> unbanUser(@PathVariable Integer id) {
+        return ResponseEntity.ok(bannedService.deleteBanned(id)); // TODO: реализовать разбан
+    }
+
+    /**
+     * Получить список забаненных
+     * @return List<BanReadDto>
+     */
+
+    @GetMapping("/users/banned")
+    public ResponseEntity<List<BanReadDto>> listOfBanned(){
+       return ResponseEntity.ok(bannedService.getAllBanned()); // TODO: реализовать список забаненных
+    }
+
+
+    /**
+     * Получить забаненного по идентификатору
+     * @param id Идентификатор пользователя,
+     * @return BanReadDto
+     */
+    @GetMapping("/users/banned/{id}")
+    public ResponseEntity<BanReadDto> getBannedById(@PathVariable Integer id){
+       return ResponseEntity.ok(bannedService.getBannedById(id)); // TODO: реализовать список забаненных
+
+    }
+
+
+
 
 }
