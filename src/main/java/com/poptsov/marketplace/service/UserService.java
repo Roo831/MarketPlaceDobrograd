@@ -33,8 +33,6 @@ public class UserService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final UserReadMapper userReadMapper;
-    private final UserEditMapper userEditMapper;
-    private final UserRoleMapper userRoleMapper;
     private final ShopReadMapper shopReadMapper;
     private final OrderReadMapper orderReadMapper;
 
