@@ -2,9 +2,10 @@ package com.poptsov.marketplace.service;
 
 
 import com.poptsov.marketplace.database.entity.Order;
+import com.poptsov.marketplace.database.entity.Role;
 import com.poptsov.marketplace.database.entity.User;
+import com.poptsov.marketplace.database.repository.BannedRepository;
 import com.poptsov.marketplace.database.repository.OrderRepository;
-import com.poptsov.marketplace.database.repository.ShopRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.exceptions.EntityGetException;
@@ -34,7 +35,6 @@ public class UserService {
     private final UserReadMapper userReadMapper;
     private final UserEditMapper userEditMapper;
     private final UserRoleMapper userRoleMapper;
-    private final ShopRepository shopRepository;
     private final ShopReadMapper shopReadMapper;
     private final OrderReadMapper orderReadMapper;
 
@@ -70,18 +70,28 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto updateUser(Integer id, UserEditDto userEditDto) {
-        return Optional.of(userRepository.save(userEditMapper.map(id, userEditDto))) // обновить пользователя
-                .map(userReadMapper::map)
-                .orElseThrow(() -> new EntityUpdateException("Failed to update user with id: " + id));
+    public UserReadDto updateUser (Integer id, UserEditDto userEditDto) {
+        User userToUpdate = userRepository.findById(id)
+                .orElseThrow(() -> new EntityGetException("User  not found with id: " + id));
+
+
+        userToUpdate.setFirstname(userEditDto.getFirstname());
+        userToUpdate.setLastname(userEditDto.getLastname());
+
+        return userReadMapper.map(userRepository.save(userToUpdate));
     }
 
     @Transactional
-    public UserReadDto updateUser(Integer id, UserRoleDto userRoleDto) {
+    public UserReadDto updateUser(Integer id, SwitchAdminDto switchAdminDto) {
 
-        return Optional.of(userRepository.save(userRoleMapper.map(id, userRoleDto)))
-                .map(userReadMapper::map)
-                .orElseThrow(() -> new EntityUpdateException("Failed to update user with id: " + id));
+        User userToUpdate = userRepository.findById(id)
+                .orElseThrow(() -> new EntityGetException("User  not found with id: " + id));
+        userToUpdate.setIsAdmin(switchAdminDto.isAdmin());
+        if(switchAdminDto.isAdmin()) {
+            userToUpdate.setRole(Role.admin);
+        } else
+            userToUpdate.setRole(Role.user);
+        return userReadMapper.map(userRepository.save(userToUpdate));
     }
 
     public UserReadDto getUserById(Integer id) {
@@ -122,6 +132,12 @@ public class UserService {
                 .orElseThrow(() -> new EntityGetException("Failed to get orders for user with id: " + id)); // Выбрасываем исключение, если пользователь не найден
     }
 
+    public boolean isUserBanned(String username) {
+        // Получаем пользователя по имени, используя Optional
+        return userRepository.findByUsername(username)
+                .map(User::getIsBanned)
+                .orElse(false);
+    }
 }
 
 

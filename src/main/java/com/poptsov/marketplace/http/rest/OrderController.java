@@ -82,7 +82,7 @@ public class OrderController {
      * @return OrderReadDto
      */
 
-    @GetMapping("/{id}/getOwner")
+    @GetMapping("/{id}/owner")
     public ResponseEntity<UserReadDto> getOwnerByOrderId(@PathVariable Integer id) {
         UserReadDto ownerDto = userService.getOwnerByOrderId(id);
         return ResponseEntity.ok(ownerDto);
@@ -95,7 +95,7 @@ public class OrderController {
      * @return ShopReadDto
      */
 
-    @GetMapping("/{id}/getShop")
+    @GetMapping("/{id}/shop")
     public ResponseEntity<ShopReadDto> getShopByOrderId(@PathVariable Integer id) {
         ShopReadDto shopReadDto = shopService.getShopByOrderId(id);
         return ResponseEntity.ok(shopReadDto);

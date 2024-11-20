@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 
 @Component
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class UserRegisterMapper implements Mapper<RegisterDto, User> {
                 .role(Role.user)
                 .isAdmin(false)
                 .isBanned(false)
+                .createdAt(new Date())
                 .build();
     }
 }
