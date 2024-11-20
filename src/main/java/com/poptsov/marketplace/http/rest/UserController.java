@@ -22,33 +22,56 @@ public class UserController {
     private final ShopService shopService;
 
 
-    @GetMapping("/")
-    public ResponseEntity<List<UserReadDto>> getUsers() {
-        List<UserReadDto> usersDto = userService.getAllUsers();
-        return ResponseEntity.ok(usersDto);
-    }
+    /**
+     * Получить пользователя по ид
+     * @param id Идентификатор пользователя
+     * @return UserReadDto
+     */
 
     @GetMapping("/{id}")
     public ResponseEntity<UserReadDto> getUserById(@PathVariable Integer id) {
         UserReadDto userReadDto = userService.getUserById(id);
-        return ResponseEntity.ok(userReadDto);
+        // TODO: проверка владельца (Пользователь может получить доступ только к своей странице)
+        return ResponseEntity.ok( userReadDto);
     }
+
+    /**
+     * Редактировать пользователя
+     * @param id Идентификатор пользователя
+     * @param userEditDto Вносимые изменения
+     * @return UserReadDto
+     */
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserReadDto> editUser (@PathVariable Integer id, @Validated @RequestBody UserEditDto userEditDto) {
         UserReadDto updatedUserReadDto = userService.updateUser(id, userEditDto);
+        // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
         return ResponseEntity.ok(updatedUserReadDto);
     }
+
+    /**
+     * Все заказы пользователя
+     * @param id Идентификатор пользователя
+     * @return List<OrderReadDto>
+     */
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<OrderReadDto>> getUserOrders(@PathVariable Integer id) {
         List<OrderReadDto> orders = orderService.getOrdersByUserId(id);
+        // TODO: проверка владельца (Пользователь может получить доступ только к своим заказам)
         return ResponseEntity.ok(orders);
     }
+
+    /**
+     * Магазин по ид владельца
+     * @param id Идентификатор пользователя
+     * @return ShopReadDto
+     */
 
     @GetMapping("/{id}/shop")
     public ResponseEntity<List<ShopReadDto>> getShopsByUserId(@PathVariable Integer id) {
         List<ShopReadDto> shops = shopService.getShopsByUserId(id);
+        // TODO: проверка владельца (Пользователь может получить доступ только к своему магазину)
         return ResponseEntity.ok(shops);
     }
 

@@ -29,11 +29,7 @@ public class OrderService {
         return false;
     }
 
-    public OrderReadDto setOrderStatusToProcessing(Integer id, OrderEditStatusDto orderEditStatusDto) {
-        return null;
-    }
-
-    public OrderReadDto setOrderStatusToCompleted(Integer id, OrderEditStatusDto orderEditStatusDto) {
+    public OrderReadDto editOrderStatus(Integer id, OrderEditStatusDto orderEditStatusDto) {
         return null;
     }
 }

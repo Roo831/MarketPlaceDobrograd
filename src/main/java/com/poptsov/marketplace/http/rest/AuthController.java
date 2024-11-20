@@ -17,6 +17,13 @@ public class AuthController {
 
   private final AuthenticationService authenticationService;
 
+    /**
+     * Регистрация пользователя
+     *
+     * @param request данные пользователя RegisterDto
+     * @return токен JwtAuthenticationResponse
+     */
+
     @PostMapping("/registration")
     public JwtAuthenticationResponse signUp(@RequestBody @Valid RegisterDto request) {
         System.out.println("AuthController register start");
@@ -24,9 +31,16 @@ public class AuthController {
 
     }
 
+    /**
+     * Аутентификация пользователя
+     *
+     * @param request данные пользователя LoginDto
+     * @return токен JwtAuthenticationResponse
+     */
+
     @PostMapping("/login")
     public JwtAuthenticationResponse signIn(@RequestBody @Valid LoginDto request) {
-        System.out.println("AuthController log in start");
+        System.out.println("AuthController login start");
         return authenticationService.signIn(request);
 
     }
