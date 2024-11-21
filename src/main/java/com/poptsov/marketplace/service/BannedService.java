@@ -29,7 +29,7 @@ public class BannedService {
     private final UserReadMapper userReadMapper;
 
     @Transactional
-    public BanReadDto createBanned(Integer userId, BanCreateDto banCreateDto) {
+    public BanReadDto createBanned(Integer userId, BanCreateDto banCreateDto) { // Admin
 
         User user = userRepository.findById(userId).orElseThrow(() -> new EntityGetException("User not found"));
         user.setIsBanned(true);
@@ -46,7 +46,7 @@ public class BannedService {
     }
 
     @Transactional
-    public UserReadDto deleteBanned(Integer id) {
+    public UserReadDto deleteBanned(Integer id) { // Admin
         Banned banned = bannedRepository.findById(id)
                 .orElseThrow(() -> new EntityGetException("Banned not found"));
 
@@ -64,11 +64,11 @@ public class BannedService {
         return userReadMapper.map(user);
     }
 
-    public List<BanReadDto> getAllBanned() {
+    public List<BanReadDto> getAllBanned() { // Admin
         return bannedRepository.findAll().stream().map(bannedReadMapper::map).toList();
     }
 
-    public BanReadDto getBannedById(Integer id) {
+    public BanReadDto getBannedById(Integer id) { // Admin
         return bannedReadMapper.map(bannedRepository.findById(id).orElseThrow(() -> new EntityGetException("Banned not found")));
     }
 }
