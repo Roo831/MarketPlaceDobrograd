@@ -45,16 +45,17 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopReadDto switchActiveStatus(Integer id, ShopEditStatusDto shopEditStatusDto) {
+    public ShopReadDto switchActiveStatusOfMyShop( ShopEditStatusDto shopEditStatusDto) {
 
-        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
-        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
+        User user = userService.getCurrentUser();
+        Shop shop = user.getShop();
 
-        Shop shopToUpdate = shopRepository.findById(id)
-                .orElseThrow(() -> new EntityGetException("Shop not found with id: " + id));
+        if(shop == null) {
+            throw new EntityGetException("No shop found");
+        }
 
-        shopToUpdate.setActive(shopEditStatusDto.isActive());
-        return shopReadMapper.map(shopRepository.save(shopToUpdate));
+        shop.setActive(shopEditStatusDto.isActive());
+        return shopReadMapper.map(shopRepository.save(shop));
     }
 
     @Transactional
@@ -75,30 +76,27 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopReadDto editShop(Integer id, ShopCreateEditDto shopCreateEditDto) {
+    public ShopReadDto editMyShop(ShopCreateEditDto shopCreateEditDto) {
 
-        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
-        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
+       User currentUser = userService.getCurrentUser();
 
-        Shop shopToUpdate = shopRepository.findById(id)
-                .orElseThrow(() -> new EntityGetException("Shop not found with id: " + id));
-
-        shopToUpdate.setName(shopCreateEditDto.getName());
-        shopToUpdate.setAddress(shopCreateEditDto.getAddress());
-        shopToUpdate.setSpecialization(shopCreateEditDto.getSpecialization());
-        shopToUpdate.setDescription(shopCreateEditDto.getDescription());
-
+       Shop shopToUpdate = currentUser.getShop();
+        if(shopToUpdate == null) {
+            throw new EntityGetException("Shop not found");
+        }
+       shopCreateEditMapper.map(shopCreateEditDto, shopToUpdate);
         return shopReadMapper.map(shopRepository.save(shopToUpdate));
     }
 
     @Transactional
-    public boolean deleteShop(Integer id) {
-        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
-        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
-        if (shopRepository.existsById(id)) {
-            shopRepository.deleteShopById(id);
-            return true;
-        } else return false;
+    public boolean deleteMyShop() {
+      User currentUser = userService.getCurrentUser();
+      Shop shopToDelete = currentUser.getShop();
+      if(shopToDelete == null) {
+          return false;
+      }
+      shopRepository.delete(shopToDelete);
+      return true;
     }
 
     public ShopReadDto getMyShop() {
