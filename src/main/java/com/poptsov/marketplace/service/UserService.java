@@ -1,20 +1,16 @@
 package com.poptsov.marketplace.service;
 
-
 import com.poptsov.marketplace.database.entity.Order;
 import com.poptsov.marketplace.database.entity.Role;
 import com.poptsov.marketplace.database.entity.User;
-import com.poptsov.marketplace.database.repository.BannedRepository;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.exceptions.EntityGetException;
-import com.poptsov.marketplace.exceptions.EntityUpdateException;
 import com.poptsov.marketplace.exceptions.UserAlreadyExistException;
 import com.poptsov.marketplace.mapper.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -131,7 +127,6 @@ public class UserService {
     }
 
     public boolean isUserBanned(String username) {
-        // Получаем пользователя по имени, используя Optional
         return userRepository.findByUsername(username)
                 .map(User::getIsBanned)
                 .orElse(false);
