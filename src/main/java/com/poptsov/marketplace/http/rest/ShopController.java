@@ -29,6 +29,7 @@ public class ShopController {
 
     @PostMapping("/create")
     public ResponseEntity<ShopReadDto> createShop(@RequestParam Integer userId, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
+        // TODO: проверка владельца (Пользователь может создать только свой магазин)
         ShopReadDto shopDto = shopService.createShop(userId, shopCreateEditDto);
         return ResponseEntity.ok(shopDto);
     }
@@ -56,7 +57,7 @@ public class ShopController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<ShopReadDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
-        System.out.println("Received request to edit shop with ID: " + id + " and DTO: " + shopCreateEditDto);
+        // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
         ShopReadDto updatedShopDto = shopService.editShop(id, shopCreateEditDto);
         return ResponseEntity.ok(updatedShopDto);
     }
@@ -70,10 +71,8 @@ public class ShopController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteShop(@PathVariable Integer id) {
-        if(shopService.deleteShop(id))
-        return ResponseEntity.noContent().build();
-        else
-            return ResponseEntity.notFound().build();
+        // TODO: проверка владельца (Только хозяин магазина может его удалить)
+        return shopService.deleteShop(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
     /**
@@ -84,6 +83,7 @@ public class ShopController {
      */
 
     @GetMapping("/{id}/orders")
+    // TODO: проверка владельца (Только хозяин магазина может получить его заказы)
     public ResponseEntity<List<OrderReadDto>> getShopOrders(@PathVariable Integer id) {
         List<OrderReadDto> orders = orderService.getOrdersByShopId(id);
         return ResponseEntity.ok(orders);
@@ -111,6 +111,7 @@ public class ShopController {
 
     @PatchMapping("/{id}/status")
     public ResponseEntity<ShopReadDto> switchActiveStatus(@PathVariable Integer id, @Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
+        // TODO: проверка владельца (Только владелец магазина может менять статус своего магазина)
        ShopReadDto shop = shopService.switchActiveStatus(id, shopEditStatusDto);
         return ResponseEntity.ok(shop);
     }

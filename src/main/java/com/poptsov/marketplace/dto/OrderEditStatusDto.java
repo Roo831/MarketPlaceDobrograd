@@ -6,7 +6,6 @@ import lombok.Data;
 import jakarta.validation.constraints.*;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor

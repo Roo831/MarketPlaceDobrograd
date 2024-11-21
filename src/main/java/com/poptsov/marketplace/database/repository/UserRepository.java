@@ -3,9 +3,6 @@ package com.poptsov.marketplace.database.repository;
 
 import com.poptsov.marketplace.database.entity.User;
 
-import com.poptsov.marketplace.mapper.UserEditMapper;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

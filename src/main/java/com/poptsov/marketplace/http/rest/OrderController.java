@@ -32,6 +32,7 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<OrderReadDto> createOrder(@RequestParam Integer userId, @RequestParam Integer shopId, @Validated @RequestBody OrderCreateDto orderCreateDto) {
+        // TODO: проверка владельца (Пользователь может создать заказ только себе, но для любого магазина)
         OrderReadDto orderReadDto = orderService.createOrder(userId, shopId, orderCreateDto);
         return ResponseEntity.ok(orderReadDto);
     }
@@ -45,6 +46,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderReadDto> getOrderById(@PathVariable Integer id) {
+        // TODO: проверка владельца (Проверка не нужна, так как реализовать сложно, затрата ресурсов большая, а информация бесполезна)
         OrderReadDto orderReadDto = orderService.getOrderById(id);
         return ResponseEntity.ok(orderReadDto);
     }
@@ -58,6 +60,7 @@ public class OrderController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<OrderReadDto>editOrderStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
+        // TODO: проверка владельца (Пользователь может редактировать только свой заказ или заказ своего магазина)
         OrderReadDto orderReadDto = orderService.editOrderStatus(id, orderEditStatusDto);
         return ResponseEntity.ok(orderReadDto);
     }
@@ -71,6 +74,7 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
+        // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
         boolean isDeleted = orderService.deleteOrder(id);
         return ResponseEntity.ok(isDeleted);
     }

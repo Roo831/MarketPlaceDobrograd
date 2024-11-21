@@ -8,13 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class AdminController { // Дополнительные проверки авторизации не нужны, так как к контроллерам имеет доступ только администраторы
 
     private final BannedService bannedService;
     private final UserService userService;
@@ -95,7 +94,7 @@ public class AdminController {
 
     @DeleteMapping("/users/{id}/unban")
     public ResponseEntity<UserReadDto> unbanUser(@PathVariable Integer id) {
-        return ResponseEntity.ok(bannedService.deleteBanned(id)); // TODO: реализовать разбан
+        return ResponseEntity.ok(bannedService.deleteBanned(id));
     }
 
     /**
@@ -105,7 +104,7 @@ public class AdminController {
 
     @GetMapping("/users/banned")
     public ResponseEntity<List<BanReadDto>> listOfBanned(){
-       return ResponseEntity.ok(bannedService.getAllBanned()); // TODO: реализовать список забаненных
+       return ResponseEntity.ok(bannedService.getAllBanned());
     }
 
 
@@ -116,11 +115,8 @@ public class AdminController {
      */
     @GetMapping("/users/banned/{id}")
     public ResponseEntity<BanReadDto> getBannedById(@PathVariable Integer id){
-       return ResponseEntity.ok(bannedService.getBannedById(id)); // TODO: реализовать список забаненных
+       return ResponseEntity.ok(bannedService.getBannedById(id));
 
     }
-
-
-
 
 }
