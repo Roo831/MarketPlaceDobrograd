@@ -2,15 +2,19 @@ package com.poptsov.marketplace.http.rest;
 
 
 import com.poptsov.marketplace.dto.*;
+
 import com.poptsov.marketplace.service.OrderService;
 import com.poptsov.marketplace.service.ShopService;
 import com.poptsov.marketplace.service.UserService;
+import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/users")
@@ -30,8 +34,8 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserReadDto> getUserById(@PathVariable Integer id) {
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), id); // TODO: проверка владельца (Пользователь может получить доступ только к своей странице)
         UserReadDto userReadDto = userService.getUserById(id);
-        // TODO: проверка владельца (Пользователь может получить доступ только к своей странице)
         return ResponseEntity.ok( userReadDto);
     }
 
@@ -44,8 +48,8 @@ public class UserController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<UserReadDto> editUser (@PathVariable Integer id, @Validated @RequestBody UserEditDto userEditDto) {
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), id); // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
         UserReadDto updatedUserReadDto = userService.updateUser(id, userEditDto);
-        // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
         return ResponseEntity.ok(updatedUserReadDto);
     }
 
@@ -57,8 +61,8 @@ public class UserController {
 
     @GetMapping("/{id}/orders")
     public ResponseEntity<List<OrderReadDto>> getUserOrders(@PathVariable Integer id) {
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), id);// TODO: проверка владельца (Пользователь может получить доступ только к своим заказам)
         List<OrderReadDto> orders = orderService.getOrdersByUserId(id);
-        // TODO: проверка владельца (Пользователь может получить доступ только к своим заказам)
         return ResponseEntity.ok(orders);
     }
 
@@ -70,10 +74,11 @@ public class UserController {
 
     @GetMapping("/{id}/shop")
     public ResponseEntity<ShopReadDto> getShopByUserId(@PathVariable Integer id) {
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), id); // TODO: проверка владельца (Пользователь может получить доступ только к своему магазину)
         ShopReadDto shop = shopService.getShopByUserId(id);
-        // TODO: проверка владельца (Пользователь может получить доступ только к своему магазину)
         return ResponseEntity.ok(shop);
     }
+
 
 }
 

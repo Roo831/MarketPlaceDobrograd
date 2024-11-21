@@ -1,11 +1,18 @@
 package com.poptsov.marketplace.http.rest;
 
 
+import com.poptsov.marketplace.database.entity.Shop;
+import com.poptsov.marketplace.database.repository.ShopRepository;
+import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.service.OrderService;
 import com.poptsov.marketplace.service.ShopService;
+import com.poptsov.marketplace.service.UserService;
+import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +25,8 @@ public class ShopController {
 
     private final ShopService shopService;
     private final OrderService orderService;
+    private final ShopRepository shopRepository;
+    private final UserService userService;
 
     /**
      * Создать магазин и прикрепить его к пользователю
@@ -28,8 +37,9 @@ public class ShopController {
      */
 
     @PostMapping("/create")
+    @Transactional
     public ResponseEntity<ShopReadDto> createShop(@RequestParam Integer userId, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
-        // TODO: проверка владельца (Пользователь может создать только свой магазин)
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), userId);// TODO: проверка владельца (Пользователь может создать только свой магазин)
         ShopReadDto shopDto = shopService.createShop(userId, shopCreateEditDto);
         return ResponseEntity.ok(shopDto);
     }
@@ -56,8 +66,12 @@ public class ShopController {
      */
 
     @PatchMapping("/{id}")
+    @Transactional
     public ResponseEntity<ShopReadDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
-        // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
+        // TODO: проверка владельца (Только хозяин магазина может редактировать его)
+       Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
+
         ShopReadDto updatedShopDto = shopService.editShop(id, shopCreateEditDto);
         return ResponseEntity.ok(updatedShopDto);
     }
@@ -70,8 +84,10 @@ public class ShopController {
      */
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> deleteShop(@PathVariable Integer id) {
-        // TODO: проверка владельца (Только хозяин магазина может его удалить)
+        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId); // TODO: проверка владельца (Только хозяин магазина может его удалить)
         return shopService.deleteShop(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
@@ -83,8 +99,10 @@ public class ShopController {
      */
 
     @GetMapping("/{id}/orders")
-    // TODO: проверка владельца (Только хозяин магазина может получить его заказы)
+    @Transactional
     public ResponseEntity<List<OrderReadDto>> getShopOrders(@PathVariable Integer id) {
+        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
         List<OrderReadDto> orders = orderService.getOrdersByShopId(id);
         return ResponseEntity.ok(orders);
     }
@@ -110,8 +128,10 @@ public class ShopController {
      */
 
     @PatchMapping("/{id}/status")
+    @Transactional
     public ResponseEntity<ShopReadDto> switchActiveStatus(@PathVariable Integer id, @Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
-        // TODO: проверка владельца (Только владелец магазина может менять статус своего магазина)
+        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId); // TODO: проверка владельца (Только владелец магазина может менять статус своего магазина)
        ShopReadDto shop = shopService.switchActiveStatus(id, shopEditStatusDto);
         return ResponseEntity.ok(shop);
     }
