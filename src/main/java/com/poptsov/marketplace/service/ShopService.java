@@ -87,9 +87,7 @@ public class ShopService {
 
     @Transactional(noRollbackFor = Exception.class)
     public boolean deleteShop(Integer id) {
-        System.out.println("Attempting to delete shop with id: " + id);
         if (shopRepository.existsById(id)) {
-            System.out.println("try to shopRepository.deleteById(id)... " + id);
             shopRepository.deleteShopById(id);
             return true;
         } else return false;
