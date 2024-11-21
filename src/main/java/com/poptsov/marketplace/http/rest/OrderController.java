@@ -1,13 +1,21 @@
 package com.poptsov.marketplace.http.rest;
 
+import com.poptsov.marketplace.database.entity.Shop;
+import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.exceptions.AuthorizationException;
+import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.service.OrderService;
 import com.poptsov.marketplace.service.ShopService;
 import com.poptsov.marketplace.service.UserService;
+import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/orders")
@@ -17,6 +25,7 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
     private final ShopService shopService;
+    private final OrderRepository orderRepository;
 
 
     /**
@@ -31,8 +40,9 @@ public class OrderController {
      */
 
     @PostMapping("/create")
+    @Transactional
     public ResponseEntity<OrderReadDto> createOrder(@RequestParam Integer userId, @RequestParam Integer shopId, @Validated @RequestBody OrderCreateDto orderCreateDto) {
-        // TODO: проверка владельца (Пользователь может создать заказ только себе, но для любого магазина)
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), userId);// TODO: проверка владельца (Пользователь может создать заказ только себе, но для любого магазина)
         OrderReadDto orderReadDto = orderService.createOrder(userId, shopId, orderCreateDto);
         return ResponseEntity.ok(orderReadDto);
     }
@@ -59,8 +69,11 @@ public class OrderController {
      */
 
     @PatchMapping("/{id}")
+    @Transactional
     public ResponseEntity<OrderReadDto>editOrderStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        // TODO: проверка владельца (Пользователь может редактировать только свой заказ или заказ своего магазина)
+        Integer shopOwnerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getShop().getUser().getId();
+        // TODO: проверка владельца (Пользователь может редактировать только заказ своего магазина)
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), shopOwnerId);
         OrderReadDto orderReadDto = orderService.editOrderStatus(id, orderEditStatusDto);
         return ResponseEntity.ok(orderReadDto);
     }
@@ -73,8 +86,13 @@ public class OrderController {
      */
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
-        // TODO: проверка владельца (Пользователь может редактировать только свою страницу)
+        Integer ownerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getUser().getId();
+        Integer shopOwnerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getShop().getUser().getId();
+        if (!Objects.equals(ownerId, userService.getCurrentUser ().getId()) && !Objects.equals(shopOwnerId, userService.getCurrentUser ().getId())) {
+            throw new AuthorizationException("Вы не можете удалить этот заказ.");
+        }
         boolean isDeleted = orderService.deleteOrder(id);
         return ResponseEntity.ok(isDeleted);
     }

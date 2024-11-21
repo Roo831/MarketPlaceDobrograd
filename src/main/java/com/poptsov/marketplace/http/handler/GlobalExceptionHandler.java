@@ -3,6 +3,7 @@ package com.poptsov.marketplace.http.handler;
 import com.poptsov.marketplace.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -45,7 +46,10 @@ public class GlobalExceptionHandler {
             EntityUpdateException.class,
             EntityGetException.class,
             EntityCreateException.class,
-            UsernameNotFoundException.class
+            UsernameNotFoundException.class,
+            AuthenticationException.class,
+            AuthorizationException.class
+
     })
     public ResponseEntity<Map<String, String>> handleCustomExceptions(RuntimeException ex) {
         return createErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
