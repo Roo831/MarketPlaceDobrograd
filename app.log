@@ -24,3 +24,6 @@
 2024-11-21T11:13:06.551+05:00  WARN 14008 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
 2024-11-21T11:13:07.729+05:00  INFO 14008 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
 2024-11-21T11:13:07.744+05:00  INFO 14008 --- [main] c.p.marketplace.MarketplaceApplication   : Started MarketplaceApplication in 8.076 seconds (process running for 9.062)
+2024-11-21T11:14:33.633+05:00  INFO 14008 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-21T11:14:33.633+05:00  INFO 14008 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-21T11:14:33.634+05:00  INFO 14008 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms

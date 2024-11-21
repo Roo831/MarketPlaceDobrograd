@@ -85,7 +85,7 @@ public class ShopService {
         return shopReadMapper.map(shopRepository.save(shopToUpdate));
     }
 
-    @Transactional(noRollbackFor = Exception.class)
+    @Transactional
     public boolean deleteShop(Integer id) {
         if (shopRepository.existsById(id)) {
             shopRepository.deleteShopById(id);

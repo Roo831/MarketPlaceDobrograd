@@ -10,6 +10,7 @@ import com.poptsov.marketplace.dto.BanReadDto;
 import com.poptsov.marketplace.dto.UserReadDto;
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.mapper.BannedReadMapper;
+import com.poptsov.marketplace.mapper.UserReadMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ public class BannedService {
     private final BannedReadMapper bannedReadMapper;
     private final BannedRepository bannedRepository;
     private final UserRepository userRepository;
+    private final UserReadMapper userReadMapper;
 
     @Transactional
     public BanReadDto createBanned(Integer userId, BanCreateDto banCreateDto) {
@@ -43,15 +45,30 @@ public class BannedService {
         return bannedReadMapper.map(banned);
     }
 
+    @Transactional
     public UserReadDto deleteBanned(Integer id) {
-        return null;
+        Banned banned = bannedRepository.findById(id)
+                .orElseThrow(() -> new EntityGetException("Banned not found"));
+
+        User user = banned.getUser();
+        if (user != null) {
+            user.setIsBanned(false);
+            user.setIsAdmin(false);
+            user.setRole(Role.user);
+        } else {
+            throw new EntityGetException("User  associated with banned not found");
+        }
+
+        bannedRepository.deleteBannedById(id);
+
+        return userReadMapper.map(user);
     }
 
     public List<BanReadDto> getAllBanned() {
-        return null;
+        return bannedRepository.findAll().stream().map(bannedReadMapper::map).toList();
     }
 
     public BanReadDto getBannedById(Integer id) {
-        return null;
+        return bannedReadMapper.map(bannedRepository.findById(id).orElseThrow(() -> new EntityGetException("Banned not found")));
     }
 }

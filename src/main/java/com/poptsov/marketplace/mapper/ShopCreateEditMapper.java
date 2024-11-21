@@ -1,7 +1,6 @@
 package com.poptsov.marketplace.mapper;
 
 import com.poptsov.marketplace.database.entity.Shop;
-import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.dto.ShopCreateEditDto;
 import com.poptsov.marketplace.dto.ShopEditStatusDto;
 import org.springframework.stereotype.Component;
