@@ -24,7 +24,7 @@ public class AdminController { // Дополнительные проверки 
      */
 
     @GetMapping("/users")
-    public ResponseEntity<List<UserReadDto>> getUsers() {
+    public ResponseEntity<List<UserReadDto>> getUsers() { // TODO: Сортировка по алфавиту
         return ResponseEntity.ok( userService.getAllUsers());
     }
 
@@ -63,7 +63,7 @@ public class AdminController { // Дополнительные проверки 
     }
 
     /**
-     * Изменить роль пользователю
+     * Переключить админа
      * @param id Идентификатор пользователя,
      * @param switchAdminDto true/false
      * @return UserReadDto

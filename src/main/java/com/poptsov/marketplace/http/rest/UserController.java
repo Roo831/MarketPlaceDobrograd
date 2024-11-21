@@ -30,7 +30,7 @@ public class UserController {
      */
 
     @GetMapping("/me")
-    public ResponseEntity<UserReadDto> geMyself() {
+    public ResponseEntity<UserReadDto> getMyself() {
         UserReadDto userReadDto = userService.getMyself();
         return ResponseEntity.ok( userReadDto);
     }
@@ -41,7 +41,7 @@ public class UserController {
      * @return UserReadDto
      */
 
-    @PatchMapping("/edit")
+    @PatchMapping("/me/edit")
     public ResponseEntity<UserReadDto> editUser (@Validated @RequestBody UserEditDto userEditDto) {
         UserReadDto updatedUserReadDto = userService.updateUser(userEditDto);
         return ResponseEntity.ok(updatedUserReadDto);
@@ -54,7 +54,7 @@ public class UserController {
 
     @GetMapping("/me/orders")
     public ResponseEntity<List<OrderReadDto>> getUserOrders() {
-        List<OrderReadDto> orders = orderService.getOrdersByUserId();
+        List<OrderReadDto> orders = orderService.getMyOrders();
         return ResponseEntity.ok(orders);
     }
 

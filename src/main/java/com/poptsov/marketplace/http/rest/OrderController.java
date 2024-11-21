@@ -1,22 +1,16 @@
 package com.poptsov.marketplace.http.rest;
 
-import com.poptsov.marketplace.database.entity.Shop;
-import com.poptsov.marketplace.database.entity.User;
-import com.poptsov.marketplace.database.repository.OrderRepository;
+
 import com.poptsov.marketplace.dto.*;
-import com.poptsov.marketplace.exceptions.AuthorizationException;
-import com.poptsov.marketplace.exceptions.EntityGetException;
+
 import com.poptsov.marketplace.service.OrderService;
 import com.poptsov.marketplace.service.ShopService;
 import com.poptsov.marketplace.service.UserService;
-import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/orders")

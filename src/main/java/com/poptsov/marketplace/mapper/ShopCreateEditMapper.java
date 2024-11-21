@@ -43,4 +43,11 @@ public class ShopCreateEditMapper  implements Mapper<ShopCreateEditDto, Shop>{
 
     }
 
+    public void map(Shop shopToUpdate, ShopCreateEditDto shopCreateEditDto) {
+        shopToUpdate.setName(shopCreateEditDto.getName());
+        shopToUpdate.setAddress(shopCreateEditDto.getAddress());
+        shopToUpdate.setSpecialization(shopCreateEditDto.getSpecialization());
+        shopToUpdate.setDescription(shopCreateEditDto.getDescription());
+    }
+
 }

@@ -33,6 +33,55 @@ public class ShopController {
     }
 
     /**
+     * Получить свой магазин
+     *
+     * @return ShopReadDto
+     */
+
+    @GetMapping("/myShop")
+    public ResponseEntity<ShopReadDto> getMyShop() {
+        ShopReadDto shopDto = shopService.getMyShop();
+        return ResponseEntity.ok(shopDto);
+    }
+
+    /**
+     * Редактировать данные своего магазина
+     *
+     * @param shopCreateEditDto Вносимые изменения
+     * @return ShopReadDto
+     */
+
+    @PatchMapping("myShop/edit")
+    public ResponseEntity<ShopReadDto> editMyShop(@Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
+
+        ShopReadDto updatedShopDto = shopService.editMyShop(shopCreateEditDto);
+        return ResponseEntity.ok(updatedShopDto);
+    }
+
+    /**
+     * Удалить свой магазин
+     *
+     * @return true/false
+     */
+
+    @DeleteMapping("myShop/delete")
+    public ResponseEntity<Void> deleteMyShop() {
+        return shopService.deleteMyShop() ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
+    /**
+     * Получить все заказы своего магазина
+     *
+     * @return List<OrderReadDto>
+     */
+
+    @GetMapping("myShop/orders")
+    public ResponseEntity<List<OrderReadDto>> getMyShopOrders() {
+        List<OrderReadDto> orders = orderService.getOrdersOfMyShop();
+        return ResponseEntity.ok(orders);
+    }
+
+    /**
      * Получить магазин
      *
      * @param id Идентификатор магазина
@@ -43,46 +92,6 @@ public class ShopController {
     public ResponseEntity<ShopReadDto> getShopById(@PathVariable Integer id) {
         ShopReadDto shopDto = shopService.getShopById(id);
         return ResponseEntity.ok(shopDto);
-    }
-
-    /**
-     * Редактировать данные своего магазина
-     *
-     * @param id, Идентификатор магазина
-     * @param shopCreateEditDto Вносимые изменения
-     * @return ShopReadDto
-     */
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<ShopReadDto> editShop(@PathVariable Integer id, @Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
-
-        ShopReadDto updatedShopDto = shopService.editShop(id, shopCreateEditDto);
-        return ResponseEntity.ok(updatedShopDto);
-    }
-
-    /**
-     * Удалить свой магазин
-     *
-     * @param id Идентификатор магазина
-     * @return true/false
-     */
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteShop(@PathVariable Integer id) {
-        return shopService.deleteShop(id) ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
-    }
-
-    /**
-     * Получить все заказы своего магазина
-     *
-     * @param id Идентификатор магазина
-     * @return List<OrderReadDto>
-     */
-
-    @GetMapping("/{id}/orders")
-    public ResponseEntity<List<OrderReadDto>> getShopOrders(@PathVariable Integer id) {
-        List<OrderReadDto> orders = orderService.getOrdersByShopId(id);
-        return ResponseEntity.ok(orders);
     }
 
     /**
@@ -100,14 +109,13 @@ public class ShopController {
     /**
      * Изменить статус своего магазина
      *
-     * @param id Идентификатор магазина,
      * @param shopEditStatusDto Статус магазина shopEditStatusDto
      * @return ShopReadDto
      */
 
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<ShopReadDto> switchActiveStatus(@PathVariable Integer id, @Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
-       ShopReadDto shop = shopService.switchActiveStatus(id, shopEditStatusDto);
+    @PatchMapping("myShop/editStatus")
+    public ResponseEntity<ShopReadDto> switchActiveStatusOfMyShop(@Validated @RequestBody ShopEditStatusDto shopEditStatusDto) {
+       ShopReadDto shop = shopService.switchActiveStatusOfMyShop(shopEditStatusDto);
         return ResponseEntity.ok(shop);
     }
 

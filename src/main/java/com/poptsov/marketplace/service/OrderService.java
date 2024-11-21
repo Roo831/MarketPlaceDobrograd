@@ -33,14 +33,18 @@ public class OrderService {
     private final OrderCreateMapper orderCreateMapper;
     private final UserService userService;
 
-    public List<OrderReadDto> getOrdersByShopId(Integer id) {
-        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
-        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
-        Shop shop = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop with id: " + id + " not found"));
+    public List<OrderReadDto> getOrdersOfMyShop() {
+       User currentUser = userService.getCurrentUser();
+       Shop shop = currentUser.getShop();
+
+       if(shop == null) {
+           throw new EntityGetException("You have no shop");
+       }
+
         return shop.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
     }
 
-    public List<OrderReadDto> getOrdersByUserId() {
+    public List<OrderReadDto> getMyOrders() {
         User user = userService.getCurrentUser();
        return user.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
     }
@@ -70,7 +74,7 @@ public class OrderService {
         Integer ownerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getUser().getId();
         Integer shopOwnerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getShop().getUser().getId();
         if (!Objects.equals(ownerId, userService.getCurrentUser ().getId()) && !Objects.equals(shopOwnerId, userService.getCurrentUser ().getId())) {
-            throw new AuthorizationException("Вы не можете удалить этот заказ.");
+            throw new AuthorizationException("You cannot to delete this order");
         }
         if (orderRepository.existsById(id)) {
             orderRepository.deleteOrderById(id);
