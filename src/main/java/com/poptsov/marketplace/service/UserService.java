@@ -64,10 +64,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto updateUser (Integer id, UserEditDto userEditDto) {
-        User userToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new EntityGetException("User  not found with id: " + id));
-
+    public UserReadDto updateUser (UserEditDto userEditDto) {
+        User userToUpdate = getCurrentUser();
 
         userToUpdate.setFirstname(userEditDto.getFirstname());
         userToUpdate.setLastname(userEditDto.getLastname());
@@ -76,7 +74,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto updateUser(Integer id, SwitchAdminDto switchAdminDto) {
+    public UserReadDto updateUser(Integer id, SwitchAdminDto switchAdminDto) { // Admin
 
         User userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new EntityGetException("User  not found with id: " + id));
@@ -88,13 +86,18 @@ public class UserService {
         return userReadMapper.map(userRepository.save(userToUpdate));
     }
 
-    public UserReadDto getUserById(Integer id) {
+
+    public UserReadDto getMyself(){
+       return userReadMapper.map(getCurrentUser());
+    }
+
+    public UserReadDto getUserById(Integer id) { // Admin
         return userRepository.findUserById(id)
                 .map(userReadMapper::map)
                 .orElseThrow(() -> new EntityGetException("Failed to get user with id: " + id));
     }
 
-    public List<UserReadDto> getAllUsers() {
+    public List<UserReadDto> getAllUsers() {  // Admin
         return Optional.of(userRepository.findAll())
                 .filter(users -> !users.isEmpty())
                 .map(users -> users.stream()
@@ -110,14 +113,14 @@ public class UserService {
                 .orElseThrow(() -> new EntityGetException("Failed to get user for order with id: " + orderId));
     }
 
-    public ShopReadDto getShopByUserId(Integer id) {
+    public ShopReadDto getShopByUserId(Integer id) { // Admin
         return userRepository.findUserById(id)
                 .map(User::getShop)
                 .map(shopReadMapper::map)
                 .orElseThrow(() -> new EntityGetException("Failed to get shop with user id: " + id));
     }
 
-    public List<OrderReadDto> getOrdersByUserId(Integer id) {
+    public List<OrderReadDto> getOrdersByUserId(Integer id) {  //Admin
         return userRepository.findUserById(id)
                 .map(User::getOrders)
                 .map(orders -> orders.stream()

@@ -12,6 +12,7 @@ import com.poptsov.marketplace.dto.ShopReadDto;
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.mapper.ShopCreateEditMapper;
 import com.poptsov.marketplace.mapper.ShopReadMapper;
+import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ public class ShopService {
     private final ShopRepository shopRepository;
     private final ShopReadMapper shopReadMapper;
     private final ShopCreateEditMapper shopCreateEditMapper;
+    private final UserService userService;
 
     public List<ShopReadDto> getActiveShops() {
 
@@ -44,28 +46,28 @@ public class ShopService {
 
     @Transactional
     public ShopReadDto switchActiveStatus(Integer id, ShopEditStatusDto shopEditStatusDto) {
-        Shop shopToUpdate = shopRepository.findById(id)
-                .orElseThrow(() -> new EntityGetException("Shop not found with id: " + id)); // Получаем магазин в кеш Hibernate, если он существует
 
-        shopToUpdate.setActive(shopEditStatusDto.isActive()); // Устанавливаем статус магазина
-        return shopReadMapper.map(shopRepository.save(shopToUpdate)); // сохраняем обратно, завершая транзакцию
+        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
+
+        Shop shopToUpdate = shopRepository.findById(id)
+                .orElseThrow(() -> new EntityGetException("Shop not found with id: " + id));
+
+        shopToUpdate.setActive(shopEditStatusDto.isActive());
+        return shopReadMapper.map(shopRepository.save(shopToUpdate));
     }
 
     @Transactional
-    public ShopReadDto createShop(Integer userId, ShopCreateEditDto shopCreateDto) {
+    public ShopReadDto createShop(ShopCreateEditDto shopCreateDto) {
 
+        User currentUser = userService.getCurrentUser();
 
-        return userRepository.findById(userId)
-                .map(owner -> {
-                    if (owner.getShop() != null && owner.getShop().getId() != null) {
-                        throw new EntityGetException("Shop already exists");
-                    }
-                    Shop shop = shopCreateEditMapper.map(shopCreateDto);
-                    shop.setUser(owner);
-                    return shopRepository.save(shop);
-                })
-                .map(shopReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("User not found with id: " + userId));
+        if (currentUser.getShop() != null && currentUser.getShop().getId() != null) {
+            throw new EntityGetException("Shop already exists");
+        }
+        Shop shop = shopCreateEditMapper.map(shopCreateDto);
+        shop.setUser(currentUser);
+        return shopReadMapper.map(shopRepository.save(shop));
     }
 
     public ShopReadDto getShopById(Integer id) {
@@ -74,6 +76,10 @@ public class ShopService {
 
     @Transactional
     public ShopReadDto editShop(Integer id, ShopCreateEditDto shopCreateEditDto) {
+
+        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
+
         Shop shopToUpdate = shopRepository.findById(id)
                 .orElseThrow(() -> new EntityGetException("Shop not found with id: " + id));
 
@@ -87,17 +93,16 @@ public class ShopService {
 
     @Transactional
     public boolean deleteShop(Integer id) {
+        Integer ownerId = shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found")).getUser().getId();
+        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), ownerId);
         if (shopRepository.existsById(id)) {
             shopRepository.deleteShopById(id);
             return true;
         } else return false;
     }
 
-    public ShopReadDto getShopByUserId(Integer id) {
-        return userRepository.findUserById(id)
-                .map(User::getShop)
-                .map(shopReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("User not found with id, or shop aren't exists: " + id));
+    public ShopReadDto getMyShop() {
+        return shopReadMapper.map(userService.getCurrentUser().getShop());
     }
 
     public ShopReadDto getShopByOrderId(Integer id) {

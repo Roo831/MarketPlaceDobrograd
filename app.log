@@ -198,3 +198,119 @@ io.jsonwebtoken.ExpiredJwtException: JWT expired 34059373 milliseconds ago at 20
 2024-11-21T15:48:56.329+05:00  INFO 12632 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2024-11-21T15:48:56.331+05:00  INFO 12632 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2024-11-21T15:48:56.337+05:00  INFO 12632 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-11-21T16:11:55.003+05:00  INFO 11516 --- [main] c.p.marketplace.MarketplaceApplication   : Starting MarketplaceApplication using Java 17.0.12 with PID 11516 (C:\Users\user2\IdeaProjects\MarketPlaceDobrograd\target\classes started by user2 in C:\Users\user2\IdeaProjects\MarketPlaceDobrograd)
+2024-11-21T16:11:55.005+05:00 DEBUG 11516 --- [main] c.p.marketplace.MarketplaceApplication   : Running with Spring Boot v3.3.5, Spring v6.1.14
+2024-11-21T16:11:55.006+05:00  INFO 11516 --- [main] c.p.marketplace.MarketplaceApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-11-21T16:11:55.748+05:00  WARN 11516 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: java.lang.TypeNotPresentException: Type javax.servlet.http.HttpServletRequest not present
+2024-11-21T16:11:55.756+05:00  INFO 11516 --- [main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2024-11-21T16:11:55.775+05:00 ERROR 11516 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+java.lang.TypeNotPresentException: Type javax.servlet.http.HttpServletRequest not present
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:125) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.reifyTypeArguments(Reifier.java:68) ~[na:na]
+	at java.base/sun.reflect.generics.visitor.Reifier.visitClassTypeSignature(Reifier.java:138) ~[na:na]
+	at java.base/sun.reflect.generics.tree.ClassTypeSignature.accept(ClassTypeSignature.java:49) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.computeSuperInterfaces(ClassRepository.java:117) ~[na:na]
+	at java.base/sun.reflect.generics.repository.ClassRepository.getSuperInterfaces(ClassRepository.java:95) ~[na:na]
+	at java.base/java.lang.Class.getGenericInterfaces(Class.java:1211) ~[na:na]
+	at org.springframework.core.ResolvableType.getInterfaces(ResolvableType.java:517) ~[spring-core-6.1.14.jar:6.1.14]
+	at org.springframework.core.ResolvableType.as(ResolvableType.java:465) ~[spring-core-6.1.14.jar:6.1.14]
+	at org.springframework.core.ResolvableType.forClass(ResolvableType.java:1093) ~[spring-core-6.1.14.jar:6.1.14]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.getTargetType(PluginRegistriesBeanDefinitionRegistrar.java:101) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.plugin.core.config.PluginRegistriesBeanDefinitionRegistrar.registerBeanDefinitions(PluginRegistriesBeanDefinitionRegistrar.java:71) ~[spring-plugin-core-2.0.0.RELEASE.jar:2.0.0.RELEASE]
+	at org.springframework.context.annotation.ImportBeanDefinitionRegistrar.registerBeanDefinitions(ImportBeanDefinitionRegistrar.java:86) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:376) ~[spring-context-6.1.14.jar:6.1.14]
+	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:721) ~[na:na]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:375) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:429) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:789) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:607) ~[spring-context-6.1.14.jar:6.1.14]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.3.5.jar:3.3.5]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754) ~[spring-boot-3.3.5.jar:3.3.5]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456) ~[spring-boot-3.3.5.jar:3.3.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335) ~[spring-boot-3.3.5.jar:3.3.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363) ~[spring-boot-3.3.5.jar:3.3.5]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352) ~[spring-boot-3.3.5.jar:3.3.5]
+	at com.poptsov.marketplace.MarketplaceApplication.main(MarketplaceApplication.java:12) ~[classes/:na]
+Caused by: java.lang.ClassNotFoundException: javax.servlet.http.HttpServletRequest
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at java.base/sun.reflect.generics.factory.CoreReflectionFactory.makeNamedType(CoreReflectionFactory.java:114) ~[na:na]
+	... 32 common frames omitted
+
+2024-11-21T16:15:46.502+05:00  INFO 996 --- [main] c.p.marketplace.MarketplaceApplication   : Starting MarketplaceApplication using Java 17.0.12 with PID 996 (C:\Users\user2\IdeaProjects\MarketPlaceDobrograd\target\classes started by user2 in C:\Users\user2\IdeaProjects\MarketPlaceDobrograd)
+2024-11-21T16:15:46.504+05:00 DEBUG 996 --- [main] c.p.marketplace.MarketplaceApplication   : Running with Spring Boot v3.3.5, Spring v6.1.14
+2024-11-21T16:15:46.505+05:00  INFO 996 --- [main] c.p.marketplace.MarketplaceApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-11-21T16:15:47.297+05:00  INFO 996 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-21T16:15:47.369+05:00  INFO 996 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 65 ms. Found 4 JPA repository interfaces.
+2024-11-21T16:15:48.033+05:00  INFO 996 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-21T16:15:48.047+05:00  INFO 996 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-21T16:15:48.047+05:00  INFO 996 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2024-11-21T16:15:48.120+05:00  INFO 996 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-21T16:15:48.121+05:00  INFO 996 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1571 ms
+2024-11-21T16:15:48.273+05:00  INFO 996 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-21T16:15:48.335+05:00  INFO 996 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-11-21T16:15:48.371+05:00  INFO 996 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-11-21T16:15:48.690+05:00  INFO 996 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-11-21T16:15:48.721+05:00  INFO 996 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-11-21T16:15:48.885+05:00  INFO 996 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@191e654
+2024-11-21T16:15:48.887+05:00  INFO 996 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-11-21T16:15:48.924+05:00  WARN 996 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-11-21T16:15:50.146+05:00  INFO 996 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-11-21T16:15:50.293+05:00  INFO 996 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-21T16:15:50.549+05:00  INFO 996 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-11-21T16:15:51.060+05:00 DEBUG 996 --- [main] c.p.m.security.JwtAuthenticationFilter   : Filter 'jwtAuthenticationFilter' configured for use
+2024-11-21T16:15:51.219+05:00  INFO 996 --- [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-11-21T16:15:51.313+05:00  WARN 996 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-21T16:15:52.028+05:00  INFO 996 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-21T16:15:52.039+05:00  INFO 996 --- [main] c.p.marketplace.MarketplaceApplication   : Started MarketplaceApplication in 6.088 seconds (process running for 6.793)
+2024-11-21T16:15:53.355+05:00  INFO 996 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-21T16:15:53.355+05:00  INFO 996 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-21T16:15:53.356+05:00  INFO 996 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-21T16:16:39.016+05:00  INFO 996 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-21T16:16:39.017+05:00  INFO 996 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-11-21T16:16:39.020+05:00  INFO 996 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2024-11-21T16:16:43.701+05:00  INFO 8540 --- [main] c.p.marketplace.MarketplaceApplication   : Starting MarketplaceApplication using Java 17.0.12 with PID 8540 (C:\Users\user2\IdeaProjects\MarketPlaceDobrograd\target\classes started by user2 in C:\Users\user2\IdeaProjects\MarketPlaceDobrograd)
+2024-11-21T16:16:43.703+05:00 DEBUG 8540 --- [main] c.p.marketplace.MarketplaceApplication   : Running with Spring Boot v3.3.5, Spring v6.1.14
+2024-11-21T16:16:43.703+05:00  INFO 8540 --- [main] c.p.marketplace.MarketplaceApplication   : No active profile set, falling back to 1 default profile: "default"
+2024-11-21T16:16:44.411+05:00  INFO 8540 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-21T16:16:44.481+05:00  INFO 8540 --- [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 4 JPA repository interfaces.
+2024-11-21T16:16:45.033+05:00  INFO 8540 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+2024-11-21T16:16:45.046+05:00  INFO 8540 --- [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-11-21T16:16:45.047+05:00  INFO 8540 --- [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.31]
+2024-11-21T16:16:45.113+05:00  INFO 8540 --- [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-11-21T16:16:45.114+05:00  INFO 8540 --- [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1363 ms
+2024-11-21T16:16:45.252+05:00  INFO 8540 --- [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-21T16:16:45.313+05:00  INFO 8540 --- [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.3.Final
+2024-11-21T16:16:45.346+05:00  INFO 8540 --- [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2024-11-21T16:16:45.641+05:00  INFO 8540 --- [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-11-21T16:16:45.672+05:00  INFO 8540 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-11-21T16:16:45.835+05:00  INFO 8540 --- [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@13dc6649
+2024-11-21T16:16:45.837+05:00  INFO 8540 --- [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-11-21T16:16:45.873+05:00  WARN 8540 --- [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-11-21T16:16:46.918+05:00  INFO 8540 --- [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-11-21T16:16:47.042+05:00  INFO 8540 --- [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-21T16:16:47.261+05:00  INFO 8540 --- [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2024-11-21T16:16:47.691+05:00 DEBUG 8540 --- [main] c.p.m.security.JwtAuthenticationFilter   : Filter 'jwtAuthenticationFilter' configured for use
+2024-11-21T16:16:47.833+05:00  INFO 8540 --- [main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2024-11-21T16:16:47.917+05:00  WARN 8540 --- [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-21T16:16:48.548+05:00  INFO 8540 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8081 (http) with context path '/'
+2024-11-21T16:16:48.558+05:00  INFO 8540 --- [main] c.p.marketplace.MarketplaceApplication   : Started MarketplaceApplication in 5.359 seconds (process running for 5.938)
+2024-11-21T16:17:00.124+05:00  INFO 8540 --- [http-nio-8081-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2024-11-21T16:17:00.124+05:00  INFO 8540 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2024-11-21T16:17:00.126+05:00  INFO 8540 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2024-11-21T16:48:30.993+05:00  INFO 8540 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-21T16:48:30.996+05:00  INFO 8540 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2024-11-21T16:48:31.007+05:00  INFO 8540 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
