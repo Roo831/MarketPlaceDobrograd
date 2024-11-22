@@ -71,16 +71,16 @@ public class OrderService {
 
     @Transactional
     public boolean deleteOrder(Integer id) {
-        Integer ownerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getUser().getId();
-        Integer shopOwnerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getShop().getUser().getId();
-        if (!Objects.equals(ownerId, userService.getCurrentUser ().getId()) && !Objects.equals(shopOwnerId, userService.getCurrentUser ().getId())) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found"));
+
+        Integer ownerId = order.getUser().getId();
+        Integer shopOwnerId = order.getShop().getUser().getId();
+
+        if (!Objects.equals(ownerId, userService.getCurrentUser().getId()) && !Objects.equals(shopOwnerId, userService.getCurrentUser().getId())) {
             throw new AuthorizationException("You cannot to delete this order");
         }
-        if (orderRepository.existsById(id)) {
             orderRepository.deleteOrderById(id);
             return true;
-        } else return false;
-
     }
 
     @Transactional

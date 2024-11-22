@@ -7,8 +7,8 @@ CREATE TABLE users
     firstname  VARCHAR(64), -- РП имя
     lastname   VARCHAR(64), -- РП фамилия
     steam_id   VARCHAR(64), -- steam_id
-    role       VARCHAR(20)  NOT NULL CHECK (role IN ('admin', 'user', 'banned')) DEFAULT 'user', -- роль. Возможно не нужна, так как есть флаги isAdmin и isBanned
-    is_admin    Boolean      NOT NULL                                             DEFAULT FALSE, -- администратор
+    role       VARCHAR(20)  NOT NULL CHECK (role IN ('admin', 'user', 'banned')) DEFAULT 'user', -- роль.
+    is_admin    Boolean      NOT NULL                                             DEFAULT FALSE, -- администратор?
     is_banned   Boolean      NOT NULL                                             DEFAULT FALSE, -- забанен?
     created_at TIMESTAMP  DEFAULT CURRENT_TIMESTAMP  -- дата создания
 );
@@ -21,7 +21,7 @@ CREATE TABLE shops
     rating         INTEGER CHECK (rating >= 1 AND rating <= 5), --оценка
     specialization VARCHAR     NOT NULL CHECK ( specialization IN ('chief', 'gundealer')), -- специализация
     address        VARCHAR(64) NOT NULL UNIQUE, --адрес магазина
-    name      VARCHAR(128), --имя магазина
+    name      VARCHAR(128) Not Null UNIQUE , --имя магазина
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP, --дата создания
     active Boolean NOT NULL, --магазин отображается на главной странице
     description    TEXT, -- описание магазина (перечень товаров например)

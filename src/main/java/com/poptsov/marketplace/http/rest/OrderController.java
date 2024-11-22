@@ -23,8 +23,7 @@ public class OrderController {
 
 
     /**
-     * Создать заказ и прикрепить его к себе
-     * Прикрепить заказ к магазину, откуда совершаешь покупку.
+     * Создать свой заказ и прикрепить к магазину
      * Флаг заказа при его создании = "На рассмотрении/Pending"
      *
      * @param shopId Идентификатор магазина
@@ -59,7 +58,7 @@ public class OrderController {
      * @return OrderReadDto
      */
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/{id}/editStatus")
     public ResponseEntity<OrderReadDto>editOrderStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
         OrderReadDto orderReadDto = orderService.editOrderStatus(id, orderEditStatusDto);
         return ResponseEntity.ok(orderReadDto);
@@ -73,7 +72,7 @@ public class OrderController {
      * @return ShopReadDto
      */
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
         boolean isDeleted = orderService.deleteOrder(id);
         return ResponseEntity.ok(isDeleted);

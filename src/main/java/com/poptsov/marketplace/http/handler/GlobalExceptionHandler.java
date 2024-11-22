@@ -1,6 +1,7 @@
 package com.poptsov.marketplace.http.handler;
 
 import com.poptsov.marketplace.exceptions.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -41,16 +42,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserAlreadyExistException.class,
-            UserNotFoundException.class,
+            DataIntegrityViolationException.class,
+            EntityAlreadyException.class,
+            EntityNotFoundException.class,
             EntityUpdateException.class,
             EntityGetException.class,
             EntityCreateException.class,
             UsernameNotFoundException.class,
             AuthenticationException.class,
             AuthorizationException.class
-
     })
+
     public ResponseEntity<Map<String, String>> handleCustomExceptions(RuntimeException ex) {
         return createErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
@@ -65,6 +67,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
         return createErrorResponse(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }
 
 
