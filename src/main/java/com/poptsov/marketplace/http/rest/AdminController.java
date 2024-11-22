@@ -39,7 +39,6 @@ public class AdminController { // Дополнительные проверки 
         return ResponseEntity.ok( userService.getUserById(id));
     }
 
-
     /**
      * Получить магазин пользователя
      * @param id Идентификатор пользователя
@@ -92,7 +91,7 @@ public class AdminController { // Дополнительные проверки 
      * @return UserReadDto
      */
 
-    @DeleteMapping("/users/{id}/unban")
+    @DeleteMapping("/banned/{id}/unban")
     public ResponseEntity<UserReadDto> unbanUser(@PathVariable Integer id) {
         return ResponseEntity.ok(bannedService.deleteBanned(id));
     }

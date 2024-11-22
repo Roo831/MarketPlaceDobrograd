@@ -9,15 +9,19 @@ import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.ShopCreateEditDto;
 import com.poptsov.marketplace.dto.ShopEditStatusDto;
 import com.poptsov.marketplace.dto.ShopReadDto;
+import com.poptsov.marketplace.exceptions.EntityAlreadyException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.mapper.ShopCreateEditMapper;
 import com.poptsov.marketplace.mapper.ShopReadMapper;
-import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,7 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ShopService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final ShopRepository shopRepository;
     private final ShopReadMapper shopReadMapper;
     private final ShopCreateEditMapper shopCreateEditMapper;
@@ -59,48 +62,85 @@ public class ShopService {
     }
 
     @Transactional
-    public ShopReadDto createShop(ShopCreateEditDto shopCreateDto) {
+    public ShopReadDto createShop(ShopCreateEditDto shopCreateEditDto) {
 
-        User currentUser = userService.getCurrentUser();
+        User currentUser = userService.getCurrentUser(); // получить текущего юзера
 
-        if (currentUser.getShop() != null && currentUser.getShop().getId() != null) {
-            throw new EntityGetException("Shop already exists");
+        if (currentUser.getShop() != null && currentUser.getShop().getId() != null) { // если у него есть магазин
+            throw new EntityGetException("Shop already exists"); // выбросить исключение
         }
-        Shop shop = shopCreateEditMapper.map(shopCreateDto);
-        shop.setUser(currentUser);
-        return shopReadMapper.map(shopRepository.save(shop));
-    }
 
-    public ShopReadDto getShopById(Integer id) {
-        return shopReadMapper.map(shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found with id: " + id)));
+        Shop shop = shopCreateEditMapper.map(shopCreateEditDto); // Создать новый магазин, не занося его в кеш hibernate
+        shop.setUser(currentUser); //установить текущего юзера (уже в кеше)
+
+        Shop savedShop;  // создать переменную сохраненного магазина
+
+        try {
+            savedShop = shopRepository.save(shop); // попытаться сохранить магазин
+        } catch (DataIntegrityViolationException e) { // поймать любые ошибки валидации данных
+           String message = e.getMessage(); // получить сообщение из ошибки
+           String address = shopCreateEditDto.getAddress(); // получить адрес из ДТО
+           String name = shopCreateEditDto.getName(); // получить имя из ДТО
+            checkUniqueData(address, message); // в случае если в сообщении есть адрес - выбросить исключение
+            checkUniqueData(name, message); // в случае если в ошибке есть имя -выбросить исключение
+            throw e;
+        }
+        return shopReadMapper.map(savedShop); // замаппить в дто
     }
 
     @Transactional
     public ShopReadDto editMyShop(ShopCreateEditDto shopCreateEditDto) {
 
-       User currentUser = userService.getCurrentUser();
+        User currentUser = userService.getCurrentUser(); //получить текущего пользователя
+        Shop shopToUpdate = currentUser.getShop(); // получить его магазин
 
-       Shop shopToUpdate = currentUser.getShop();
-        if(shopToUpdate == null) {
-            throw new EntityGetException("Shop not found");
+        if(shopToUpdate == null) { // если магазина нет
+            throw new EntityGetException("Shop not found"); // выбросить исключение
         }
-       shopCreateEditMapper.map(shopCreateEditDto, shopToUpdate);
-        return shopReadMapper.map(shopRepository.save(shopToUpdate));
+
+        shopCreateEditMapper.map(shopToUpdate, shopCreateEditDto); // обогатить текущий магазин новыми данными
+
+        Shop updatedShop; // создать переменную обновленного магазина
+        try {
+            updatedShop = shopRepository.save(shopToUpdate); // попытаться сохранить магазин в переменную
+
+        } catch (DataIntegrityViolationException e) { // поймать любые ошибки валидации данных
+            String message = e.getMessage(); // получить сообщение из ошибки
+            String address = shopCreateEditDto.getAddress(); // получить адрес из ДТО
+            String name = shopCreateEditDto.getName(); // получить имя из ДТО
+            checkUniqueData(address, message); // в случае если в сообщении есть адрес - выбросить исключение
+            checkUniqueData(name, message); // в случае если в ошибке есть имя -выбросить исключение
+            throw e;
+        }
+        return shopReadMapper.map(updatedShop); // замаппить в дто
     }
 
-    @Transactional
+
+    public ShopReadDto getShopById(Integer id) {
+        return shopReadMapper.map(shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found with id: " + id)));
+    }
+
+
+    @Transactional()
     public boolean deleteMyShop() {
-      User currentUser = userService.getCurrentUser();
-      Shop shopToDelete = currentUser.getShop();
-      if(shopToDelete == null) {
-          return false;
-      }
-      shopRepository.delete(shopToDelete);
+
+
+            User currentUser = userService.getCurrentUser();
+            Shop shopToDelete = currentUser.getShop();
+            if (shopToDelete == null) {
+                return false;
+            }
+            shopRepository.deleteShopById(shopToDelete.getId());
+
       return true;
     }
 
     public ShopReadDto getMyShop() {
-        return shopReadMapper.map(userService.getCurrentUser().getShop());
+        Shop shop = userService.getCurrentUser().getShop();
+        if(shop == null) {
+            throw new EntityGetException("Shop not found");
+        }
+        return shopReadMapper.map(shop);
     }
 
     public ShopReadDto getShopByOrderId(Integer id) {
@@ -108,5 +148,14 @@ public class ShopService {
                 .map(Order::getShop)
                 .map(shopReadMapper::map)
                 .orElseThrow(() -> new EntityGetException("Order not found with id, or shop aren't exists: " + id));
+    }
+
+    private void checkUniqueData(String wordToFind, String message){
+
+        String regex = "\\b" + Pattern.quote(wordToFind) + "\\b";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        if(pattern.matcher(message).find()){
+            throw new EntityGetException(wordToFind + " already exists");
+        }
     }
 }

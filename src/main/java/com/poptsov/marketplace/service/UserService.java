@@ -6,8 +6,8 @@ import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.exceptions.EntityAlreadyException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
-import com.poptsov.marketplace.exceptions.UserAlreadyExistException;
 import com.poptsov.marketplace.mapper.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,10 +41,10 @@ public class UserService {
     @Transactional
     public User create(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new UserAlreadyExistException("Пользователь с таким именем уже существует");
+            throw new EntityAlreadyException("Пользователь с таким именем уже существует");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistException("Пользователь с таким email уже существует");
+            throw new EntityAlreadyException("Пользователь с таким email уже существует");
         }
         return save(user);
     }
