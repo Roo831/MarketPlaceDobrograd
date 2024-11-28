@@ -7,10 +7,12 @@ import com.poptsov.marketplace.dto.RegisterDto;
 import com.poptsov.marketplace.mapper.UserRegisterMapper;
 import com.poptsov.marketplace.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -25,14 +27,10 @@ public class AuthenticationService {
      * @param registerDto данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signUp(RegisterDto registerDto) {
-        System.out.println("Build user from dto");
+    public JwtAuthenticationResponse create(RegisterDto registerDto) {
         User user = userRegisterMapper.map(registerDto);
-        System.out.println(("try to create user in DB"));
         userService.create(user);
-        System.out.println("try to generate token");
         var jwt = jwtService.generateToken(user);
-        System.out.println("return JwtAuthenticationResponse: " + jwt);
         return new JwtAuthenticationResponse(jwt);
     }
 
@@ -43,19 +41,18 @@ public class AuthenticationService {
      * @return токен
      */
     public JwtAuthenticationResponse signIn(LoginDto request) {
-        System.out.println("authenticationManager.authenticate(data from DTO)");
+        log.info("Sign In process start...");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 request.getUsername(),
                 request.getPassword()
         ));
-
+        log.info("Try to get user by Username...");
         var user = userService
                 .userDetailsService()
                 .loadUserByUsername(request.getUsername());
-
+        log.info("Try to generate token...");
         var jwt = jwtService.generateToken(user);
-
+        log.info("Sign In successful!, return token - {}", jwt);
         return new JwtAuthenticationResponse(jwt);
     }
-
 }

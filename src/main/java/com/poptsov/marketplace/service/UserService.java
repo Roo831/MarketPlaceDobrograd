@@ -32,10 +32,20 @@ public class UserService {
     private final ShopReadMapper shopReadMapper;
     private final OrderReadMapper orderReadMapper;
 
-    @Transactional
-    public User save(User user) {
-        System.out.println("Сохранить в БД");
-        return userRepository.save(user);
+    //CRUD start
+    public UserReadDto findById(Integer id) { // Admin
+        return userRepository.findUserById(id)
+                .map(userReadMapper::map)
+                .orElseThrow(() -> new EntityGetException("Failed to get user with id: " + id));
+    }
+
+    public List<UserReadDto> findAll() {  // Admin
+        return Optional.of(userRepository.findAll())
+                .filter(users -> !users.isEmpty())
+                .map(users -> users.stream()
+                        .map(userReadMapper::map)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new EntityGetException("No users found"));
     }
 
     @Transactional
@@ -46,26 +56,12 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new EntityAlreadyException("Пользователь с таким email уже существует");
         }
-        return save(user);
-    }
-
-    public User getByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
-    }
-
-    public UserDetailsService userDetailsService() {
-        return this::getByUsername;
-    }
-
-    public User getCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return getByUsername(username);
+        return userRepository.save(user);
     }
 
     @Transactional
-    public UserReadDto updateUser (UserEditDto userEditDto) {
-        User userToUpdate = getCurrentUser();
+    public UserReadDto update (UserEditDto userEditDto) {
+        User userToUpdate = findCurrentUser();
 
         userToUpdate.setFirstname(userEditDto.getFirstname());
         userToUpdate.setLastname(userEditDto.getLastname());
@@ -73,8 +69,24 @@ public class UserService {
         return userReadMapper.map(userRepository.save(userToUpdate));
     }
 
+    //CRUD end
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+    }
+
+    public UserDetailsService userDetailsService() {
+        return this::findByUsername;
+    }
+
+    public User findCurrentUser() {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return findByUsername(username);
+    }
+
     @Transactional
-    public UserReadDto updateUser(Integer id, SwitchAdminDto switchAdminDto) { // Admin
+    public UserReadDto updateUserToAdmin(Integer id, SwitchAdminDto switchAdminDto) { // Admin
 
         User userToUpdate = userRepository.findById(id)
                 .orElseThrow(() -> new EntityGetException("User  not found with id: " + id));
@@ -88,39 +100,25 @@ public class UserService {
 
 
     public UserReadDto getMyself(){
-       return userReadMapper.map(getCurrentUser());
+       return userReadMapper.map(findCurrentUser());
     }
 
-    public UserReadDto getUserById(Integer id) { // Admin
-        return userRepository.findUserById(id)
-                .map(userReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("Failed to get user with id: " + id));
-    }
 
-    public List<UserReadDto> getAllUsers() {  // Admin
-        return Optional.of(userRepository.findAll())
-                .filter(users -> !users.isEmpty())
-                .map(users -> users.stream()
-                        .map(userReadMapper::map)
-                        .collect(Collectors.toList()))
-                .orElseThrow(() -> new EntityGetException("No users found"));
-    }
-
-    public UserReadDto getOwnerByOrderId(Integer orderId) {
+    public UserReadDto findOwnerByOrderId(Integer orderId) {
         return orderRepository.findById(orderId)
                 .map(Order::getUser)
                 .map(userReadMapper::map)
                 .orElseThrow(() -> new EntityGetException("Failed to get user for order with id: " + orderId));
     }
 
-    public ShopReadDto getShopByUserId(Integer id) { // Admin
+    public ShopReadDto findShopByUserId(Integer id) { // Admin
         return userRepository.findUserById(id)
                 .map(User::getShop)
                 .map(shopReadMapper::map)
                 .orElseThrow(() -> new EntityGetException("Failed to get shop with user id: " + id));
     }
 
-    public List<OrderReadDto> getOrdersByUserId(Integer id) {  //Admin
+    public List<OrderReadDto> findOrdersByUserId(Integer id) {  //Admin
         return userRepository.findUserById(id)
                 .map(User::getOrders)
                 .map(orders -> orders.stream()

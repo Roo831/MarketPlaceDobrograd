@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderReadDto {
+public class OrderReadDto implements ReadDto {
 
     @NotNull(message = "Order ID cannot be Blank")
     private Integer orderId;

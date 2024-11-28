@@ -1,18 +1,18 @@
 package com.poptsov.marketplace.mapper;
 
 import com.poptsov.marketplace.database.entity.Shop;
-import com.poptsov.marketplace.dto.ShopCreateEditDto;
+import com.poptsov.marketplace.dto.ShopEditDto;
 import com.poptsov.marketplace.dto.ShopEditStatusDto;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
-public class ShopCreateEditMapper  implements Mapper<ShopCreateEditDto, Shop>{
+public class ShopEditMapper  implements Mapper<ShopEditDto, Shop>{
 
 
     @Override
-    public Shop map(ShopCreateEditDto object) {
+    public Shop map(ShopEditDto object) {
         return Shop.builder()
                 .name(object.getName())
                 .address(object.getAddress())
@@ -24,7 +24,7 @@ public class ShopCreateEditMapper  implements Mapper<ShopCreateEditDto, Shop>{
                 .build();
     }
 
-    public Shop map(Integer id, ShopCreateEditDto object) {
+    public Shop map(Integer id, ShopEditDto object) {
         return Shop.builder()
                 .id(id)
                 .name(object.getName())
@@ -43,7 +43,7 @@ public class ShopCreateEditMapper  implements Mapper<ShopCreateEditDto, Shop>{
 
     }
 
-    public void map(Shop shopToUpdate, ShopCreateEditDto shopCreateEditDto) {
+    public void map(Shop shopToUpdate, ShopEditDto shopCreateEditDto) {
         shopToUpdate.setName(shopCreateEditDto.getName());
         shopToUpdate.setAddress(shopCreateEditDto.getAddress());
         shopToUpdate.setSpecialization(shopCreateEditDto.getSpecialization());

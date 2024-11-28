@@ -32,7 +32,8 @@ logging:
       poptsov:
         marketplace: DEBUG                # Уровень логирования для вашего пакета
   file:
-    name: app.log
+    name: com.poptsov
+    path: /
 
 marketplace:
   app:

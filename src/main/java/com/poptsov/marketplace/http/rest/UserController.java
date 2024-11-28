@@ -42,8 +42,8 @@ public class UserController {
      */
 
     @PatchMapping("/me/edit")
-    public ResponseEntity<UserReadDto> editUser (@Validated @RequestBody UserEditDto userEditDto) {
-        UserReadDto updatedUserReadDto = userService.updateUser(userEditDto);
+    public ResponseEntity<UserReadDto> edit (@Validated @RequestBody UserEditDto userEditDto) {
+        UserReadDto updatedUserReadDto = userService.update(userEditDto);
         return ResponseEntity.ok(updatedUserReadDto);
     }
 
@@ -53,8 +53,8 @@ public class UserController {
      */
 
     @GetMapping("/me/orders")
-    public ResponseEntity<List<OrderReadDto>> getUserOrders() {
-        List<OrderReadDto> orders = orderService.getMyOrders();
+    public ResponseEntity<List<OrderReadDto>> findMyOrders() {
+        List<OrderReadDto> orders = orderService.findMyOrders();
         return ResponseEntity.ok(orders);
     }
 
@@ -64,8 +64,8 @@ public class UserController {
      */
 
     @GetMapping("/me/shop")
-    public ResponseEntity<ShopReadDto> getMyShop() {
-        ShopReadDto shop = shopService.getMyShop();
+    public ResponseEntity<ShopReadDto> findMyShop() {
+        ShopReadDto shop = shopService.findMyShop();
         return ResponseEntity.ok(shop);
     }
 

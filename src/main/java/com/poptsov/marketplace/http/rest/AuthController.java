@@ -27,7 +27,7 @@ public class AuthController {
     @PostMapping("/registration")
     public JwtAuthenticationResponse signUp(@Validated @RequestBody @Valid RegisterDto registerDto) {
         System.out.println("AuthController register start");
-        return authenticationService.signUp(registerDto);
+        return authenticationService.create(registerDto);
 
     }
 

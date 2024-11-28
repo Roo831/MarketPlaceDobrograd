@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEditDto {
+public class UserEditDto implements UpdateDto {
 
     @NotBlank(message = "Firstname cannot be Blank")
     private String firstname;
@@ -17,4 +17,8 @@ public class UserEditDto {
     @NotBlank(message = "Lastname cannot be Blank")
     private String lastname;
 
+    @Override
+    public String getLoggingUpdateInfo() {
+        return this.getClass().getSimpleName() + " [firstname=" + firstname + ", lastname=" + lastname + "]";
+    }
 }

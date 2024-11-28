@@ -5,7 +5,6 @@ import com.poptsov.marketplace.database.entity.Shop;
 import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.ShopRepository;
-import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.OrderCreateDto;
 import com.poptsov.marketplace.dto.OrderReadDto;
 import com.poptsov.marketplace.dto.OrderEditStatusDto;
@@ -27,37 +26,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
     private final ShopRepository shopRepository;
     private final OrderReadMapper orderReadMapper;
     private final OrderCreateMapper orderCreateMapper;
     private final UserService userService;
 
-    public List<OrderReadDto> getOrdersOfMyShop() {
-       User currentUser = userService.getCurrentUser();
-       Shop shop = currentUser.getShop();
 
-       if(shop == null) {
-           throw new EntityGetException("You have no shop");
-       }
+    // CRUD start
 
-        return shop.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
-    }
-
-    public List<OrderReadDto> getMyOrders() {
-        User user = userService.getCurrentUser();
-       return user.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
-    }
-
-    public OrderReadDto getOrderById(Integer orderId) {
+    public OrderReadDto findById(Integer orderId) {
         return orderRepository.findById(orderId)
                 .map(orderReadMapper::map).orElseThrow(() -> new EntityGetException("Order not found"));
     }
 
     @Transactional
-    public OrderReadDto createOrder(Integer shopId, OrderCreateDto orderCreateDto) {
+    public OrderReadDto create(Integer shopId, OrderCreateDto orderCreateDto) {
 
-        User user = userService.getCurrentUser();
+        User user = userService.findCurrentUser();
         Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(() -> new EntityGetException("Shop not found with id: " + shopId));
 
@@ -70,27 +55,48 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean deleteOrder(Integer id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found"));
-
-        Integer ownerId = order.getUser().getId();
-        Integer shopOwnerId = order.getShop().getUser().getId();
-
-        if (!Objects.equals(ownerId, userService.getCurrentUser().getId()) && !Objects.equals(shopOwnerId, userService.getCurrentUser().getId())) {
-            throw new AuthorizationException("You cannot to delete this order");
-        }
-            orderRepository.deleteOrderById(id);
-            return true;
-    }
-
-    @Transactional
-    public OrderReadDto editOrderStatus(Integer id, OrderEditStatusDto orderEditStatusDto) {
+    public OrderReadDto update(Integer id, OrderEditStatusDto orderEditStatusDto) {
         Integer shopOwnerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getShop().getUser().getId();
-        AuthorityCheckUtil.checkAuthorities(userService.getCurrentUser().getId(), shopOwnerId);
+        AuthorityCheckUtil.checkAuthorities(userService.findCurrentUser().getId(), shopOwnerId);
         Order order = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found"));
         order.setStatus(orderEditStatusDto.getStatus());
         orderRepository.save(order);
         return orderReadMapper.map(order);
     }
+
+    @Transactional
+    public boolean delete(Integer id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found"));
+
+        Integer ownerId = order.getUser().getId();
+        Integer shopOwnerId = order.getShop().getUser().getId();
+
+        if (!Objects.equals(ownerId, userService.findCurrentUser().getId()) && !Objects.equals(shopOwnerId, userService.findCurrentUser().getId())) {
+            throw new AuthorizationException("You cannot to delete this order");
+        }
+        orderRepository.deleteOrderById(id);
+        return true;
+    }
+
+    // CRUD end
+
+    public List<OrderReadDto> findOrdersOfMyShop() {
+       User currentUser = userService.findCurrentUser();
+       Shop shop = currentUser.getShop();
+
+       if(shop == null) {
+           throw new EntityGetException("You have no shop");
+       }
+
+        return shop.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
+    }
+
+    public List<OrderReadDto> findMyOrders() {
+        User user = userService.findCurrentUser();
+       return user.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
+    }
+
+
+
 
 }

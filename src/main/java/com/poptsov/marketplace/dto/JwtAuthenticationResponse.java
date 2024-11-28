@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class JwtAuthenticationResponse {
+public class JwtAuthenticationResponse implements ReadDto {
     private String token;
 }

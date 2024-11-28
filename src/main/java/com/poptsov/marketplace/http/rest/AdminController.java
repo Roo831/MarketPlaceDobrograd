@@ -25,7 +25,7 @@ public class AdminController { // Дополнительные проверки 
 
     @GetMapping("/users")
     public ResponseEntity<List<UserReadDto>> getUsers() { // TODO: Сортировка по алфавиту
-        return ResponseEntity.ok( userService.getAllUsers());
+        return ResponseEntity.ok( userService.findAll());
     }
 
     /**
@@ -35,8 +35,8 @@ public class AdminController { // Дополнительные проверки 
      */
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserReadDto> getUserById(@PathVariable Integer id) {
-        return ResponseEntity.ok( userService.getUserById(id));
+    public ResponseEntity<UserReadDto> findUserById(@PathVariable Integer id) {
+        return ResponseEntity.ok( userService.findById(id));
     }
 
     /**
@@ -47,7 +47,7 @@ public class AdminController { // Дополнительные проверки 
 
     @GetMapping("/users/{id}/shop")
     public ResponseEntity<ShopReadDto> getShopByUserId(@PathVariable Integer id) {
-        return ResponseEntity.ok( userService.getShopByUserId(id));
+        return ResponseEntity.ok( userService.findShopByUserId(id));
     }
 
     /**
@@ -58,7 +58,7 @@ public class AdminController { // Дополнительные проверки 
 
     @GetMapping("/users/{id}/orders")
     public ResponseEntity<List<OrderReadDto>> getOrdersByUserId(@PathVariable Integer id) {
-        return ResponseEntity.ok( userService.getOrdersByUserId(id));
+        return ResponseEntity.ok( userService.findOrdersByUserId(id));
     }
 
     /**
@@ -70,7 +70,7 @@ public class AdminController { // Дополнительные проверки 
 
     @PatchMapping("/users/{id}/makeAdmin")
     public ResponseEntity<UserReadDto> switchAdmin(@PathVariable Integer id, @Validated @RequestBody SwitchAdminDto switchAdminDto) {
-        return ResponseEntity.ok(userService.updateUser(id, switchAdminDto));
+        return ResponseEntity.ok(userService.updateUserToAdmin(id, switchAdminDto));
     }
 
     /**
@@ -82,7 +82,7 @@ public class AdminController { // Дополнительные проверки 
 
     @PatchMapping("/users/{id}/ban")
     public ResponseEntity<BanReadDto> banUser(@PathVariable Integer id, @Validated @RequestBody BanCreateDto banCreateDto) {
-        return ResponseEntity.ok(bannedService.createBanned(id, banCreateDto));
+        return ResponseEntity.ok(bannedService.create(id, banCreateDto));
     }
 
     /**
@@ -93,7 +93,7 @@ public class AdminController { // Дополнительные проверки 
 
     @DeleteMapping("/banned/{id}/unban")
     public ResponseEntity<UserReadDto> unbanUser(@PathVariable Integer id) {
-        return ResponseEntity.ok(bannedService.deleteBanned(id));
+        return ResponseEntity.ok(bannedService.delete(id));
     }
 
     /**
@@ -103,7 +103,7 @@ public class AdminController { // Дополнительные проверки 
 
     @GetMapping("/users/banned")
     public ResponseEntity<List<BanReadDto>> listOfBanned(){
-       return ResponseEntity.ok(bannedService.getAllBanned());
+       return ResponseEntity.ok(bannedService.findAll());
     }
 
 
@@ -112,9 +112,9 @@ public class AdminController { // Дополнительные проверки 
      * @param id Идентификатор пользователя,
      * @return BanReadDto
      */
-    @GetMapping("/users/banned/{id}")
-    public ResponseEntity<BanReadDto> getBannedById(@PathVariable Integer id){
-       return ResponseEntity.ok(bannedService.getBannedById(id));
+    @GetMapping("/banned/{id}")
+    public ResponseEntity<BanReadDto> findBannedById(@PathVariable Integer id){
+       return ResponseEntity.ok(bannedService.findById(id));
 
     }
 

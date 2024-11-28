@@ -10,8 +10,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class OrderEditStatusDto {
+public class OrderEditStatusDto implements UpdateDto {
 
     @NotNull(message = "Status cannot be Null")
     private Status status;
+
+    @Override
+    public String getLoggingUpdateInfo() {
+        return this.getClass().getSimpleName() + " [status=" + status + "]";
+    }
 }
