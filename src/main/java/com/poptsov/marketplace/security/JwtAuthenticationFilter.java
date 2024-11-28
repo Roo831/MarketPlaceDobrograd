@@ -29,10 +29,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public static final String BEARER_PREFIX = "Bearer ";
     public static final String HEADER_NAME = "Authorization";
-
     private final JwtService jwtService;
     private final UserService userService;
-
 
     @Override
     protected void doFilterInternal(
@@ -55,13 +53,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("Bearer is not empty, get jwt and extract username from jwt...");
             username = jwtService.extractUserName(jwt);
         } catch (ExpiredJwtException e) {
-            log.info("JWT expired: {}", e.getMessage());
+            log.error("JWT expired: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("JWT expired");
             response.getWriter().flush();
             return;
         } catch (Exception e) {
-            log.info("Error extracting username from JWT: {}", e.getMessage());
+            log.error("Error extracting username from JWT: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid JWT");
             response.getWriter().flush();
@@ -73,18 +71,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = userService
                     .userDetailsService()
                     .loadUserByUsername(username);
-
+            log.info("User  found: {}", userDetails.getUsername());
             boolean isBanned = userService.isUserBanned(username);
-            log.info("Ban checked...");
+            log.info("Ban checked for user: {}", username);
             if (isBanned) {
-                log.info("User  {} is banned", username);
+                log.warn("User  {} is banned", username);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("Access denied for banned users");
                 response.getWriter().flush();
                 return;
             }
+            log.info("User  is not banned.");
 
             // Если токен валиден, то аутентифицируем пользователя
+            log.info("Try to authenticate user...");
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 log.info("Token is valid, create context...");
@@ -100,12 +100,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 log.info("Put authToken into context...");
                 SecurityContextHolder.setContext(context);
                 log.info("Put context into SecurityContextHolder");
+            } else {
+                log.warn("Token is invalid for user: {}", username);
             }
         }
         filterChain.doFilter(request, response);
         log.info("doFilterInternal end");
     }
-
 }
 
 
