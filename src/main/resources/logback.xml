@@ -16,7 +16,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logback/bookStoreApp.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logback/bookStoreApp.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logback/marketplace.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
             <totalSizeCap>100MB</totalSizeCap>
             <maxFileSize>10MB</maxFileSize>
