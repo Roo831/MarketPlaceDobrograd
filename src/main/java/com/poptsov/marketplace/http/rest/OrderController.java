@@ -32,8 +32,8 @@ public class OrderController {
      */
 
     @PostMapping("/create")
-    public ResponseEntity<OrderReadDto> createOrder(@RequestParam Integer shopId, @Validated @RequestBody OrderCreateDto orderCreateDto) {
-        OrderReadDto orderReadDto = orderService.createOrder(shopId, orderCreateDto);
+    public ResponseEntity<OrderReadDto> create(@RequestParam Integer shopId, @Validated @RequestBody OrderCreateDto orderCreateDto) {
+        OrderReadDto orderReadDto = orderService.create(shopId, orderCreateDto);
         return ResponseEntity.ok(orderReadDto);
     }
 
@@ -45,8 +45,8 @@ public class OrderController {
      */
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderReadDto> getOrderById(@PathVariable Integer id) {
-        OrderReadDto orderReadDto = orderService.getOrderById(id);
+    public ResponseEntity<OrderReadDto> findById(@PathVariable Integer id) {
+        OrderReadDto orderReadDto = orderService.findById(id);
         return ResponseEntity.ok(orderReadDto);
     }
 
@@ -59,8 +59,8 @@ public class OrderController {
      */
 
     @PatchMapping("/{id}/editStatus")
-    public ResponseEntity<OrderReadDto>editOrderStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        OrderReadDto orderReadDto = orderService.editOrderStatus(id, orderEditStatusDto);
+    public ResponseEntity<OrderReadDto>editStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
+        OrderReadDto orderReadDto = orderService.update(id, orderEditStatusDto);
         return ResponseEntity.ok(orderReadDto);
     }
 
@@ -73,8 +73,8 @@ public class OrderController {
      */
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Boolean> deleteOrder(@PathVariable Integer id) {
-        boolean isDeleted = orderService.deleteOrder(id);
+    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
+        boolean isDeleted = orderService.delete(id);
         return ResponseEntity.ok(isDeleted);
     }
 
@@ -86,8 +86,8 @@ public class OrderController {
      */
 
     @GetMapping("/{id}/owner")
-    public ResponseEntity<UserReadDto> getOwnerByOrderId(@PathVariable Integer id) {
-        UserReadDto ownerDto = userService.getOwnerByOrderId(id);
+    public ResponseEntity<UserReadDto> findOwnerByOrderId(@PathVariable Integer id) {
+        UserReadDto ownerDto = userService.findOwnerByOrderId(id);
         return ResponseEntity.ok(ownerDto);
     }
 
@@ -99,7 +99,7 @@ public class OrderController {
      */
 
     @GetMapping("/{id}/shop")
-    public ResponseEntity<ShopReadDto> getShopByOrderId(@PathVariable Integer id) {
+    public ResponseEntity<ShopReadDto> findShopByOrderId(@PathVariable Integer id) {
         ShopReadDto shopReadDto = shopService.getShopByOrderId(id);
         return ResponseEntity.ok(shopReadDto);
     }

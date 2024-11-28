@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCreateDto {
+public class OrderCreateDto implements CreateDto {
 
 
     @NotBlank(message = "Name cannot be Blank")
@@ -21,4 +21,8 @@ public class OrderCreateDto {
     @Min(value = 0, message = "Price must be greater than or equal to 0")
     private Integer price;
 
+    @Override
+    public String getLoggingCreateInfo() {
+        return this.getClass().getSimpleName() + " [name=" + name + ", description=" + description + ", price=" + price + "]";
+    }
 }

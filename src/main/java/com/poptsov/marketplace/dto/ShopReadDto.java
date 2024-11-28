@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ShopReadDto {
+public class ShopReadDto implements ReadDto {
 
     @NotNull(message = "ID cannot be Null")
     private Integer id;

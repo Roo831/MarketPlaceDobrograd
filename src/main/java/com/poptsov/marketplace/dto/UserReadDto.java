@@ -8,13 +8,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserReadDto {
+public class UserReadDto implements ReadDto {
 
     @NotNull(message = "ID cannot be Null")
     private Integer id;

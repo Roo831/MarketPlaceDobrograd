@@ -22,13 +22,13 @@ public class ShopController {
     /**
      * Создать магазин и прикрепить его к себе
      *
-     * @param shopCreateEditDto Данные нового магазина
+     * @param shopCreateDto Данные нового магазина
      * @return ShopReadDto
      */
 
     @PostMapping("/create")
-    public ResponseEntity<ShopReadDto> createShop(@Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
-        ShopReadDto shopDto = shopService.createShop(shopCreateEditDto);
+    public ResponseEntity<ShopReadDto> create(@Validated @RequestBody ShopCreateDto shopCreateDto) {
+        ShopReadDto shopDto = shopService.create(shopCreateDto);
         return ResponseEntity.ok(shopDto);
     }
 
@@ -40,21 +40,21 @@ public class ShopController {
 
     @GetMapping("/myShop")
     public ResponseEntity<ShopReadDto> getMyShop() {
-        ShopReadDto shopDto = shopService.getMyShop();
+        ShopReadDto shopDto = shopService.findMyShop();
         return ResponseEntity.ok(shopDto);
     }
 
     /**
      * Редактировать данные своего магазина
      *
-     * @param shopCreateEditDto Вносимые изменения
+     * @param shopEditDto Вносимые изменения
      * @return ShopReadDto
      */
 
     @PatchMapping("myShop/edit")
-    public ResponseEntity<ShopReadDto> editMyShop(@Validated @RequestBody ShopCreateEditDto shopCreateEditDto) {
+    public ResponseEntity<ShopReadDto> edit(@Validated @RequestBody ShopEditDto shopEditDto) {
 
-        ShopReadDto updatedShopDto = shopService.editMyShop(shopCreateEditDto);
+        ShopReadDto updatedShopDto = shopService.update(shopEditDto);
         return ResponseEntity.ok(updatedShopDto);
     }
 
@@ -77,7 +77,7 @@ public class ShopController {
 
     @GetMapping("myShop/orders")
     public ResponseEntity<List<OrderReadDto>> getMyShopOrders() {
-        List<OrderReadDto> orders = orderService.getOrdersOfMyShop();
+        List<OrderReadDto> orders = orderService.findOrdersOfMyShop();
         return ResponseEntity.ok(orders);
     }
 
@@ -89,8 +89,8 @@ public class ShopController {
      */
 
     @GetMapping("/{id}")
-    public ResponseEntity<ShopReadDto> getShopById(@PathVariable Integer id) {
-        ShopReadDto shopDto = shopService.getShopById(id);
+    public ResponseEntity<ShopReadDto> findById(@PathVariable Integer id) {
+        ShopReadDto shopDto = shopService.findById(id);
         return ResponseEntity.ok(shopDto);
     }
 
@@ -102,7 +102,7 @@ public class ShopController {
 
     @GetMapping("/active")
     public ResponseEntity<List<ShopReadDto>> getActiveShops() {
-        List<ShopReadDto> shops = shopService.getActiveShops();
+        List<ShopReadDto> shops = shopService.findActiveShops();
         return ResponseEntity.ok(shops);
     }
 

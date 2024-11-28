@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanCreateDto {
+public class BanCreateDto implements CreateDto {
 
     @NotBlank(message = "Description of ban cannot be Blank")
     private String descriptionOfBan;
 
+    @Override
+    public String getLoggingCreateInfo() {
+        return this.getClass().getSimpleName() + ": " + descriptionOfBan;
+    }
 }

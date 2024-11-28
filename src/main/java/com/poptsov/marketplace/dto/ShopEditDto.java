@@ -10,7 +10,7 @@ import jakarta.validation.constraints.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShopCreateEditDto {
+public class ShopEditDto implements UpdateDto {
 
     @NotBlank(message = "Shop name cannot be Blank")
     private String name;
@@ -24,4 +24,9 @@ public class ShopCreateEditDto {
 
     @Size(max = 500, message = "Description must be less than 500 characters")
     private String description;
+
+    @Override
+    public String getLoggingUpdateInfo() {
+        return this.getClass().getSimpleName() + ": " + name;
+    }
 }

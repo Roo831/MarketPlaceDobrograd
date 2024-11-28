@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterDto {
+public class RegisterDto implements CreateDto {
 
     @NotBlank(message = "Username cannot be Blank")
     private String username;
@@ -26,4 +26,9 @@ public class RegisterDto {
 
     @NotBlank(message = "Lastname cannot be Blank")
     private String lastname;
+
+    @Override
+    public String getLoggingCreateInfo() {
+        return this.getClass().getSimpleName() + " [username=" + username + ", email" + email + "]";
+    }
 }

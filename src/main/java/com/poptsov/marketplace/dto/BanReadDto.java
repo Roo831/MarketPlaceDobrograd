@@ -10,7 +10,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BanReadDto {
+public class BanReadDto implements ReadDto {
 
     @NotBlank(message = "Id of ban cannot be Blank")
     private Integer id;

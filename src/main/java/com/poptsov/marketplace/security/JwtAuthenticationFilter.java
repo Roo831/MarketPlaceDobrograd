@@ -2,6 +2,7 @@ package com.poptsov.marketplace.security;
 
 import com.poptsov.marketplace.service.UserService;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -37,28 +40,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
-        System.out.println("doFilterInternal start");
+        log.info("doFilterInternal start");
         var authHeader = request.getHeader(HEADER_NAME);
         if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
-
-            System.out.println("Bearer is empty, return filterChain.dofilter");
+            log.info("Bearer is empty, return filterChain.doFilter");
             filterChain.doFilter(request, response);
             return;
         }
-        // Обрезаем префикс и получаем имя пользователя из токена
+
         var jwt = authHeader.substring(BEARER_PREFIX.length());
-        var username = jwtService.extractUserName(jwt);
-        System.out.println("Bearer is not empty, get jwt and extract username from jwt...");
+        String username;
+
+        try {
+            log.info("Bearer is not empty, get jwt and extract username from jwt...");
+            username = jwtService.extractUserName(jwt);
+        } catch (ExpiredJwtException e) {
+            log.info("JWT expired: {}", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT expired");
+            response.getWriter().flush();
+            return;
+        } catch (Exception e) {
+            log.info("Error extracting username from JWT: {}", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT");
+            response.getWriter().flush();
+            return;
+        }
+
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            System.out.println("Username not null, and authentication is null, try to get user...");
+            log.info("Username not null, and authentication is null, try to get user...");
             UserDetails userDetails = userService
                     .userDetailsService()
                     .loadUserByUsername(username);
 
             boolean isBanned = userService.isUserBanned(username);
-            System.out.println("Ban checked...");
+            log.info("Ban checked...");
             if (isBanned) {
-                System.out.println("User " + username + " is banned");
+                log.info("User  {} is banned", username);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 response.getWriter().write("Access denied for banned users");
                 response.getWriter().flush();
@@ -68,25 +87,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Если токен валиден, то аутентифицируем пользователя
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
-                System.out.println("Token isValid, create context...");
+                log.info("Token is valid, create context...");
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
                         userDetails.getAuthorities()
                 );
-                System.out.println("Generate new UsernamePasswordAuthenticationToken...");
+                log.info("Generate new UsernamePasswordAuthenticationToken...");
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
-                System.out.println("put authToken into context...");
+                log.info("Put authToken into context...");
                 SecurityContextHolder.setContext(context);
-                System.out.println("Put context into SecurityContextHolder");
+                log.info("Put context into SecurityContextHolder");
             }
         }
         filterChain.doFilter(request, response);
-        System.out.println("doFilterInternal end");
+        log.info("doFilterInternal end");
     }
 
-    }
+}
 
 

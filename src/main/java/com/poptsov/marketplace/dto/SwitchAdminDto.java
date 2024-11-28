@@ -9,8 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SwitchAdminDto {
+public class SwitchAdminDto implements UpdateDto {
 
     @NotNull(message = "admin cannot be null")
     private boolean admin;
+
+    @Override
+    public String getLoggingUpdateInfo() {
+        return this.getClass().getSimpleName() + " [admin=" + admin + "]";
+    }
 }
