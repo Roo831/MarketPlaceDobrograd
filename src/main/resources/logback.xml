@@ -14,7 +14,7 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logback/bookStoreApp.log</file>
+        <file>logback/marketplaceDobrograd.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>logback/marketplace.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
