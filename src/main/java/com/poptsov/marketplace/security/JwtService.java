@@ -26,7 +26,7 @@ import java.util.function.Function;
 public class JwtService {
 
     @Value("${marketplace.app.secret}")
-private String jwtSigningKey;
+    private String jwtSigningKey;
 
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -42,55 +42,67 @@ private String jwtSigningKey;
             claims.put("lastname", customUserDetails.getLastname());
             claims.put("isAdmin", customUserDetails.getIsAdmin());
         }
-        return generateToken(claims, userDetails);
+        String token = generateToken(claims, userDetails);
+        log.info("Token generated for user: {}", userDetails.getUsername());
+        return token;
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        log.info("is Token Valid?");
+        log.info("Checking if token is valid...");
         final String userName = extractUserName(token);
         boolean isValid = (userName.equals(userDetails.getUsername())) && !isTokenExpired(token);
-        log.info("is Token Valid = {}", isValid);
+        log.info("Is token valid = {}", isValid);
         return isValid;
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolvers) {
-        log.info("extract Claim...");
+        log.info("Extracting claim...");
         final Claims claims = extractAllClaims(token);
         return claimsResolvers.apply(claims);
     }
 
     private String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        log.info("Generate token...");
-        return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
+        log.info("Generating token...");
+        return Jwts.builder()
+                .claims(extraClaims)
+                .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
-                .signWith(getSigningKey()).compact();
+                .signWith(getSigningKey())
+                .compact();
     }
 
     private boolean isTokenExpired(String token) {
-        log.info("is Token Expired?");
+        log.info("Checking if token is expired...");
         return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
-        log.info("Extract expiration...");
+        log.info("Extracting expiration date...");
         return extractClaim(token, Claims::getExpiration);
     }
 
     private Claims extractAllClaims(String token) {
-        log.info("Extract all claims...");
-        return Jwts.parser().setSigningKey(getSigningKey()).build().parseClaimsJws(token)
-                .getBody();
+        log.info("Extracting all claims...");
+        try {
+            return Jwts.parser()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            log.error("Failed to extract claims from token: {}", e.getMessage());
+            throw e; // или обработайте ошибку другим образом
+        }
     }
 
     private Key getSigningKey() {
-        log.info("Get signing key...");
+        log.info("Getting signing key...");
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         if (keyBytes.length * 8 < 256) {
-            log.info("Key must be at least 256 bytes");
+            log.error("Key must be at least 256 bits");
             throw new IllegalArgumentException("Ключ должен быть не менее 256 бит!");
         }
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
 }
