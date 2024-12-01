@@ -8,6 +8,7 @@ import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.exceptions.EntityAlreadyException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
+import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,9 +72,14 @@ public class UserService {
 
     //CRUD end
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with email: " + email));
+    }
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with username: " + username));
     }
 
     public UserDetailsService userDetailsService() {

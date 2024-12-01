@@ -55,6 +55,7 @@ public class GlobalExceptionHandler {
             EntityGetException.class,
             EntityCreateException.class,
             UsernameNotFoundException.class,
+            IllegalArgumentException.class,
             AuthenticationException.class,
             AuthorizationException.class
     })
