@@ -15,6 +15,19 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect # Указание диалекта для PostgreSQL
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: helpmeplsmen@gmail.com
+    password: qpyz bqmd vkgz cwzh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
 
   # Настройки для управления транзакциями
   transaction:
@@ -23,6 +36,7 @@ spring:
 # Настройки сервера
 server:
   port: 8081                         # Порт, на котором будет запущено приложение
+
 
 
 marketplace:

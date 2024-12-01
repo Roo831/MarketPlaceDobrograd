@@ -25,10 +25,20 @@ public class AuthController {
      */
 
     @PostMapping("/registration")
-    public JwtAuthenticationResponse signUp(@Validated @RequestBody @Valid RegisterDto registerDto) {
-        System.out.println("AuthController register start");
+    public OverheadMessageDto signUp(@Validated @RequestBody RegisterDto registerDto) {
         return authenticationService.create(registerDto);
 
+    }
+
+    /**
+     * Валидация почтового адреса
+     * @param verificationCodeDto почта и код подтверждения
+     * @return JwtAuthenticationResponse
+     */
+
+    @PostMapping("/verify-code")
+    public JwtAuthenticationResponse verifyCode(@Validated @RequestBody VerificationCodeDto verificationCodeDto) {
+        return authenticationService.verifyCode(verificationCodeDto);
     }
 
     /**
@@ -39,8 +49,7 @@ public class AuthController {
      */
 
     @PostMapping("/login")
-    public JwtAuthenticationResponse signIn(@Validated @RequestBody @Valid LoginDto loginDto) {
-        System.out.println("AuthController login start");
+    public JwtAuthenticationResponse signIn(@Validated @RequestBody LoginDto loginDto) {
         return authenticationService.signIn(loginDto);
 
     }
