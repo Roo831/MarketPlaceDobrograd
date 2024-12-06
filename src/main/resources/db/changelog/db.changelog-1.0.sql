@@ -54,4 +54,3 @@ CREATE TABLE orders
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (shop_id) REFERENCES  shops (id) ON DELETE CASCADE
 );
-

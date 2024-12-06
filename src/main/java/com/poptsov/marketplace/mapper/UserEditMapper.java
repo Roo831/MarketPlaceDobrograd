@@ -8,25 +8,17 @@ import org.springframework.stereotype.Component;
 public class UserEditMapper implements Mapper<UserEditDto, User>{
 
 
-    private void copy(User user, UserEditDto userEditDto) {
-
-        user.setFirstname(userEditDto.getFirstname());
-        user.setLastname(userEditDto.getLastname());
-
-    }
 
     @Override
-    public User map(UserEditDto object) { // Не используется
-        User user = new User();
-        copy(user, object);
-        return user;
+    public User map(UserEditDto object) { // Не используется. Создано чтобы не нарушать контракт с интерфейсом
+        return null;
     }
-
 
 
     public User map(Integer id, UserEditDto userEditDto) {
         User user = User.builder().id(id).build();
-        copy(user, userEditDto);
+        user.setFirstname(userEditDto.getFirstname());
+        user.setLastname(userEditDto.getLastname());
         return user;
     }
 }

@@ -12,16 +12,8 @@ public class ShopEditMapper  implements Mapper<ShopEditDto, Shop>{
 
 
     @Override
-    public Shop map(ShopEditDto object) {
-        return Shop.builder()
-                .name(object.getName())
-                .address(object.getAddress())
-                .rating(1)
-                .specialization(object.getSpecialization())
-                .createdAt(new Date())
-                .active(false)
-                .description(object.getDescription())
-                .build();
+    public Shop map(ShopEditDto object) { // вынужденная заглушка для интерфейса
+        return null;
     }
 
     public Shop map(Integer id, ShopEditDto object) {
@@ -43,11 +35,11 @@ public class ShopEditMapper  implements Mapper<ShopEditDto, Shop>{
 
     }
 
-    public void map(Shop shopToUpdate, ShopEditDto shopCreateEditDto) {
-        shopToUpdate.setName(shopCreateEditDto.getName());
-        shopToUpdate.setAddress(shopCreateEditDto.getAddress());
-        shopToUpdate.setSpecialization(shopCreateEditDto.getSpecialization());
-        shopToUpdate.setDescription(shopCreateEditDto.getDescription());
+    public void map(Shop shopToUpdate, ShopEditDto shopEditDto) {
+        shopToUpdate.setName(shopEditDto.getName());
+        shopToUpdate.setAddress(shopEditDto.getAddress());
+        shopToUpdate.setSpecialization(shopEditDto.getSpecialization());
+        shopToUpdate.setDescription(shopEditDto.getDescription());
     }
 
 }

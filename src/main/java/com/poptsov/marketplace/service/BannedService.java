@@ -9,6 +9,7 @@ import com.poptsov.marketplace.dto.BanCreateDto;
 import com.poptsov.marketplace.dto.BanReadDto;
 import com.poptsov.marketplace.dto.UserReadDto;
 import com.poptsov.marketplace.exceptions.EntityGetException;
+import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.BannedReadMapper;
 import com.poptsov.marketplace.mapper.UserReadMapper;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class BannedService {
     @Transactional
     public BanReadDto create(Integer userId, BanCreateDto banCreateDto) { // Admin
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new EntityGetException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
         user.setIsBanned(true);
         user.setIsAdmin(false);
         user.setRole(Role.banned);
@@ -51,7 +52,7 @@ public class BannedService {
     @Transactional
     public UserReadDto delete(Integer id) { // Admin
         Banned banned = bannedRepository.findById(id)
-                .orElseThrow(() -> new EntityGetException("Banned not found"));
+                .orElseThrow(() -> new EntityNotFoundException("Banned not found"));
 
         User user = banned.getUser();
         if (user != null) {
@@ -59,7 +60,7 @@ public class BannedService {
             user.setIsAdmin(false);
             user.setRole(Role.user);
         } else {
-            throw new EntityGetException("User  associated with banned not found");
+            throw new EntityNotFoundException("User associated with banned not found");
         }
 
         bannedRepository.deleteBannedById(id);
@@ -72,7 +73,7 @@ public class BannedService {
     }
 
     public BanReadDto findById(Integer id) { // Admin
-        return bannedReadMapper.map(bannedRepository.findById(id).orElseThrow(() -> new EntityGetException("Banned not found")));
+        return bannedReadMapper.map(bannedRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Banned not found")));
     }
     // CRUD end
 }

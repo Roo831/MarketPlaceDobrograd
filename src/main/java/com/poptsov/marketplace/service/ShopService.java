@@ -10,6 +10,7 @@ import com.poptsov.marketplace.dto.ShopEditDto;
 import com.poptsov.marketplace.dto.ShopEditStatusDto;
 import com.poptsov.marketplace.dto.ShopReadDto;
 import com.poptsov.marketplace.exceptions.EntityGetException;
+import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.ShopCreateMapper;
 import com.poptsov.marketplace.mapper.ShopEditMapper;
 import com.poptsov.marketplace.mapper.ShopReadMapper;
@@ -38,60 +39,58 @@ public class ShopService {
     @Transactional
     public ShopReadDto create(ShopCreateDto shopCreateDto) {
 
-        User currentUser = userService.findCurrentUser(); // получить текущего юзера
+        User currentUser = userService.findCurrentUser();
 
-        if (currentUser.getShop() != null && currentUser.getShop().getId() != null) { // если у него есть магазин
-            throw new EntityGetException("Shop already exists"); // выбросить исключение
+        if (currentUser.getShop().getId() != null) {
+            throw new EntityGetException("Shop already exists");
         }
 
-        Shop shop = shopCreateMapper.map(shopCreateDto); // Создать новый магазин, не занося его в кеш hibernate
-        shop.setUser(currentUser); //установить текущего юзера (уже в кеше)
+        Shop shop = shopCreateMapper.map(shopCreateDto);
+        shop.setUser(currentUser);
 
-        Shop savedShop;  // создать переменную сохраненного магазина
+        Shop savedShop;
 
         try {
-            savedShop = shopRepository.save(shop); // попытаться сохранить магазин
-        } catch (DataIntegrityViolationException e) { // поймать любые ошибки валидации данных
-            String message = e.getMessage(); // получить сообщение из ошибки
-            String address = shopCreateDto.getAddress(); // получить адрес из ДТО
-            String name = shopCreateDto.getName(); // получить имя из ДТО
-            checkUniqueData(address, message); // в случае если в сообщении есть адрес - выбросить исключение
-            checkUniqueData(name, message); // в случае если в ошибке есть имя -выбросить исключение
+            savedShop = shopRepository.save(shop);
+        } catch (DataIntegrityViolationException e) {
+            String message = e.getMessage();
+            String address = shopCreateDto.getAddress();
+            String name = shopCreateDto.getName();
+            checkUniqueData(address, message);
+            checkUniqueData(name, message);
             throw e;
         }
-        return shopReadMapper.map(savedShop); // замаппить в дто
+        return shopReadMapper.map(savedShop);
     }
 
     @Transactional
-    public ShopReadDto update(ShopEditDto shopCreateEditDto) {
+    public ShopReadDto update(ShopEditDto shopEditDto) {
 
-        User currentUser = userService.findCurrentUser(); //получить текущего пользователя
-        Shop shopToUpdate = currentUser.getShop(); // получить его магазин
+        User currentUser = userService.findCurrentUser();
+        Shop shopToUpdate = currentUser.getShop();
 
-        if(shopToUpdate == null) { // если магазина нет
-            throw new EntityGetException("Shop not found"); // выбросить исключение
+        if (shopToUpdate == null) {
+            throw new EntityNotFoundException("Shop not found");
         }
 
-        shopEditMapper.map(shopToUpdate, shopCreateEditDto); // обогатить текущий магазин новыми данными
+        String address = shopEditDto.getAddress();
+        String name = shopEditDto.getName();
+        if (shopRepository.existsByName(name))
+            throw new EntityGetException(name + " already exists");
+        if (shopRepository.existsByAddress(address))
+            throw new EntityGetException(address + " already exists");
 
-        Shop updatedShop; // создать переменную обновленного магазина
-        try {
-            updatedShop = shopRepository.save(shopToUpdate); // попытаться сохранить магазин в переменную
+        shopEditMapper.map(shopToUpdate, shopEditDto);
 
-        } catch (DataIntegrityViolationException e) { // поймать любые ошибки валидации данных
-            String message = e.getMessage(); // получить сообщение из ошибки
-            String address = shopCreateEditDto.getAddress(); // получить адрес из ДТО
-            String name = shopCreateEditDto.getName(); // получить имя из ДТО
-            checkUniqueData(address, message); // в случае если в сообщении есть адрес - выбросить исключение
-            checkUniqueData(name, message); // в случае если в ошибке есть имя - выбросить исключение
-            throw e;
-        }
-        return shopReadMapper.map(updatedShop); // замаппить в дто
+        Shop updatedShop;
+        updatedShop = shopRepository.save(shopToUpdate);
+
+        return shopReadMapper.map(updatedShop);
     }
 
 
     public ShopReadDto findById(Integer id) {
-        return shopReadMapper.map(shopRepository.findById(id).orElseThrow(() -> new EntityGetException("Shop not found with id: " + id)));
+        return shopReadMapper.map(shopRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + id)));
     }
 
 
@@ -102,36 +101,29 @@ public class ShopService {
         User currentUser = userService.findCurrentUser();
         Shop shopToDelete = currentUser.getShop();
         if (shopToDelete == null) {
-            return false;
+            throw new EntityNotFoundException("You have no Shop");
         }
         shopRepository.deleteShopById(shopToDelete.getId());
-
         return true;
     }
-
     // CRUD end
 
     public List<ShopReadDto> findActiveShops() {
 
-        List<Shop> shops = shopRepository.findByActiveTrue();
-
-        if (shops.isEmpty()) {
-            throw new EntityGetException("No shops found");
-        }
-
-        return shops.stream()
+        return shopRepository.findByActiveTrue()
+                .stream()
                 .map(shopReadMapper::map)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public ShopReadDto switchActiveStatusOfMyShop( ShopEditStatusDto shopEditStatusDto) {
+    public ShopReadDto switchActiveStatusOfMyShop(ShopEditStatusDto shopEditStatusDto) {
 
         User user = userService.findCurrentUser();
         Shop shop = user.getShop();
 
-        if(shop == null) {
-            throw new EntityGetException("No shop found");
+        if (shop == null) {
+            throw new EntityNotFoundException("You have no Shop");
         }
 
         shop.setActive(shopEditStatusDto.isActive());
@@ -140,24 +132,29 @@ public class ShopService {
 
     public ShopReadDto findMyShop() {
         Shop shop = userService.findCurrentUser().getShop();
-        if(shop == null) {
-            throw new EntityGetException("Shop not found");
+        if (shop == null) {
+            throw new EntityNotFoundException("Shop not found");
         }
         return shopReadMapper.map(shop);
     }
 
-    public ShopReadDto getShopByOrderId(Integer id) {
-        return orderRepository.findById(id)
-                .map(Order::getShop)
-                .map(shopReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("Order not found with id, or shop aren't exists: " + id));
+    public ShopReadDto getShopByOrderId(Integer orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new EntityNotFoundException("Order not found with id: " + orderId));
+        Shop shop = order.getShop();
+
+        if (shop == null) {
+            throw new EntityNotFoundException("Shop of order with id " + orderId + "not found");
+        }
+
+        return shopReadMapper.map(shop);
+
     }
 
-    private void checkUniqueData(String wordToFind, String message){
+    private void checkUniqueData(String wordToFind, String message) { // По невыясненным причинам метод не работает в update методе
 
         String regex = "\\b" + Pattern.quote(wordToFind) + "\\b";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        if(pattern.matcher(message).find()){
+        if (pattern.matcher(message).find()) {
             throw new EntityGetException(wordToFind + " already exists");
         }
     }

@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -23,6 +24,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
+@Setter
 public class JwtService {
 
     @Value("${marketplace.app.secret}")
@@ -72,12 +74,12 @@ public class JwtService {
                 .compact();
     }
 
-    private boolean isTokenExpired(String token) {
+    boolean isTokenExpired(String token) {
         log.info("Checking if token is expired...");
         return extractExpiration(token).before(new Date());
     }
 
-    private Date extractExpiration(String token) {
+    Date extractExpiration(String token) {
         log.info("Extracting expiration date...");
         return extractClaim(token, Claims::getExpiration);
     }
@@ -92,11 +94,11 @@ public class JwtService {
                     .getBody();
         } catch (Exception e) {
             log.error("Failed to extract claims from token: {}", e.getMessage());
-            throw e; // или обработайте ошибку другим образом
+            throw e;
         }
     }
 
-    private Key getSigningKey() {
+    Key getSigningKey() {
         log.info("Getting signing key...");
         byte[] keyBytes = Decoders.BASE64.decode(jwtSigningKey);
         if (keyBytes.length * 8 < 256) {
@@ -105,4 +107,31 @@ public class JwtService {
         }
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+    public String generateTokenWithExpiredDate(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        log.info("Payload generated...");
+        if (userDetails instanceof User customUserDetails) {
+            claims.put("id", customUserDetails.getId());
+            claims.put("role", customUserDetails.getRole());
+            claims.put("firstname", customUserDetails.getFirstname());
+            claims.put("lastname", customUserDetails.getLastname());
+            claims.put("isAdmin", customUserDetails.getIsAdmin());
+        }
+        String token = generateExpiredToken(claims, userDetails);
+        log.info("Expired token generated for user: {}", userDetails.getUsername());
+        return token;
+    }
+
+    private String generateExpiredToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        log.info("Generating expired token...");
+        return Jwts.builder()
+                .claims(extraClaims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() - 100000 * 60 * 24)) // Просрочка токена на 40 часов
+                .signWith(getSigningKey())
+                .compact();
+    }
+
 }

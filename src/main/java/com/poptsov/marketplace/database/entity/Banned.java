@@ -27,4 +27,8 @@ public class Banned {
     @OneToOne(optional = false)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
+
+    public Banned (Integer id){
+        this.id = id;
+    }
 }

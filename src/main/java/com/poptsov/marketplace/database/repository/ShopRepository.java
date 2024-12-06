@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Integer> {
@@ -20,4 +19,8 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
     void deleteShopById(@Param("id") Integer id);
 
     List<Shop> findByActiveTrue();
+
+    boolean existsByName(String name);
+
+    boolean existsByAddress(String address);
 }

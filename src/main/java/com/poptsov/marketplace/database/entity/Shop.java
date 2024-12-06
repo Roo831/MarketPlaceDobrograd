@@ -44,6 +44,13 @@ public class Shop {
     @OneToMany(mappedBy = "shop", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
 
+    public Shop (Integer id){
+        this.id = id;
+    }
 
+    public void addOrder(Order order){
+        orders.add(order);
+        order.setShop(this);
+    }
 
 }

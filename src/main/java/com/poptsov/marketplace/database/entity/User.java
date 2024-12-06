@@ -45,6 +45,8 @@ public class User implements UserDetails {
 
     private Boolean isBanned;
 
+    private Boolean isVerified;
+
     private Date createdAt;
 
     @Builder.Default
@@ -81,4 +83,14 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public User (Integer id){
+        this.id = id;
+    }
+
+    public void addOrder(Order order){
+        orders.add(order);
+        order.setUser(this);
+    }
+
 }

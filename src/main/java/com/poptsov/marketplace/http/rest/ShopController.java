@@ -65,8 +65,9 @@ public class ShopController {
      */
 
     @DeleteMapping("myShop/delete")
-    public ResponseEntity<Void> deleteMyShop() {
-        return shopService.deleteMyShop() ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    public ResponseEntity<Boolean> deleteMyShop() {
+        boolean isDeleted =  shopService.deleteMyShop();
+         return ResponseEntity.ok(isDeleted);
     }
 
     /**

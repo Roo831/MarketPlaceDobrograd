@@ -2,6 +2,7 @@ package com.poptsov.marketplace.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BanReadDto implements ReadDto {
 
     @NotBlank(message = "Id of ban cannot be Blank")
