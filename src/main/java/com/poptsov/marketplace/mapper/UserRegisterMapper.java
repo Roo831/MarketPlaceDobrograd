@@ -27,6 +27,7 @@ public class UserRegisterMapper implements Mapper<RegisterDto, User> {
                 .role(Role.user)
                 .isAdmin(false)
                 .isBanned(false)
+                .isVerified(false)
                 .createdAt(new Date())
                 .build();
     }

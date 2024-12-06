@@ -38,10 +38,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+
         log.info("doFilterInternal start");
+
         var authHeader = request.getHeader(HEADER_NAME);
+
         if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
+
             log.info("Bearer is empty, return filterChain.doFilter");
+
             filterChain.doFilter(request, response);
             return;
         }
@@ -50,15 +55,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String username;
 
         try {
+
             log.info("Bearer is not empty, get jwt and extract username from jwt...");
+
             username = jwtService.extractUserName(jwt);
+
         } catch (ExpiredJwtException e) {
+
             log.error("JWT expired: {}", e.getMessage());
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("JWT expired");
             response.getWriter().flush();
             return;
         } catch (Exception e) {
+
             log.error("Error extracting username from JWT: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Invalid JWT");
@@ -67,13 +78,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (StringUtils.isNotEmpty(username) && SecurityContextHolder.getContext().getAuthentication() == null) {
+
             log.info("Username not null, and authentication is null, try to get user...");
+
             UserDetails userDetails = userService
                     .userDetailsService()
                     .loadUserByUsername(username);
+
             log.info("User  found: {}", userDetails.getUsername());
+
             boolean isBanned = userService.isUserBanned(username);
+
             log.info("Ban checked for user: {}", username);
+
             if (isBanned) {
                 log.warn("User  {} is banned", username);
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -85,8 +102,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // Если токен валиден, то аутентифицируем пользователя
             log.info("Try to authenticate user...");
+
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
+
                 log.info("Token is valid, create context...");
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
@@ -95,10 +114,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails.getAuthorities()
                 );
                 log.info("Generate new UsernamePasswordAuthenticationToken...");
+
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
+
                 log.info("Put authToken into context...");
+
                 SecurityContextHolder.setContext(context);
+
                 log.info("Put context into SecurityContextHolder");
             } else {
                 log.warn("Token is invalid for user: {}", username);

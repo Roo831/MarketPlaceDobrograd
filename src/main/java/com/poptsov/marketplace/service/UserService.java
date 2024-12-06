@@ -13,12 +13,11 @@ import com.poptsov.marketplace.mapper.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -41,12 +40,13 @@ public class UserService {
     }
 
     public List<UserReadDto> findAll() {  // Admin
-        return Optional.of(userRepository.findAll())
-                .filter(users -> !users.isEmpty())
-                .map(users -> users.stream()
-                        .map(userReadMapper::map)
-                        .collect(Collectors.toList()))
-                .orElseThrow(() -> new EntityGetException("No users found"));
+        List<User> users = userRepository.findAll();
+        if (users.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return users.stream()
+                .map(userReadMapper::map)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -92,10 +92,10 @@ public class UserService {
     }
 
     @Transactional
-    public UserReadDto updateUserToAdmin(Integer id, SwitchAdminDto switchAdminDto) { // Admin
+    public UserReadDto updateUserAdminRights(Integer id, SwitchAdminDto switchAdminDto) { // Admin
 
         User userToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new EntityGetException("User  not found with id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("User  not found with id: " + id));
         userToUpdate.setIsAdmin(switchAdminDto.isAdmin());
         if(switchAdminDto.isAdmin()) {
             userToUpdate.setRole(Role.admin);
@@ -114,23 +114,23 @@ public class UserService {
         return orderRepository.findById(orderId)
                 .map(Order::getUser)
                 .map(userReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("Failed to get user for order with id: " + orderId));
+                .orElseThrow(() -> new EntityNotFoundException("Failed to get user for order with id: " + orderId));
     }
 
-    public ShopReadDto findShopByUserId(Integer id) { // Admin
-        return userRepository.findUserById(id)
+    public ShopReadDto findShopByUserId(Integer userId) { // Admin
+        return userRepository.findUserById(userId)
                 .map(User::getShop)
                 .map(shopReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("Failed to get shop with user id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Failed to get shop with user id: " + userId));
     }
 
-    public List<OrderReadDto> findOrdersByUserId(Integer id) {  //Admin
-        return userRepository.findUserById(id)
+    public List<OrderReadDto> findOrdersByUserId(Integer userId) {  //Admin
+        return userRepository.findUserById(userId)
                 .map(User::getOrders)
                 .map(orders -> orders.stream()
                         .map(orderReadMapper::map)
                         .collect(Collectors.toList()))
-                .orElseThrow(() -> new EntityGetException("Failed to get orders for user with id: " + id)); // Выбрасываем исключение, если пользователь не найден
+                .orElseThrow(() -> new EntityNotFoundException("Failed to get orders for user with id: " + userId));
     }
 
     public boolean isUserBanned(String username) {

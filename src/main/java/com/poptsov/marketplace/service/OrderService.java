@@ -10,9 +10,9 @@ import com.poptsov.marketplace.dto.OrderReadDto;
 import com.poptsov.marketplace.dto.OrderEditStatusDto;
 import com.poptsov.marketplace.exceptions.AuthorizationException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
+import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.OrderCreateMapper;
 import com.poptsov.marketplace.mapper.OrderReadMapper;
-import com.poptsov.marketplace.util.AuthorityCheckUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class OrderService {
 
     public OrderReadDto findById(Integer orderId) {
         return orderRepository.findById(orderId)
-                .map(orderReadMapper::map).orElseThrow(() -> new EntityGetException("Order not found"));
+                .map(orderReadMapper::map).orElseThrow(() -> new EntityNotFoundException("Order not found"));
     }
 
     @Transactional
@@ -44,7 +44,7 @@ public class OrderService {
 
         User user = userService.findCurrentUser();
         Shop shop = shopRepository.findById(shopId)
-                .orElseThrow(() -> new EntityGetException("Shop not found with id: " + shopId));
+                .orElseThrow(() -> new EntityNotFoundException("Shop not found with id: " + shopId));
 
         Order order = orderCreateMapper.map(orderCreateDto);
         order.setUser(user);
@@ -56,9 +56,13 @@ public class OrderService {
 
     @Transactional
     public OrderReadDto update(Integer id, OrderEditStatusDto orderEditStatusDto) {
-        Integer shopOwnerId = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found")).getShop().getUser().getId();
-        AuthorityCheckUtil.checkAuthorities(userService.findCurrentUser().getId(), shopOwnerId);
-        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found"));
+
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        Integer shopOwnerId = order.getShop().getUser().getId();
+        if (!Objects.equals(userService.findCurrentUser().getId(), shopOwnerId))
+            throw new AuthorizationException("Owner of shop id does not match with your id");
+
         order.setStatus(orderEditStatusDto.getStatus());
         orderRepository.save(order);
         return orderReadMapper.map(order);
@@ -66,7 +70,8 @@ public class OrderService {
 
     @Transactional
     public boolean delete(Integer id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityGetException("Order not found"));
+
+        Order order = orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order not found"));
 
         Integer ownerId = order.getUser().getId();
         Integer shopOwnerId = order.getShop().getUser().getId();
@@ -81,22 +86,20 @@ public class OrderService {
     // CRUD end
 
     public List<OrderReadDto> findOrdersOfMyShop() {
-       User currentUser = userService.findCurrentUser();
-       Shop shop = currentUser.getShop();
+        User currentUser = userService.findCurrentUser();
+        Shop shop = currentUser.getShop();
 
-       if(shop == null) {
-           throw new EntityGetException("You have no shop");
-       }
+        if (shop == null) {
+            throw new EntityNotFoundException("You have no shop");
+        }
 
         return shop.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
     }
 
     public List<OrderReadDto> findMyOrders() {
         User user = userService.findCurrentUser();
-       return user.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
+        return user.getOrders().stream().map(orderReadMapper::map).collect(Collectors.toList());
     }
-
-
 
 
 }

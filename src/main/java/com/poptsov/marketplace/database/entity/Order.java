@@ -38,4 +38,8 @@ public class Order {
     @JoinColumn(name = "shop_id", nullable = false)
     private Shop shop;
 
+    public Order (Integer id){
+        this.id = id;
+    }
+
 }

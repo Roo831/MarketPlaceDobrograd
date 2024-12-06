@@ -70,7 +70,7 @@ public class AdminController { // Дополнительные проверки 
 
     @PatchMapping("/users/{id}/makeAdmin")
     public ResponseEntity<UserReadDto> switchAdmin(@PathVariable Integer id, @Validated @RequestBody SwitchAdminDto switchAdminDto) {
-        return ResponseEntity.ok(userService.updateUserToAdmin(id, switchAdminDto));
+        return ResponseEntity.ok(userService.updateUserAdminRights(id, switchAdminDto));
     }
 
     /**
