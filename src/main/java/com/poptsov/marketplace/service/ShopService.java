@@ -41,7 +41,7 @@ public class ShopService {
 
         User currentUser = userService.findCurrentUser();
 
-        if (currentUser.getShop().getId() != null) {
+        if (currentUser.getShop() != null && currentUser.getShop().getId() != null) {
             throw new EntityGetException("Shop already exists");
         }
 
