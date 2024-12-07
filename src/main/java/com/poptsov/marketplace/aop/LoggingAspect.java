@@ -1,5 +1,6 @@
 package com.poptsov.marketplace.aop;
 
+import com.poptsov.marketplace.dto.LoginDto;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -11,6 +12,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -46,7 +48,9 @@ public class LoggingAspect {
         String methodName = joinPoint.getSignature().getName();
 
         Object[] args = joinPoint.getArgs();
-        String argsString = args.length > 0 ? Arrays.toString(args) : "METHOD HAS NO ARGUMENTS";
+        String argsString = Arrays.stream(args)
+                .map(arg -> arg instanceof LoginDto ? "LoginDto{username='" + ((LoginDto) arg).getUsername() + "'}" : arg.toString())
+                .collect(Collectors.joining(", "));
 
         log.info("RUN SERVICE: SERVICE METHOD : {}.{}\n METHOD ARGUMENTS: [{}]", className, methodName, argsString);
     }
