@@ -5,6 +5,8 @@ import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.service.AuthenticationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.ast.tree.expression.Over;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +29,8 @@ public class AuthController {
      */
 
     @PostMapping("/registration")
-    public OverheadMessageDto signUp(@Validated @RequestBody RegisterDto registerDto) {
-        return authenticationService.create(registerDto);
+    public ResponseEntity<OverheadMessageDto> signUp(@Validated @RequestBody RegisterDto registerDto) {
+        return ResponseEntity.ok(authenticationService.create(registerDto));
 
     }
 
@@ -39,8 +41,8 @@ public class AuthController {
      */
 
     @PostMapping("/verify-code")
-    public JwtAuthenticationResponse verifyCode(@Validated @RequestBody VerificationCodeDto verificationCodeDto) {
-        return authenticationService.verifyCode(verificationCodeDto);
+    public ResponseEntity<JwtAuthenticationResponse> verifyCode(@Validated @RequestBody VerificationCodeDto verificationCodeDto) {
+        return ResponseEntity.ok(authenticationService.verifyCode(verificationCodeDto));
     }
 
     /**
@@ -51,8 +53,15 @@ public class AuthController {
      */
 
     @PostMapping("/login")
-    public JwtAuthenticationResponse signIn(@Validated @RequestBody LoginDto loginDto) {
-        return authenticationService.signIn(loginDto);
+    public ResponseEntity<JwtAuthenticationResponse> signIn(@Validated @RequestBody LoginDto loginDto) {
+        return ResponseEntity.ok(authenticationService.signIn(loginDto));
 
+    }
+
+    @GetMapping("/test")
+  public ResponseEntity<OverheadMessageDto> test() {
+      return ResponseEntity.ok(OverheadMessageDto.builder()
+                      .message("test")
+              .build());
     }
 }
