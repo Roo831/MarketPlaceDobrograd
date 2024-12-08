@@ -80,7 +80,6 @@ public class SecurityConfiguration {
         return config.getAuthenticationManager();
     }
 
-
 }
 
 
