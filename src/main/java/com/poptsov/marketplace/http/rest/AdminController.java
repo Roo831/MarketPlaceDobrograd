@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController { // Дополнительные проверки авторизации не нужны, так как к контроллерам имеет доступ только администраторы
