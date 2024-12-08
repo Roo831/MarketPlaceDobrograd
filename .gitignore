@@ -35,4 +35,4 @@ build/
 # Игнорировать папку logback
 /logback/
 
-application.yml
+src/main/resources/application.yml
