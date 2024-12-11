@@ -1,4 +1,7 @@
-FROM ubuntu:latest
-LABEL authors="user2"
+FROM openjdk:17
 
-ENTRYPOINT ["top", "-b"]
+COPY target/Marketplace-0.0.1-SNAPSHOT.jar app.jar
+
+EXPOSE 8081
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
