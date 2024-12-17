@@ -64,10 +64,10 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         var corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(
-                List.of("*"));
+                List.of("http://176.59.8.209:8080", "http://localhost:8080"));
         corsConfig.setAllowCredentials(true);
-        corsConfig.setAllowedMethods(List.of("*"));
-        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
 
         var urlBasedConfig = new UrlBasedCorsConfigurationSource();
         urlBasedConfig.registerCorsConfiguration("/**", corsConfig);
