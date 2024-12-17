@@ -39,6 +39,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        // Обработка предварительных запросов (OPTIONS)
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return; // Завершаем обработку, так как это предварительный запрос
+        }
+
         log.info("doFilterInternal start");
 
         var authHeader = request.getHeader(HEADER_NAME);
