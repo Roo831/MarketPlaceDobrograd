@@ -15,7 +15,6 @@ import java.util.Locale;
 
 @Validated
 @RestController
-@CrossOrigin
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {

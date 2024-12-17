@@ -45,16 +45,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(List.of("*")); // Разрешить все домены
-                    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Указать разрешенные методы
-                    configuration.setAllowedHeaders(List.of("*")); // Разрешить все заголовки
-                    configuration.setAllowCredentials(true); // Разрешить отправку учетных данных
-
-                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                    source.registerCorsConfiguration("/**", configuration); // Применить конфигурацию ко всем путям
-
-                    cors.configurationSource(source); // Установить конфигурацию CORS
+                    cors.configurationSource(corsConfigurationSource());
                 })
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/auth/**").permitAll()
@@ -67,6 +58,20 @@ public class SecurityConfiguration {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        var corsConfig = new CorsConfiguration();
+        corsConfig.setAllowedOrigins(
+                List.of("*"));
+        corsConfig.setAllowCredentials(true);
+        corsConfig.setAllowedMethods(List.of("*"));
+        corsConfig.setAllowedHeaders(List.of("*"));
+
+        var urlBasedConfig = new UrlBasedCorsConfigurationSource();
+        urlBasedConfig.registerCorsConfiguration("/**", corsConfig);
+        return urlBasedConfig;
     }
 
     @Bean

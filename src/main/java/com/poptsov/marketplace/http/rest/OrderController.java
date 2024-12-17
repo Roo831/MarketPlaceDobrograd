@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@CrossOrigin
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
