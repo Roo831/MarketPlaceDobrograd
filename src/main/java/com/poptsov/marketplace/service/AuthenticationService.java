@@ -3,6 +3,7 @@ package com.poptsov.marketplace.service;
 import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.exceptions.AuthorizationException;
+import com.poptsov.marketplace.mapper.JwtAuthenticationDtoMapper;
 import com.poptsov.marketplace.mapper.UserRegisterMapper;
 import com.poptsov.marketplace.security.JwtService;
 import com.poptsov.marketplace.util.VerificationCodeGenerator;
@@ -28,6 +29,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final UserRegisterMapper userRegisterMapper;
     private final EmailService emailService;
+    private final JwtAuthenticationDtoMapper jwtAuthenticationDtoMapper;
 
     private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
 
@@ -61,7 +63,7 @@ public class AuthenticationService {
      */
 
     @Transactional
-    public JwtAuthenticationResponse verifyCode(VerificationCodeDto verificationCodeDto) {
+    public JwtAuthenticationDto verifyCode(VerificationCodeDto verificationCodeDto) {
         String storedCode = verificationCodes.get(verificationCodeDto.getEmail());
         if (storedCode != null && storedCode.equals(verificationCodeDto.getCode())) {
 
@@ -70,7 +72,7 @@ public class AuthenticationService {
             User user = userService.findByEmail(verificationCodeDto.getEmail());
             user.setIsVerified(true);
             var jwt = jwtService.generateToken(user);
-            return new JwtAuthenticationResponse(jwt);
+            return jwtAuthenticationDtoMapper.map(user, jwt);
         } else {
             throw new IllegalArgumentException("Неверный код подтверждения.");
         }
@@ -82,7 +84,7 @@ public class AuthenticationService {
      * @param loginDto данные пользователя
      * @return токен
      */
-    public JwtAuthenticationResponse signIn(LoginDto loginDto) {
+    public JwtAuthenticationDto signIn(LoginDto loginDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(),
                 loginDto.getPassword()
@@ -92,6 +94,6 @@ public class AuthenticationService {
             throw new AuthorizationException("Пользователь не верифицирован.");
         }
         String jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        return jwtAuthenticationDtoMapper.map(user, jwt);
     }
 }

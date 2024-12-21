@@ -74,6 +74,18 @@ public class JwtService {
                 .compact();
     }
 
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        // Добавьте необходимые данные в claims, если нужно
+        return Jwts.builder()
+                .claims(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 60)) // 7 дней
+                .signWith(getSigningKey())
+                .compact();
+    }
+
     boolean isTokenExpired(String token) {
         log.info("Checking if token is expired...");
         return extractExpiration(token).before(new Date());

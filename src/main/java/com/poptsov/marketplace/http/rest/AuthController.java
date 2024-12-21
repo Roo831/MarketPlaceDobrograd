@@ -41,7 +41,7 @@ public class AuthController {
      */
 
     @PostMapping("/verify-code")
-    public ResponseEntity<JwtAuthenticationResponse> verifyCode(@Validated @RequestBody VerificationCodeDto verificationCodeDto) {
+    public ResponseEntity<JwtAuthenticationDto> verifyCode(@Validated @RequestBody VerificationCodeDto verificationCodeDto) {
         return ResponseEntity.ok(authenticationService.verifyCode(verificationCodeDto));
     }
 
@@ -53,7 +53,7 @@ public class AuthController {
      */
 
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthenticationResponse> signIn(@Validated @RequestBody LoginDto loginDto) {
+    public ResponseEntity<JwtAuthenticationDto> signIn(@Validated @RequestBody LoginDto loginDto) {
         return ResponseEntity.ok(authenticationService.signIn(loginDto));
 
     }
