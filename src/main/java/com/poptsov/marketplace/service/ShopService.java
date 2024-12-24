@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -70,22 +71,21 @@ public class ShopService {
         Shop shopToUpdate = currentUser.getShop();
 
         if (shopToUpdate == null) {
-            throw new EntityNotFoundException("Shop not found");
+            throw new EntityNotFoundException("User with id:" + currentUser.getId() +  "does not have a shop");
         }
 
         String address = shopEditDto.getAddress();
         String name = shopEditDto.getName();
-        if (shopRepository.existsByName(name))
+       Optional<Shop> exceptedByNameShop = shopRepository.findByName(name);
+       Optional<Shop>  exceptedByAddressShop = shopRepository.findByAddress(address);
+        if (exceptedByNameShop.isPresent() && !exceptedByNameShop.get().getUser().getId().equals(currentUser.getId()))
             throw new EntityGetException(name + " already exists");
-        if (shopRepository.existsByAddress(address))
+        if (exceptedByAddressShop.isPresent() && !exceptedByAddressShop.get().getUser().getId().equals(currentUser.getId()))
             throw new EntityGetException(address + " already exists");
 
         shopEditMapper.map(shopToUpdate, shopEditDto);
 
-        Shop updatedShop;
-        updatedShop = shopRepository.save(shopToUpdate);
-
-        return shopReadMapper.map(updatedShop);
+        return shopReadMapper.map(shopRepository.save(shopToUpdate));
     }
 
 

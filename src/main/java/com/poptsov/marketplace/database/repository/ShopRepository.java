@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shop, Integer> {
@@ -23,4 +24,7 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
     boolean existsByName(String name);
 
     boolean existsByAddress(String address);
+
+    Optional<Shop> findByName(String name);
+    Optional<Shop> findByAddress(String address);
 }

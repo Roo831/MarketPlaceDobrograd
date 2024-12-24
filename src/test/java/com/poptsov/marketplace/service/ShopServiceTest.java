@@ -99,16 +99,16 @@ class ShopServiceTest {
                 .userId(shop.getUser().getId())
                 .build();
 
-        User userWithoutShop = MockEntityUtil.getTestUser ();
+        User userWithoutShop = MockEntityUtil.getTestUser();
         userWithoutShop.setShop(new Shop());
 
-        Shop shopWithoutUser  = MockEntityUtil.getTestShop();
-        shopWithoutUser .setUser (null);
+        Shop shopWithoutUser = MockEntityUtil.getTestShop();
+        shopWithoutUser.setUser(null);
 
-        when(userService.findCurrentUser ()).thenReturn(userWithoutShop);
-        when(shopCreateMapper.map(shopCreateDto)).thenReturn(shopWithoutUser );
-        when(shopRepository.save(shopWithoutUser )).thenReturn(shopWithoutUser );
-        when(shopReadMapper.map(shopWithoutUser )).thenReturn(expectedResult);
+        when(userService.findCurrentUser()).thenReturn(userWithoutShop);
+        when(shopCreateMapper.map(shopCreateDto)).thenReturn(shopWithoutUser);
+        when(shopRepository.save(shopWithoutUser)).thenReturn(shopWithoutUser);
+        when(shopReadMapper.map(shopWithoutUser)).thenReturn(expectedResult);
 
         ShopReadDto actualResult = shopService.create(shopCreateDto);
 
@@ -151,7 +151,7 @@ class ShopServiceTest {
         when(shopRepository.save(shop)).thenReturn(shop);
         when(shopReadMapper.map(shop)).thenReturn(expectedResult);
 
-       assertThrows(EntityGetException.class, () -> shopService.create(shopCreateDto));
+        assertThrows(EntityGetException.class, () -> shopService.create(shopCreateDto));
 
     }
 
@@ -218,18 +218,25 @@ class ShopServiceTest {
     @Test
     void update_throw_EntityGetException() {
         ShopEditDto shopEditDto = ShopEditDto.builder()
-                .name(shop.getName())
-                .address(shop.getAddress())
+                .name(shop.getName()) // Используйте имя, которое уже существует
+                .address(shop.getAddress()) // Используйте адрес, который уже существует
                 .specialization(shop.getSpecialization())
                 .description(shop.getDescription())
                 .build();
-
+        User otherUser =  User.builder() // Создаем другого пользователя, владельца магазина, адрес и имя которого будут совпадать с shopEditDto
+                .id(632) // Ид не равен нашему id
+                .build();
+        Shop otherShop = Shop.builder()  // Создаем другой магазин, где имя и адрес будут такие же, как и те что пришли из shopEditDto, чтобы получить исключение
+                .id(632) // Ид магазина не должен совпадать с нашим
+                .name(shop.getName())
+                .address(shop.getAddress())
+                .user(otherUser)
+                .build();
         when(userService.findCurrentUser()).thenReturn(user);
-        when(shopRepository.existsByName(shop.getName())).thenReturn(true);
-        when(shopRepository.existsByAddress(shop.getAddress())).thenReturn(true);
+        when(shopRepository.findByName(shop.getName())).thenReturn(Optional.of(otherShop)); // Мок другого магазина
+        when(shopRepository.findByAddress(shop.getAddress())).thenReturn(Optional.of(otherShop)); // Мок другого магазина
 
         assertThrows(EntityGetException.class, () -> shopService.update(shopEditDto));
-
     }
 
     @Test

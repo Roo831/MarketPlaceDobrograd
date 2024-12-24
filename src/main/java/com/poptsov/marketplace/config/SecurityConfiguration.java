@@ -1,6 +1,7 @@
 package com.poptsov.marketplace.config;
 
 
+import com.poptsov.marketplace.database.entity.Role;
 import com.poptsov.marketplace.security.JwtAuthenticationFilter;
 import com.poptsov.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -44,15 +45,15 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> { cors.disable();
-//                    cors.configurationSource(corsConfigurationSource());
+                .cors(cors -> {
+                    cors.configurationSource(corsConfigurationSource());
                 })
-//                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-//                        .requestMatchers("/auth/**").permitAll()
-//                        .requestMatchers("/shops/**", "/users/**", "/orders/**").hasAnyAuthority(Role.user.name(), Role.admin.name())
-//                        .requestMatchers("/admin/**").hasAnyAuthority(Role.admin.name())
-//                        .anyRequest().authenticated()
-//                )
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/shops/**", "/users/**", "/orders/**").hasAnyAuthority(Role.user.name(), Role.admin.name())
+                        .requestMatchers("/admin/**").hasAnyAuthority(Role.admin.name())
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
