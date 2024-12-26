@@ -28,7 +28,7 @@ public class OrderReadDto implements ReadDto {
     @NotBlank(message = "Name cannot be Blank")
     private String name;
 
-    @Size(max = 2000, message = "Description must be less than 500 characters")
+    @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
 
     @Min(value = 0, message = "Price must be greater than or equal to 0")

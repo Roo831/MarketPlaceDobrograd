@@ -24,7 +24,7 @@ public class ShopEditDto implements UpdateDto {
     @ValidEnum(enumClass = Specialization.class, message = "Invalid specialization value")
     private Specialization specialization;
 
-    @Size(max = 2000, message = "Description must be less than 500 characters")
+    @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
 
     @Override

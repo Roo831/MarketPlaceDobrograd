@@ -37,7 +37,7 @@ public class ShopReadDto implements ReadDto {
     @NotNull(message = "CreatedAt cannot be Null")
     private Date createdAt;
 
-    @Size(max = 2000, message = "Description must be less than 500 characters")
+    @Size(max = 2000, message = "Description must be less than 2000 characters")
     private String description;
 
     @NotNull(message = "User  ID cannot be Null")
