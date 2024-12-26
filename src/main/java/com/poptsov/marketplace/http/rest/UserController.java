@@ -35,6 +35,18 @@ public class UserController {
         return ResponseEntity.ok( userReadDto);
     }
 
+
+    /**
+     * Получить пользователя по ид
+     * @param id Идентификатор пользователя
+     * @return UserReadDto
+     */
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserReadDto> findUserById(@PathVariable Integer id) {
+        return ResponseEntity.ok( userService.findById(id));
+    }
+
     /**
      * Редактировать себя
      * @param userEditDto Вносимые изменения

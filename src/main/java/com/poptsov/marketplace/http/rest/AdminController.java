@@ -29,17 +29,6 @@ public class AdminController { // Дополнительные проверки 
     }
 
     /**
-     * Получить пользователя по ид
-     * @param id Идентификатор пользователя
-     * @return UserReadDto
-     */
-
-    @GetMapping("/users/{id}")
-    public ResponseEntity<UserReadDto> findUserById(@PathVariable Integer id) {
-        return ResponseEntity.ok( userService.findById(id));
-    }
-
-    /**
      * Получить магазин пользователя
      * @param id Идентификатор пользователя
      * @return ShopReadDto
