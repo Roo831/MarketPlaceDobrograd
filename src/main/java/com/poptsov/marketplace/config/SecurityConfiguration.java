@@ -50,6 +50,8 @@ public class SecurityConfiguration {
                 })
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/shops/{id}").permitAll()
+                        .requestMatchers("/users/{id}").permitAll()
                         .requestMatchers("/shops/active").permitAll()
                         .requestMatchers("/shops/**", "/users/**", "/orders/**").hasAnyAuthority(Role.user.name(), Role.admin.name())
                         .requestMatchers("/admin/**").hasAnyAuthority(Role.admin.name())
