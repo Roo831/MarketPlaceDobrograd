@@ -8,7 +8,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
@@ -33,12 +32,6 @@ class EmailServiceTest {
         String code = "123456";
 
         emailService.sendVerificationCode(email, code);
-
-        SimpleMailMessage expectedMessage = new SimpleMailMessage();
-        expectedMessage.setTo(email);
-        expectedMessage.setSubject("Ваш код подтверждения");
-        expectedMessage.setText("Ваш код подтверждения: " + code);
-
         verify(mailSender).send(any(SimpleMailMessage.class));
     }
 }

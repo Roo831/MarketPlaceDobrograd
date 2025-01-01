@@ -6,7 +6,7 @@ import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
-import com.poptsov.marketplace.exceptions.EntityAlreadyException;
+import com.poptsov.marketplace.exceptions.EntityAlreadyExistsException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.*;
@@ -52,10 +52,10 @@ public class UserService {
     @Transactional
     public User create(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new EntityAlreadyException("Пользователь с таким именем уже существует");
+            throw new EntityAlreadyExistsException("Пользователь с таким именем уже существует");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EntityAlreadyException("Пользователь с таким email уже существует");
+            throw new EntityAlreadyExistsException("Пользователь с таким email уже существует");
         }
         return userRepository.save(user);
     }

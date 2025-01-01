@@ -7,7 +7,7 @@ import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
-import com.poptsov.marketplace.exceptions.EntityAlreadyException;
+import com.poptsov.marketplace.exceptions.EntityAlreadyExistsException;
 
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.exceptions.EntityNotFoundException;
@@ -210,7 +210,7 @@ class UserServiceTest {
     void create_throw() {
         when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
-        assertThrows(EntityAlreadyException.class, () -> userService.create(user));
+        assertThrows(EntityAlreadyExistsException.class, () -> userService.create(user));
     }
 
     @Test

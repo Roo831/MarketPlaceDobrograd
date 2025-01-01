@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({
             DataIntegrityViolationException.class,
-            EntityAlreadyException.class,
+            EntityAlreadyExistsException.class,
             EntityNotFoundException.class,
             EntityUpdateException.class,
             EntityGetException.class,

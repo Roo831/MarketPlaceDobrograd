@@ -10,7 +10,7 @@ CREATE TABLE users
     firstname   VARCHAR(64),                                                                                -- РП имя
     lastname    VARCHAR(64),                                                                                -- РП фамилия
     steam_id    VARCHAR(64),                                                                                -- steam_id
-    role        VARCHAR(20)  NOT NULL CHECK (role IN ('admin', 'user', 'banned')) DEFAULT 'user',           -- роль.
+    role        VARCHAR(20)  NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user', 'banned')),           -- роль.
     is_admin    Boolean      NOT NULL                                             DEFAULT FALSE,            -- администратор?
     is_banned   Boolean      NOT NULL                                             DEFAULT FALSE,            -- забанен?
     is_verified Boolean      NOT NULL                                             DEFAULT FALSE,            -- верифицирован?
