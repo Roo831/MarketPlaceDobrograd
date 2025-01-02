@@ -1,13 +1,17 @@
 package com.poptsov.marketplace.util;
 
 import com.poptsov.marketplace.database.entity.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Collections;
 import java.util.Date;
 
 public class MockEntityUtil {
 
-    private static final String encodedPassword = "VGVzdCBVc2VyIFBhc3N3b3Jk";
+    @Value("${passwords.junit}")
+    private static final String encodedPasswordUnit = "";
+    @Value("${passwords.it}")
+    private static final String encodedPasswordIT = "";
 
     public static Banned getTestBanned() {
         Banned banned = new Banned();
@@ -29,7 +33,7 @@ public class MockEntityUtil {
         user.setSteamId("Test User Steam ID");
         user.setLastname("Test User Lastname");
         user.setRole(Role.user);
-        user.setPassword(encodedPassword);
+        user.setPassword(encodedPasswordUnit);
         user.setShop(new Shop(1));
         user.setOrders(Collections.singletonList(new Order(1)));
         user.setIsBanned(true);
@@ -48,7 +52,7 @@ public class MockEntityUtil {
         user.setSteamId("Test User Steam ID");
         user.setLastname("Test User Lastname");
         user.setRole(Role.user);
-        user.setPassword(encodedPassword);
+        user.setPassword(encodedPasswordUnit);
         user.setShop(new Shop(1));
         user.setOrders(Collections.singletonList(new Order(1)));
         user.setIsBanned(false);
@@ -85,5 +89,22 @@ public class MockEntityUtil {
         shop.setOrders(Collections.singletonList(new Order(1)));
         shop.setUser(new User(1));
         return shop;
+    }
+
+    public static User getTestUserIT() {
+        User user = new User();
+
+        user.setId(1);
+        user.setUsername("Roo831");
+        user.setEmail("helpmeplsmen@gmail.com");
+        user.setFirstname("Admin");
+        user.setSteamId("STEAM_1:0:203160294");
+        user.setLastname("Adminovich");
+        user.setRole(Role.admin);
+        user.setPassword(encodedPasswordIT);
+        user.setIsBanned(false);
+        user.setIsAdmin(true);
+        user.setIsVerified(true);
+        return user;
     }
 }
