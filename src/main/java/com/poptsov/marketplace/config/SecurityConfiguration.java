@@ -68,7 +68,10 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         var corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(
-                List.of("http://77.222.40.238:80", "http://rubronameg.temp.swtest.ru", "http://35.227.137.151:80"));
+                List.of("http://77.222.40.238:80", // не помню что это, но работает, лучше не трогать
+                        "http://rubronameg.temp.swtest.ru", // домен просто по приколу
+                        "http://35.227.137.151:80", // рабочий
+                        "http://176.59.11.125:8080")); // тест
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));

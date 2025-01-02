@@ -28,7 +28,7 @@ CREATE TABLE shops
     name           VARCHAR(128) Not Null UNIQUE,                                            --имя магазина
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                                     --дата создания
     active         Boolean      NOT NULL,                                                   --магазин отображается на главной странице
-    description    TEXT,                                                                    -- описание магазина (перечень товаров например)
+    description    VARCHAR(2000),                                                                    -- описание магазина (перечень товаров например)
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 
 );
@@ -50,7 +50,7 @@ CREATE TABLE orders
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,                                                     -- время создания заказа
     status      VARCHAR(20)  NOT NULL CHECK (status IN ('pending', 'during', 'completed', 'cancelled')), -- "На рассмотрении", "В обработке", "Готов", "Отменен"
     name        VARCHAR(256) NOT NULL,                                                                   -- название заказа
-    description TEXT,                                                                                    -- описание заказа. Здесь указывается все то, что хочет приобрести клиент.
+    description    VARCHAR(2000),                                                                                    -- описание заказа. Здесь указывается все то, что хочет приобрести клиент.
     price       INTEGER      NOT NULL,                                                                   -- цена, которую предлагает клиент. Если цена не устраивает продавца, он может пометить
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     FOREIGN KEY (shop_id) REFERENCES shops (id) ON DELETE CASCADE
