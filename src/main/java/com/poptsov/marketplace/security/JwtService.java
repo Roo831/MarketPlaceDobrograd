@@ -76,7 +76,6 @@ public class JwtService {
 
     public String generateRefreshToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        // Добавьте необходимые данные в claims, если нужно
         return Jwts.builder()
                 .claims(claims)
                 .subject(userDetails.getUsername())

@@ -39,13 +39,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
+        log.info("doFilterInternal start");
         // Обработка предварительных запросов (OPTIONS)
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            log.info("Options header in Jwt filter...");
             response.setStatus(HttpServletResponse.SC_OK);
-            return; // Завершаем обработку, так как это предварительный запрос
+            return;
         }
-
-        log.info("doFilterInternal start");
 
         var authHeader = request.getHeader(HEADER_NAME);
 
