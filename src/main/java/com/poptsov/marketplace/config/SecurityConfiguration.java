@@ -69,7 +69,8 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         var corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(
-                List.of("http://localhost:80", "https://localhost:443"));
+                List.of("http://localhost:80", "https://localhost:443", // nginx
+                        "http://rubronameg.temp.swtest.ru"));  // frontend
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
