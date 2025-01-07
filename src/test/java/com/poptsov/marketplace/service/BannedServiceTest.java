@@ -121,7 +121,6 @@ class BannedServiceTest {
         UserReadDto expectedResult = UserReadDto.builder()
                 .id(bannedUser.getId())
                 .username(bannedUser.getUsername())
-                .email(bannedUser.getEmail())
                 .firstname(bannedUser.getFirstname())
                 .lastname(bannedUser.getLastname())
                 .steamId(bannedUser.getSteamId())

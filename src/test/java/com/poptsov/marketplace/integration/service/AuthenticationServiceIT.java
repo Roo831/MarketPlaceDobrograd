@@ -11,8 +11,4 @@ public class AuthenticationServiceIT {
 
 
 
-    @Test
-    void test() {
-
-    }
 }

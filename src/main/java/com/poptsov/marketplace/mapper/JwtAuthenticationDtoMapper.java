@@ -9,8 +9,19 @@ public class JwtAuthenticationDtoMapper implements Mapper<User, JwtAuthenticatio
 
 
     @Override
-    public JwtAuthenticationDto map(User object) { // Заглушка
-        return null;
+    public JwtAuthenticationDto map(User object) {
+
+        return JwtAuthenticationDto.builder()
+                .id(object.getId())
+                .username(object.getUsername())
+                .firstname(object.getFirstname())
+                .lastname(object.getLastname())
+                .steamId(object.getSteamId())
+                .role(object.getRole())
+                .isAdmin(object.getIsAdmin())
+                .isBanned(object.getIsBanned())
+                .createdAt(object.getCreatedAt())
+                .build();
     }
 
     public JwtAuthenticationDto map(User object, String jwt) {
@@ -18,7 +29,6 @@ public class JwtAuthenticationDtoMapper implements Mapper<User, JwtAuthenticatio
         return JwtAuthenticationDto.builder()
                 .id(object.getId())
                 .username(object.getUsername())
-                .email(object.getEmail())
                 .firstname(object.getFirstname())
                 .lastname(object.getLastname())
                 .steamId(object.getSteamId())

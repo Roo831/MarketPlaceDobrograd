@@ -10,10 +10,6 @@ import org.junit.jupiter.api.Test;
 public class ShopServiceIT {
 
 
-    @Test
-    void test() {
-
-    }
 
 }
 

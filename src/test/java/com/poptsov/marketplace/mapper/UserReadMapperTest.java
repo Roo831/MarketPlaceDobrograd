@@ -33,7 +33,6 @@ class UserReadMapperTest {
         assertNotNull(result);
         assertEquals(user.getId(), result.getId());
         assertEquals(user.getUsername(), result.getUsername());
-        assertEquals(user.getEmail(), result.getEmail());
         assertEquals(user.getFirstname(), result.getFirstname());
         assertEquals(user.getLastname(), result.getLastname());
         assertEquals(user.getSteamId(), result.getSteamId());

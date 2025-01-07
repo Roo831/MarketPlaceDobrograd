@@ -10,9 +10,7 @@ import org.junit.jupiter.api.Test;
 @RequiredArgsConstructor
 public class BannedServiceIT {
 
-
-    @Test
-    void test() {
-
-    }
 }
+
+
+

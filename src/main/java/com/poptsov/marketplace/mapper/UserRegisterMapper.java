@@ -14,20 +14,17 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class UserRegisterMapper implements Mapper<RegisterDto, User> {
 
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User map(RegisterDto registerDto) {
         return User.builder()
                 .username(registerDto.getUsername())
-                .firstname(registerDto.getFirstname())
-                .lastname(registerDto.getLastname())
-                .email(registerDto.getEmail())
-                .password(passwordEncoder.encode(registerDto.getPassword()))
+                .steamId(registerDto.getSteamId())
+                .firstname("John")
+                .lastname("Doe")
                 .role(Role.user)
                 .isAdmin(false)
                 .isBanned(false)
-                .isVerified(false)
                 .createdAt(new Date())
                 .build();
     }

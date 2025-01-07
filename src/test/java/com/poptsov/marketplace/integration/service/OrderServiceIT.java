@@ -12,8 +12,4 @@ public class OrderServiceIT {
 
 
 
-    @Test
-    void test() {
-
-    }
 }

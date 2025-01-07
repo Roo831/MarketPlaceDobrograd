@@ -69,7 +69,7 @@ public class JwtService {
                 .claims(extraClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24)) // сутки
+                .expiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24 * 3)) // 3 суток
                 .signWith(getSigningKey())
                 .compact();
     }

@@ -8,10 +8,6 @@ import java.util.Date;
 
 public class MockEntityUtil {
 
-    @Value("${passwords.junit}")
-    private static final String encodedPasswordUnit = "";
-    @Value("${passwords.it}")
-    private static final String encodedPasswordIT = "";
 
     public static Banned getTestBanned() {
         Banned banned = new Banned();
@@ -28,17 +24,14 @@ public class MockEntityUtil {
 
         user.setId(1);
         user.setUsername("Test User Username");
-        user.setEmail("test.user@example.com");
         user.setFirstname("Test User Firstname");
         user.setSteamId("Test User Steam ID");
         user.setLastname("Test User Lastname");
         user.setRole(Role.user);
-        user.setPassword(encodedPasswordUnit);
         user.setShop(new Shop(1));
         user.setOrders(Collections.singletonList(new Order(1)));
         user.setIsBanned(true);
         user.setIsAdmin(false);
-        user.setIsVerified(true);
         return user;
     }
 
@@ -47,17 +40,14 @@ public class MockEntityUtil {
 
         user.setId(1);
         user.setUsername("Test User Username");
-        user.setEmail("test.user@example.com");
         user.setFirstname("Test User Firstname");
         user.setSteamId("Test User Steam ID");
         user.setLastname("Test User Lastname");
         user.setRole(Role.user);
-        user.setPassword(encodedPasswordUnit);
         user.setShop(new Shop(1));
         user.setOrders(Collections.singletonList(new Order(1)));
         user.setIsBanned(false);
         user.setIsAdmin(false);
-        user.setIsVerified(true);
         return user;
     }
 
@@ -95,16 +85,14 @@ public class MockEntityUtil {
         User user = new User();
 
         user.setId(1);
-        user.setUsername("Roo831");
-        user.setEmail("helpmeplsmen@gmail.com");
-        user.setFirstname("Admin");
-        user.setSteamId("STEAM_1:0:203160294");
-        user.setLastname("Adminovich");
+        user.setUsername("Roo");
+        user.setFirstname("Doc");
+        user.setSteamId("76561198366586316");
+        user.setLastname("Norton");
         user.setRole(Role.admin);
-        user.setPassword(encodedPasswordIT);
         user.setIsBanned(false);
         user.setIsAdmin(true);
-        user.setIsVerified(true);
+
         return user;
     }
 }

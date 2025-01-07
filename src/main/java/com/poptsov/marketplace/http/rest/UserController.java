@@ -1,6 +1,7 @@
 package com.poptsov.marketplace.http.rest;
 
 
+import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.dto.*;
 
 import com.poptsov.marketplace.service.OrderService;
@@ -9,6 +10,7 @@ import com.poptsov.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,8 +56,8 @@ public class UserController {
      */
 
     @PatchMapping("/me/edit")
-    public ResponseEntity<UserReadDto> edit (@Validated @RequestBody UserEditDto userEditDto) {
-        UserReadDto updatedUserReadDto = userService.update(userEditDto);
+    public ResponseEntity<UserReadDto> edit (@Validated @RequestBody @AuthenticationPrincipal User currentUser, UserEditDto userEditDto) {
+        UserReadDto updatedUserReadDto = userService.update(currentUser, userEditDto);
         return ResponseEntity.ok(updatedUserReadDto);
     }
 

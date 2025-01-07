@@ -4,16 +4,13 @@
 CREATE TABLE users
 (
     id          SERIAL PRIMARY KEY,
-    username    VARCHAR(50)  NOT NULL UNIQUE,                                                               -- логин. Возможно не нужен, так как аутентификация будет происходить через стим
-    email       VARCHAR(100) NOT NULL UNIQUE,                                                               -- почта. Возможно не нужна, так как аутентификация будет происходить через стим
-    password    VARCHAR(255) NOT NULL,                                                                      -- пароль. Возможно не нужен, так как аутентификация будет происходить через стим
+    steam_id    VARCHAR(64) NOT NULL UNIQUE,                                                                -- Steam id
+    username    VARCHAR(50)  NOT NULL,                                                                      -- Steam username
     firstname   VARCHAR(64),                                                                                -- РП имя
     lastname    VARCHAR(64),                                                                                -- РП фамилия
-    steam_id    VARCHAR(64),                                                                                -- steam_id
     role        VARCHAR(20)  NOT NULL DEFAULT 'user' CHECK (role IN ('admin', 'user', 'banned')),           -- роль.
     is_admin    Boolean      NOT NULL                                             DEFAULT FALSE,            -- администратор?
     is_banned   Boolean      NOT NULL                                             DEFAULT FALSE,            -- забанен?
-    is_verified Boolean      NOT NULL                                             DEFAULT FALSE,            -- верифицирован?
     created_at  TIMESTAMP                                                         DEFAULT CURRENT_TIMESTAMP -- дата создания
 );
 

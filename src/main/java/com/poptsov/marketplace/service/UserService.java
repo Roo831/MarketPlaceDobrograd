@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -49,38 +50,17 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
-    public User create(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new EntityAlreadyExistsException("Пользователь с таким именем уже существует");
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EntityAlreadyExistsException("Пользователь с таким email уже существует");
-        }
-        return userRepository.save(user);
-    }
 
     @Transactional
-    public UserReadDto update (UserEditDto userEditDto) {
-        User userToUpdate = findCurrentUser();
+    public UserReadDto update(User currentUser, UserEditDto userEditDto) {
+        currentUser.setFirstname(userEditDto.getFirstname());
+        currentUser.setLastname(userEditDto.getLastname());
 
-        userToUpdate.setFirstname(userEditDto.getFirstname());
-        userToUpdate.setLastname(userEditDto.getLastname());
-
-        return userReadMapper.map(userRepository.save(userToUpdate));
+        return userReadMapper.map(userRepository.save(currentUser ));
     }
 
     //CRUD end
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with email: " + email));
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with username: " + username));
-    }
 
     public UserDetailsService userDetailsService() {
         return this::findByUsername;
@@ -89,6 +69,11 @@ public class UserService {
     public User findCurrentUser() {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return findByUsername(username);
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with username: " + username));
     }
 
     @Transactional
@@ -138,6 +123,7 @@ public class UserService {
                 .map(User::getIsBanned)
                 .orElse(false);
     }
+
 }
 
 

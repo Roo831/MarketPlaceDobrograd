@@ -13,7 +13,6 @@ public class UserReadMapper implements Mapper<User, UserReadDto> {
         return UserReadDto.builder()
                 .id(object.getId())
                 .username(object.getUsername())
-                .email(object.getEmail())
                 .firstname(object.getFirstname())
                 .lastname(object.getLastname())
                 .steamId(object.getSteamId())

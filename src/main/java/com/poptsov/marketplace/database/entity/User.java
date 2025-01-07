@@ -26,17 +26,13 @@ public class User implements UserDetails {
 
     private Integer id;
 
+    private String steamId;
+
     private String username;
-
-    private String email;
-
-    private String password;
 
     private String firstname;
 
     private String lastname;
-
-    private String steamId;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -44,8 +40,6 @@ public class User implements UserDetails {
     private Boolean isAdmin;
 
     private Boolean isBanned;
-
-    private Boolean isVerified;
 
     private Date createdAt;
 
@@ -62,6 +56,11 @@ public class User implements UserDetails {
         authorities.add(new SimpleGrantedAuthority(role.name()));
         System.out.println("Authorities: " + authorities);
         return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return null;
     }
 
     @Override
