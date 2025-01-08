@@ -54,6 +54,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/shops/{id}").permitAll()
                         .requestMatchers("/users/{id}").permitAll()
                         .requestMatchers("/shops/active").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/shops/**", "/users/**", "/orders/**").hasAnyAuthority(Role.user.name(), Role.admin.name())
                         .requestMatchers("/admin/**").hasAnyAuthority(Role.admin.name())
                         .anyRequest().authenticated()
