@@ -74,7 +74,8 @@ public class SecurityConfiguration {
                 List.of("http://localhost:80", "https://localhost:443", // nginx
                         "http://rubronameg.temp.swtest.ru", // frontend
                         "http://176.59.5.10:8080", // QA
-                        "http://176.59.5.10:80"));  // QA
+                        "http://176.59.5.10:80", // QA
+                        "https://steamcommunity.com/"));  // Steam
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
