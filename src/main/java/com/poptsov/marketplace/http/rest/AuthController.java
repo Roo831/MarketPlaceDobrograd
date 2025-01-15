@@ -6,11 +6,8 @@ import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.mapper.JwtAuthenticationDtoMapper;
 import com.poptsov.marketplace.security.JwtService;
 import com.poptsov.marketplace.service.AuthenticationService;
-import com.poptsov.marketplace.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.ast.tree.expression.Over;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 
 
