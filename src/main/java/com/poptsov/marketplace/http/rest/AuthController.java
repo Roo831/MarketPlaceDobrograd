@@ -3,7 +3,6 @@ package com.poptsov.marketplace.http.rest;
 
 import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.dto.*;
-import com.poptsov.marketplace.mapper.JwtAuthenticationDtoMapper;
 import com.poptsov.marketplace.security.JwtService;
 import com.poptsov.marketplace.service.AuthenticationService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,10 +25,10 @@ import java.util.Map;
 public class AuthController {
 
     private static final String STEAM_OPENID_URL = "https://steamcommunity.com/openid/login";
-    private static final String STEAM_USER_SUMMARIES_URL = "https://api.steampowered.com/ISteamUser /GetPlayerSummaries/v0002/";
+    private static final String STEAM_USER_SUMMARIES_URL = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/";
     private final RestTemplate restTemplate;
     @Value("${steam.api-key}")
-    private static final String STEAM_API_KEY = "";
+    private String steamApiKey = "";
 
     private final AuthenticationService authenticationService;
     private final JwtService jwtService;
@@ -45,7 +44,7 @@ public class AuthController {
     @GetMapping("/login")
     public void login(HttpServletResponse response) throws IOException {
         log.info("login start...");
-        String returnUrl = "https://poptsov.roman.fvds.ru/auth/callback";
+        String returnUrl = "http://localhost:8081/auth/callback";
         String realm = "http://rubronameg.temp.swtest.ru"; // фронтенд
 
         log.info("Try to concat openidUrl...");
@@ -79,7 +78,7 @@ public class AuthController {
         }
 
         // Получение имени пользователя из Steam API
-        String playerSummaryUrl = STEAM_USER_SUMMARIES_URL + "?key=" + STEAM_API_KEY + "&steamids=" + steamId;
+        String playerSummaryUrl = STEAM_USER_SUMMARIES_URL + "?key=" + steamApiKey + "&steamids=" + steamId;
         PlayerSummaryResponse playerResponse = restTemplate.getForObject(playerSummaryUrl, PlayerSummaryResponse.class);
 
         if (playerResponse == null || playerResponse.getResponse().getPlayers().isEmpty()) {

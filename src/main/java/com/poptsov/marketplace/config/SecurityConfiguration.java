@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,8 +55,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/shops/{id}").permitAll()
                         .requestMatchers("/users/{id}").permitAll()
                         .requestMatchers("/shops/active").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui/index.html", "/v3/api-docs", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/shops/**", "/users/**", "/orders/**").hasAnyAuthority(Role.user.name(), Role.admin.name())
                         .requestMatchers("/admin/**").hasAnyAuthority(Role.admin.name())
                         .anyRequest().authenticated()
@@ -76,7 +76,8 @@ public class SecurityConfiguration {
                         "http://176.59.5.10:8080", // QA
                         "http://176.59.5.10:80", // QA
                         "https://steamcommunity.com", // Steam
-                        "http://steamcommunity.com"));  // Steam
+                        "http://steamcommunity.com", // Steam
+                        "http://localhost:8081"));
         corsConfig.setAllowCredentials(true);
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
@@ -103,6 +104,7 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
 
 }
 

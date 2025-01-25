@@ -49,9 +49,7 @@ public class OrderService {
         Order order = orderCreateMapper.map(orderCreateDto);
         order.setUser(user);
         order.setShop(shop);
-        Order savedOrder = orderRepository.save(order);
-
-        return orderReadMapper.map(savedOrder);
+        return orderReadMapper.map(orderRepository.save(order));
     }
 
     @Transactional

@@ -6,7 +6,6 @@ import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
-import com.poptsov.marketplace.exceptions.EntityAlreadyExistsException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.*;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 

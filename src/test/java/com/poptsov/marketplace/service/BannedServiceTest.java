@@ -12,6 +12,7 @@ import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.BannedReadMapper;
 import com.poptsov.marketplace.mapper.UserReadMapper;
 import com.poptsov.marketplace.util.MockEntityUtil;
+import jakarta.persistence.LockModeType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,7 +52,6 @@ class BannedServiceTest {
     private Banned banned;
 
     private User bannedUser;
-
 
     @BeforeEach
     public void setUp() {

@@ -38,3 +38,4 @@ build/
 src/main/resources/application.yml
 src/test/resources/application-test.yml
 docker-compose.yml
+/src/main/resources/application-dev.yml
