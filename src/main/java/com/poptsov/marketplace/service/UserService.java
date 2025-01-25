@@ -6,6 +6,7 @@ import com.poptsov.marketplace.database.entity.User;
 import com.poptsov.marketplace.database.repository.OrderRepository;
 import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
+import com.poptsov.marketplace.exceptions.EntityAlreadyExistsException;
 import com.poptsov.marketplace.exceptions.EntityGetException;
 import com.poptsov.marketplace.exceptions.EntityNotFoundException;
 import com.poptsov.marketplace.mapper.*;
@@ -48,17 +49,38 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public User create(User user) {
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new EntityAlreadyExistsException("Пользователь с таким именем уже существует");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new EntityAlreadyExistsException("Пользователь с таким email уже существует");
+        }
+        return userRepository.save(user);
+    }
 
     @Transactional
-    public UserReadDto update(User currentUser, UserEditDto userEditDto) {
-        currentUser.setFirstname(userEditDto.getFirstname());
-        currentUser.setLastname(userEditDto.getLastname());
+    public UserReadDto update (UserEditDto userEditDto) {
+        User userToUpdate = findCurrentUser();
 
-        return userReadMapper.map(userRepository.save(currentUser ));
+        userToUpdate.setFirstname(userEditDto.getFirstname());
+        userToUpdate.setLastname(userEditDto.getLastname());
+
+        return userReadMapper.map(userRepository.save(userToUpdate));
     }
 
     //CRUD end
 
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with email: " + email));
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with username: " + username));
+    }
 
     public UserDetailsService userDetailsService() {
         return this::findByUsername;
@@ -67,11 +89,6 @@ public class UserService {
     public User findCurrentUser() {
         var username = SecurityContextHolder.getContext().getAuthentication().getName();
         return findByUsername(username);
-    }
-
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with username: " + username));
     }
 
     @Transactional
@@ -89,7 +106,7 @@ public class UserService {
 
 
     public UserReadDto getMyself(){
-       return userReadMapper.map(findCurrentUser());
+        return userReadMapper.map(findCurrentUser());
     }
 
 
@@ -121,10 +138,4 @@ public class UserService {
                 .map(User::getIsBanned)
                 .orElse(false);
     }
-
 }
-
-
-
-
-
