@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 class BannedServiceTest {
 
     @InjectMocks
-    private BannedService bannedService;
+    private BannedServiceImpl bannedService;
 
     @Mock
     private BannedRepository bannedRepository;

@@ -15,7 +15,6 @@ import com.poptsov.marketplace.mapper.OrderReadMapper;
 import com.poptsov.marketplace.mapper.ShopReadMapper;
 import com.poptsov.marketplace.mapper.UserReadMapper;
 import com.poptsov.marketplace.util.MockEntityUtil;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ import static org.mockito.Mockito.when;
 class UserServiceTest {
 
     @InjectMocks
-    UserService userService;
+    UserServiceImpl userService;
 
     @Mock
     private OrderRepository orderRepository;
@@ -86,18 +85,12 @@ class UserServiceTest {
 
         Authentication authentication = mock(Authentication.class);
         when(authentication.getName()).thenReturn(user.getUsername());
-        when(authentication.getPrincipal()).thenReturn(user);
 
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
 
         SecurityContextHolder.setContext(securityContext);
 
-    }
-
-    @AfterEach
-    void tearDown() {
-        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -108,6 +101,7 @@ class UserServiceTest {
         when(userReadMapper.map(user)).thenReturn(UserReadDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .email(user.getEmail())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .steamId(user.getSteamId())
@@ -124,6 +118,7 @@ class UserServiceTest {
         assertNotNull(userReadDto);
         assertEquals(user.getId(), userReadDto.getId());
         assertEquals(user.getUsername(), userReadDto.getUsername());
+        assertEquals(user.getEmail(), userReadDto.getEmail());
         assertEquals(user.getFirstname(), userReadDto.getFirstname());
         assertEquals(user.getLastname(), userReadDto.getLastname());
         assertEquals(user.getSteamId(), userReadDto.getSteamId());
@@ -150,6 +145,7 @@ class UserServiceTest {
         when(userReadMapper.map(user)).thenReturn(UserReadDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .email(user.getEmail())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .steamId(user.getSteamId())
@@ -165,6 +161,7 @@ class UserServiceTest {
         assertEquals(1, users.size());
         assertEquals(user.getId(), users.get(0).getId());
         assertEquals(user.getUsername(), users.get(0).getUsername());
+        assertEquals(user.getEmail(), users.get(0).getEmail());
         assertEquals(user.getFirstname(), users.get(0).getFirstname());
         assertEquals(user.getLastname(), users.get(0).getLastname());
         assertEquals(user.getSteamId(), users.get(0).getSteamId());
@@ -187,32 +184,34 @@ class UserServiceTest {
 
     }
 
-//    @Test
-//    void create_get() {
-//        when(userRepository.existsByUsername(user.getUsername())).thenReturn(false);
-//        when(userRepository.save(user)).thenReturn(user);
-//
-//        User result = userService.create(user);
-//
-//        assertNotNull(result);
-//        assertEquals(user.getId(), result.getId());
-//        assertEquals(user.getUsername(), result.getUsername());p
-//        assertEquals(user.getFirstname(), result.getFirstname());
-//        assertEquals(user.getLastname(), result.getLastname());
-//        assertEquals(user.getSteamId(), result.getSteamId());
-//        assertEquals(user.getRole(), result.getRole());
-//        assertEquals(user.getIsAdmin(), result.getIsAdmin());
-//        assertEquals(user.getIsBanned(), result.getIsBanned());
-//        assertEquals(user.getCreatedAt(), result.getCreatedAt());
-//
-//    }
+    @Test
+    void create_get() {
+        when(userRepository.existsByUsername(user.getUsername())).thenReturn(false);
+        when(userRepository.existsByEmail(user.getEmail())).thenReturn(false);
+        when(userRepository.save(user)).thenReturn(user);
 
-//    @Test
-//    void create_throw() {
-//        when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
-//        when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
-//        assertThrows(EntityAlreadyExistsException.class, () -> userService.create(user));
-//    }
+        User result = userService.create(user);
+
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUsername());
+        assertEquals(user.getEmail(), result.getEmail());
+        assertEquals(user.getFirstname(), result.getFirstname());
+        assertEquals(user.getLastname(), result.getLastname());
+        assertEquals(user.getSteamId(), result.getSteamId());
+        assertEquals(user.getRole(), result.getRole());
+        assertEquals(user.getIsAdmin(), result.getIsAdmin());
+        assertEquals(user.getIsBanned(), result.getIsBanned());
+        assertEquals(user.getCreatedAt(), result.getCreatedAt());
+
+    }
+
+    @Test
+    void create_throw() {
+        when(userRepository.existsByUsername(user.getUsername())).thenReturn(true);
+        when(userRepository.existsByEmail(user.getEmail())).thenReturn(true);
+        assertThrows(EntityAlreadyExistsException.class, () -> userService.create(user));
+    }
 
     @Test
     void update_get() {
@@ -223,7 +222,7 @@ class UserServiceTest {
                 .firstname(updatedFirstname)
                 .lastname(updatedLastname)
                 .build();
-        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         User expectedResult = user;
         expectedResult.setFirstname(updatedFirstname);
         expectedResult.setLastname(updatedLastname);
@@ -232,6 +231,7 @@ class UserServiceTest {
         when(userReadMapper.map(expectedResult)).thenReturn(UserReadDto.builder()
                 .id(expectedResult.getId())
                 .username(expectedResult.getUsername())
+                .email(expectedResult.getEmail())
                 .firstname(expectedResult.getFirstname())
                 .lastname(expectedResult.getLastname())
                 .steamId(expectedResult.getSteamId())
@@ -242,11 +242,12 @@ class UserServiceTest {
                 .build());
         when(userRepository.save(any())).thenReturn(expectedResult);
 
-        UserReadDto actualResult = userService.update(currentUser, userEditDto);
+        UserReadDto actualResult = userService.update(userEditDto);
 
         assertNotNull(actualResult);
         assertEquals(expectedResult.getId(), actualResult.getId());
         assertEquals(expectedResult.getUsername(), actualResult.getUsername());
+        assertEquals(expectedResult.getEmail(), actualResult.getEmail());
         assertEquals(expectedResult.getFirstname(), actualResult.getFirstname());
         assertEquals(expectedResult.getLastname(), actualResult.getLastname());
         assertEquals(expectedResult.getSteamId(), actualResult.getSteamId());
@@ -257,7 +258,34 @@ class UserServiceTest {
 
     }
 
+    @Test
+    void findByEmail_get() {
+        String email = user.getEmail();
 
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        User result = userService.findByEmail(email);
+        assertNotNull(result);
+        assertEquals(user.getId(), result.getId());
+        assertEquals(user.getUsername(), result.getUsername());
+        assertEquals(user.getEmail(), result.getEmail());
+        assertEquals(user.getFirstname(), result.getFirstname());
+        assertEquals(user.getLastname(), result.getLastname());
+        assertEquals(user.getSteamId(), result.getSteamId());
+        assertEquals(user.getRole(), result.getRole());
+        assertEquals(user.getIsAdmin(), result.getIsAdmin());
+        assertEquals(user.getIsBanned(), result.getIsBanned());
+        assertEquals(user.getCreatedAt(), result.getCreatedAt());
+
+    }
+
+    @Test
+    void findByEmail_throw() {
+
+        String email = user.getEmail();
+
+        when(userRepository.findByEmail(email)).thenThrow(EntityNotFoundException.class);
+        assertThrows(EntityNotFoundException.class, () -> userService.findByEmail(email));
+    }
 
     @Test
     void findByUsername_get() {
@@ -268,6 +296,7 @@ class UserServiceTest {
         assertNotNull(result);
         assertEquals(user.getId(), result.getId());
         assertEquals(user.getUsername(), result.getUsername());
+        assertEquals(user.getEmail(), result.getEmail());
         assertEquals(user.getFirstname(), result.getFirstname());
         assertEquals(user.getLastname(), result.getLastname());
         assertEquals(user.getSteamId(), result.getSteamId());
@@ -301,6 +330,7 @@ class UserServiceTest {
         when(userReadMapper.map(expectedResult)).thenReturn(UserReadDto.builder()
                 .id(expectedResult.getId())
                 .username(expectedResult.getUsername())
+                .email(expectedResult.getEmail())
                 .firstname(expectedResult.getFirstname())
                 .lastname(expectedResult.getLastname())
                 .steamId(expectedResult.getSteamId())
@@ -314,6 +344,7 @@ class UserServiceTest {
         assertNotNull(actualResult);
         assertEquals(expectedResult.getId(), actualResult.getId());
         assertEquals(expectedResult.getUsername(), actualResult.getUsername());
+        assertEquals(expectedResult.getEmail(), actualResult.getEmail());
         assertEquals(expectedResult.getFirstname(), actualResult.getFirstname());
         assertEquals(expectedResult.getLastname(), actualResult.getLastname());
         assertEquals(expectedResult.getSteamId(), actualResult.getSteamId());
@@ -337,6 +368,7 @@ class UserServiceTest {
         when(userReadMapper.map(expectedResult)).thenReturn(UserReadDto.builder()
                 .id(expectedResult.getId())
                 .username(expectedResult.getUsername())
+                .email(expectedResult.getEmail())
                 .firstname(expectedResult.getFirstname())
                 .lastname(expectedResult.getLastname())
                 .steamId(expectedResult.getSteamId())
@@ -350,6 +382,7 @@ class UserServiceTest {
         assertNotNull(actualResult);
         assertEquals(expectedResult.getId(), actualResult.getId());
         assertEquals(expectedResult.getUsername(), actualResult.getUsername());
+        assertEquals(expectedResult.getEmail(), actualResult.getEmail());
         assertEquals(expectedResult.getFirstname(), actualResult.getFirstname());
         assertEquals(expectedResult.getLastname(), actualResult.getLastname());
         assertEquals(expectedResult.getSteamId(), actualResult.getSteamId());
@@ -377,6 +410,7 @@ class UserServiceTest {
         UserReadDto expectedResult = UserReadDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
+                .email(user.getEmail())
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
                 .steamId(user.getSteamId())

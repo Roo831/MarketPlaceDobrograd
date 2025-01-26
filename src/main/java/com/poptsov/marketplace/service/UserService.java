@@ -1,141 +1,51 @@
 package com.poptsov.marketplace.service;
 
-import com.poptsov.marketplace.database.entity.Order;
-import com.poptsov.marketplace.database.entity.Role;
+
 import com.poptsov.marketplace.database.entity.User;
-import com.poptsov.marketplace.database.repository.OrderRepository;
-import com.poptsov.marketplace.database.repository.UserRepository;
 import com.poptsov.marketplace.dto.*;
-import com.poptsov.marketplace.exceptions.EntityAlreadyExistsException;
-import com.poptsov.marketplace.exceptions.EntityGetException;
-import com.poptsov.marketplace.exceptions.EntityNotFoundException;
-import com.poptsov.marketplace.mapper.*;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 
-@Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class UserService {
-
-    private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final UserReadMapper userReadMapper;
-    private final ShopReadMapper shopReadMapper;
-    private final OrderReadMapper orderReadMapper;
+public interface UserService extends CreateService<User, User>, ReadService<UserReadDto, Integer>, UpdateService<UserReadDto, UserEditDto> {
 
     //CRUD start
-    public UserReadDto findById(Integer id) { // Admin
-        return userRepository.findUserById(id)
-                .map(userReadMapper::map)
-                .orElseThrow(() -> new EntityGetException("Failed to get user with id: " + id));
-    }
 
-    public List<UserReadDto> findAll() {  // Admin
-        List<User> users = userRepository.findAll();
-        if (users.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return users.stream()
-                .map(userReadMapper::map)
-                .collect(Collectors.toList());
-    }
+    @Override
+    UserReadDto findById(Integer id);
 
-    @Transactional
-    public User create(User user) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new EntityAlreadyExistsException("Пользователь с таким именем уже существует");
-        }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EntityAlreadyExistsException("Пользователь с таким email уже существует");
-        }
-        return userRepository.save(user);
-    }
+    @Override
+    List<UserReadDto> findAll();
 
-    @Transactional
-    public UserReadDto update (UserEditDto userEditDto) {
-        User userToUpdate = findCurrentUser();
+    @Override
+    User create(User user);
 
-        userToUpdate.setFirstname(userEditDto.getFirstname());
-        userToUpdate.setLastname(userEditDto.getLastname());
-
-        return userReadMapper.map(userRepository.save(userToUpdate));
-    }
+    @Override
+    UserReadDto update(UserEditDto userEditDto);
 
     //CRUD end
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with email: " + email));
-    }
+    User findByEmail(String email);
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to find user with username: " + username));
-    }
+    User findByUsername(String username);
 
-    public UserDetailsService userDetailsService() {
-        return this::findByUsername;
-    }
+    UserDetailsService userDetailsService();
 
-    public User findCurrentUser() {
-        var username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return findByUsername(username);
-    }
+    User findCurrentUser();
 
-    @Transactional
-    public UserReadDto updateUserAdminRights(Integer id, SwitchAdminDto switchAdminDto) { // Admin
+    UserReadDto updateUserAdminRights(Integer id, SwitchAdminDto switchAdminDto);
 
-        User userToUpdate = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User  not found with id: " + id));
-        userToUpdate.setIsAdmin(switchAdminDto.isAdmin());
-        if(switchAdminDto.isAdmin()) {
-            userToUpdate.setRole(Role.admin);
-        } else
-            userToUpdate.setRole(Role.user);
-        return userReadMapper.map(userRepository.save(userToUpdate));
-    }
+    UserReadDto getMyself();
 
+    UserReadDto findOwnerByOrderId(Integer orderId);
 
-    public UserReadDto getMyself(){
-        return userReadMapper.map(findCurrentUser());
-    }
+    ShopReadDto findShopByUserId(Integer userId);
 
+    List<OrderReadDto> findOrdersByUserId(Integer userId);
 
-    public UserReadDto findOwnerByOrderId(Integer orderId) {
-        return orderRepository.findById(orderId)
-                .map(Order::getUser)
-                .map(userReadMapper::map)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to get user for order with id: " + orderId));
-    }
+    boolean isUserBanned(String username);
 
-    public ShopReadDto findShopByUserId(Integer userId) { // Admin
-        return userRepository.findUserById(userId)
-                .map(User::getShop)
-                .map(shopReadMapper::map)
-                .orElseThrow(() -> new EntityNotFoundException("Failed to get shop with user id: " + userId));
-    }
-
-    public List<OrderReadDto> findOrdersByUserId(Integer userId) {  //Admin
-        return userRepository.findUserById(userId)
-                .map(User::getOrders)
-                .map(orders -> orders.stream()
-                        .map(orderReadMapper::map)
-                        .collect(Collectors.toList()))
-                .orElseThrow(() -> new EntityNotFoundException("Failed to get orders for user with id: " + userId));
-    }
-
-    public boolean isUserBanned(String username) {
-        return userRepository.findByUsername(username)
-                .map(User::getIsBanned)
-                .orElse(false);
-    }
 }

@@ -60,7 +60,7 @@ public class OrderController {
 
     @PatchMapping("/{id}/editStatus")
     public ResponseEntity<OrderReadDto>editStatus(@PathVariable Integer id, @Validated @RequestBody OrderEditStatusDto orderEditStatusDto) {
-        OrderReadDto orderReadDto = orderService.update(id, orderEditStatusDto);
+        OrderReadDto orderReadDto = orderService.updateStatus(id, orderEditStatusDto);
         return ResponseEntity.ok(orderReadDto);
     }
 
@@ -73,9 +73,8 @@ public class OrderController {
      */
 
     @DeleteMapping("/{id}/delete")
-    public ResponseEntity<Boolean> delete(@PathVariable Integer id) {
-        boolean isDeleted = orderService.delete(id);
-        return ResponseEntity.ok(isDeleted);
+    public ResponseEntity<OrderReadDto> delete(@PathVariable Integer id) {
+        return ResponseEntity.ok(orderService.delete(id));
     }
 
     /**
