@@ -1,16 +1,14 @@
 package com.poptsov.marketplace.database.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -51,9 +49,11 @@ public class User implements UserDetails {
 
     @Builder.Default
     @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Order> orders = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Shop shop;
 
     @Override
@@ -93,4 +93,16 @@ public class User implements UserDetails {
         order.setUser(this);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(steamId, user.steamId) && role == user.role && Objects.equals(isAdmin, user.isAdmin) && Objects.equals(isBanned, user.isBanned) && Objects.equals(isVerified, user.isVerified) && Objects.equals(createdAt, user.createdAt) && Objects.equals(orders, user.orders) && Objects.equals(shop, user.shop);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, email, password, firstname, lastname, steamId, role, isAdmin, isBanned, isVerified, createdAt, orders, shop);
+    }
 }
