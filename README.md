@@ -15,17 +15,17 @@
 
 1. Клонируйте репозиторий:
    ```bash
-   git clone https://github.com/ваш-username/DobrogradMarketplace.git
+   git clone https://github.com/Roo831/DobrogradMarketplace.git
 Перейдите в директорию проекта:
 
-bash
-Copy
+```bash
 cd DobrogradMarketplace
+```
 Запустите проект с помощью Docker Compose:
 
-bash
-Copy
-docker-compose up --build
+```bash
+   docker-compose up --build
+```
 После успешного запуска проект будет доступен на 8081 порту.
 
 Использование
