@@ -3,9 +3,7 @@ package com.poptsov.marketplace.http.rest;
 
 import com.poptsov.marketplace.dto.*;
 import com.poptsov.marketplace.service.AuthenticationService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.ast.tree.expression.Over;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,6 @@ public class AuthController {
     @PostMapping("/registration")
     public ResponseEntity<OverheadMessageDto> signUp(@Validated @RequestBody RegisterDto registerDto) {
         return ResponseEntity.ok(authenticationService.create(registerDto));
-
     }
 
     /**
