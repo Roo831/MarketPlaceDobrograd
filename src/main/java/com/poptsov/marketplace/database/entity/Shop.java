@@ -63,11 +63,11 @@ public class Shop {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Shop shop = (Shop) o;
-        return active == shop.active && Objects.equals(id, shop.id) && Objects.equals(name, shop.name) && Objects.equals(address, shop.address) && Objects.equals(rating, shop.rating) && specialization == shop.specialization && Objects.equals(createdAt, shop.createdAt) && Objects.equals(description, shop.description) && Objects.equals(user, shop.user) && Objects.equals(orders, shop.orders);
+        return active == shop.active && Objects.equals(id, shop.id) && Objects.equals(name, shop.name) && Objects.equals(address, shop.address) && Objects.equals(rating, shop.rating) && specialization == shop.specialization && Objects.equals(createdAt, shop.createdAt) && Objects.equals(description, shop.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, address, rating, specialization, createdAt, active, description, user, orders);
+        return Objects.hash(id, name, address, rating, specialization, createdAt, active, description);
     }
 }

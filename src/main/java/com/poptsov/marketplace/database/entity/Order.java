@@ -51,11 +51,11 @@ public class Order {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(createdAt, order.createdAt) && status == order.status && Objects.equals(name, order.name) && Objects.equals(description, order.description) && Objects.equals(price, order.price) && Objects.equals(user, order.user) && Objects.equals(shop, order.shop);
+        return Objects.equals(id, order.id) && Objects.equals(createdAt, order.createdAt) && status == order.status && Objects.equals(name, order.name) && Objects.equals(description, order.description) && Objects.equals(price, order.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, createdAt, status, name, description, price, user, shop);
+        return Objects.hash(id, createdAt, status, name, description, price);
     }
 }

@@ -98,11 +98,11 @@ public class User implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(steamId, user.steamId) && role == user.role && Objects.equals(isAdmin, user.isAdmin) && Objects.equals(isBanned, user.isBanned) && Objects.equals(isVerified, user.isVerified) && Objects.equals(createdAt, user.createdAt) && Objects.equals(orders, user.orders) && Objects.equals(shop, user.shop);
+        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(steamId, user.steamId) && role == user.role && Objects.equals(isAdmin, user.isAdmin) && Objects.equals(isBanned, user.isBanned) && Objects.equals(isVerified, user.isVerified) && Objects.equals(createdAt, user.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, email, password, firstname, lastname, steamId, role, isAdmin, isBanned, isVerified, createdAt, orders, shop);
+        return Objects.hash(id, username, email, password, firstname, lastname, steamId, role, isAdmin, isBanned, isVerified, createdAt);
     }
 }
