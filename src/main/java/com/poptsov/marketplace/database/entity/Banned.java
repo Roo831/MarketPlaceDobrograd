@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -28,7 +29,17 @@ public class Banned {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    public Banned (Integer id){
-        this.id = id;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Banned banned = (Banned) o;
+        return Objects.equals(id, banned.id) && Objects.equals(descriptionOfBan, banned.descriptionOfBan) && Objects.equals(banDate, banned.banDate) && Objects.equals(user, banned.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, descriptionOfBan, banDate, user);
     }
 }

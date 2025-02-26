@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 class ShopServiceTest {
 
     @InjectMocks
-    private ShopService shopService;
+    private ShopServiceImpl shopService;
 
     @Mock
     private OrderRepository orderRepository;

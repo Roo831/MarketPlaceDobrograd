@@ -13,6 +13,7 @@ public class JwtAuthenticationDtoMapper implements Mapper<User, JwtAuthenticatio
 
         return JwtAuthenticationDto.builder()
                 .id(object.getId())
+                .email(object.getEmail())
                 .username(object.getUsername())
                 .firstname(object.getFirstname())
                 .lastname(object.getLastname())
@@ -29,6 +30,7 @@ public class JwtAuthenticationDtoMapper implements Mapper<User, JwtAuthenticatio
         return JwtAuthenticationDto.builder()
                 .id(object.getId())
                 .username(object.getUsername())
+                .email(object.getEmail())
                 .firstname(object.getFirstname())
                 .lastname(object.getLastname())
                 .steamId(object.getSteamId())

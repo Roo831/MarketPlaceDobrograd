@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 class OrderServiceTest {
 
     @InjectMocks
-    private OrderService orderService;
+    private OrderServiceImpl orderService;
 
     @Mock
     private OrderRepository orderRepository;
@@ -184,7 +184,7 @@ class OrderServiceTest {
         when(orderRepository.save(order)).thenReturn(order);
         when(orderReadMapper.map(order)).thenReturn(expectResult);
 
-        OrderReadDto actualResult = orderService.update(order.getId(), orderEditStatusDto);
+        OrderReadDto actualResult = orderService.updateStatus(order.getId(), orderEditStatusDto);
 
         assertNotNull(actualResult);
         assertEquals(expectResult.getOrderId(), actualResult.getOrderId());
@@ -205,7 +205,7 @@ class OrderServiceTest {
         when(orderRepository.findById(order.getId())).thenThrow(EntityNotFoundException.class);
 
 
-        assertThrows(EntityNotFoundException.class, () -> orderService.update(order.getId(), orderEditStatusDto));
+        assertThrows(EntityNotFoundException.class, () -> orderService.updateStatus(order.getId(), orderEditStatusDto));
     }
 
     @Test
@@ -222,17 +222,17 @@ class OrderServiceTest {
         when(orderRepository.findById(any())).thenReturn(Optional.of(order));
         when(userService.findCurrentUser()).thenReturn(notAreOwnerOfShop);
 
-        assertThrows(AuthorizationException.class, () -> orderService.update(order.getId(), orderEditStatusDto));
+        assertThrows(AuthorizationException.class, () -> orderService.updateStatus(order.getId(), orderEditStatusDto));
     }
 
     @Test
     void delete_get() {
-        boolean exceptedResult = true;
+        OrderReadDto exceptedResult = orderReadMapper.map(order);
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
         when(userService.findCurrentUser()).thenReturn(user);
 
-        boolean actualResult = orderService.delete(order.getId());
+        OrderReadDto actualResult = orderService.delete(order.getId());
 
         assertEquals(exceptedResult, actualResult);
     }
